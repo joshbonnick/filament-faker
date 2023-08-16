@@ -9,7 +9,6 @@ use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\GeneratesFakesFromComponentName;
 use FilamentFaker\Concerns\InteractsWithFakeConfig;
 use FilamentFaker\Contracts\FakesBlocks;
-use Throwable;
 
 class BlockFaker implements FakesBlocks
 {
@@ -35,11 +34,18 @@ class BlockFaker implements FakesBlocks
             'data' => collect($this->block->getChildComponents())
                 ->filter(fn (mixed $component) => $component instanceof Field)
                 ->mapWithKeys(function (Field $component) {
-                    try {
-                        return [$component->getName() => $this->block->mutateFake($component)() ?? $component->fake()];
-                    } catch (Throwable $e) {
-                        return [$component->getName() => $component->fake()];
+
+                    if (method_exists($this->block, 'mutateFake')) {
+                        $content = $this->block->mutateFake($component);
+
+                        if (is_callable($content)) {
+                            $content = $content($component);
+                        }
                     }
+
+                    $content ??= $component->fake();
+
+                    return [$component->getName() => $content];
                 })
                 ->toArray(),
         ];
