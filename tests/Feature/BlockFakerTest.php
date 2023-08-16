@@ -1,7 +1,6 @@
 <?php
 
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use Mockery\Mock;
 
 it('can generate fake blocks content', function () {
     expect($fake = MockBlock::fake())

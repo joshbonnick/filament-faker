@@ -6,11 +6,12 @@ namespace FilamentFaker;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
+use Filament\Resources\Resource;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Contracts\FakesForms;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Throwable;
 
 class FilamentFakerServiceProvider extends PackageServiceProvider
 {
@@ -26,6 +27,9 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             Block::macro('fake', fn (): array => app()->make(FakesBlocks::class)->fake(static::make())); // @phpstan-ignore-line
             Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this));
+            Resource::macro('fakeForm',
+                fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake(static::class, $withHidden)
+            );
         });
     }
 
@@ -34,6 +38,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             $this->app->bind(FakesBlocks::class, BlockFaker::class);
             $this->app->bind(FakesComponents::class, ComponentFaker::class);
+            $this->app->bind(FakesForms::class, FormFaker::class);
         });
     }
 }
