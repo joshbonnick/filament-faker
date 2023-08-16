@@ -1,110 +1,79 @@
-# Filament Block Faker
+# Filament Faker
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/joshbonnick/filament-block-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-block-faker)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-block-faker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/joshbonnick/filament-block-faker/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-block-faker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshbonnick/filament-block-faker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/joshbonnick/filament-block-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-block-faker)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/joshbonnick/filament-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-block-faker)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-faker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/joshbonnick/filament-block-faker/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-faker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshbonnick/filament-faker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/joshbonnick/filament-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-block-faker)
 
-Generate fake blocks content for Filament's Block feature for use in testing.
+Generate fake content for Filament forms, blocks and components.
 
 ## Requirements
 
-- [Filament](https://github.com/filamentphp/filament) v3 or higher
-- PHP 8.1
+- [Filament](https://github.com/filamentphp/filament) v3 or higher.
+- PHP 8.1 or higher.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require joshbonnick/filament-block-faker
+composer require joshbonnick/filament-faker
 ```
 
 You can publish the config file with:
 
 ```bash
-php artisan vendor:publish --tag="filament-block-faker-config"
+php artisan vendor:publish --tag="filament-faker-config"
 ```
 
 ## Usage
 
-Create a block class, so you may easily reference it in your tests.
-
-```php
-namespace App\Filament\Blocks;
-
-use Filament\Forms\Components\Builder;
-
-class MyContentBlock extends Builder\Block
-{    
-    public static function make(string $name): static
-    {
-        return parent::make($name)
-            ->label('Rich Editor')
-            ->icon('heroicon-m-bars-3-bottom-left')
-            ->schema([
-                Components\Select::make('color')
-                     ->options([
-                         '#f00' => 'Red',
-                         '#0f0' => 'Green',
-                         '#00f' => 'Blue'
-                     ])  
-                     ->required(),
-                Components\RichEditor::make('content')->required(),
-            ]);
-    }
-}
-```
-
-### Using The Block
+Call the `fakeForm` method on a resource to retrieve and array of fields filled with fake data.
 
 ```php
 <?php
 
-namespace App\Filament\Resources;
+$data = PostResource::fakeForm();
+```
 
-use App\Filament\Blocks\MyContentBlock;
-use Filament\Forms;
-use Filament\Forms\Form;
+### Disable Component Name Usage
 
-class PostResource extends Resource
+By default, component names are used to map to a Faker method for more accurate data. There are several ways to disable
+this behavior:
+
+Set `use_component_names_for_fake` to `false` in `config/filament-faker.php` which will disable the behavior for
+the entire package as default.
+
+Add a `shouldFakeUsingComponentName` method to your `Block` or `Component`, the method should return a `bool`
+
+```php
+<?php
+
+namespace App\Filament\Blocks;
+
+use Filament\Forms\Components\Builder\Block;
+
+class HeadingBlock extends Block
 {
-    public static function form(Form $form): Form
+    public function shouldFakeUsingComponentName(): bool
     {
-        return $form->schema([
-            Forms\Components\Builder::make('content_blocks')->blocks([
-                MyContentBlock::make('my_content'),
-            ]),
-        ]);        
+        return false;
     }
 }
 ```
 
-Now we have access to the `fake` method for our block which will return a Faker method that matches the component name or
-a fallback faker method defined in `config/filament-block-faker.php`.
+## Usage In Tests
 
-The `fake` method returns the content of the block as if it had been filled in by a user, using `faker` methods.
-
-### Disable Component Name Usage
-
-If you do not wish to use the components name for a faker method and just the generic faker methods assigned to a component
-you can set `use_component_names_for_fake` to `false` in `config/filament-block-faker.php` or override the `shouldFakeUsingComponentName`
-and return false.
+You can use the faked data in your tests.
 
 ```php
-public function shouldFakeUsingComponentName(): bool
-{
-    return false;
-}
-```
+<?php
 
-### Usage In Tests
-
-```php
 namespace Tests\Feature\Services\ContentFormatting;
 
 use App\Contracts\ContentFormatter;
-use App\Filament\Blocks\MyContentBlock;
+use App\Filament\Blocks\HeadingBlock;
+use App\Filament\Resources\PostResource;
 use Tests\TestCase;
 
 class FormatBlocksTest extends TestCase
@@ -112,29 +81,24 @@ class FormatBlocksTest extends TestCase
     public function test_it_formats_blocks()
     {
         $blocks = [
-            MyContentBlock::fake(),
-            MyContentBlock::fake(),
+            HeadingBlock::fake(),
         ];
         
         // $blocks = [
         //    [
-        //        'type' => '\\App\\Filament\\Blocks\\MyContentBlock'
+        //        'type' => 'App\Filament\Blocks\HeadingBlock'
         //        'data' => [
-        //             'color'   => '#f00',
+        //             'level'   => 1,
         //             'content' => 'Maecenas id ipsum interdum, porta diam in, molestie est.',
-        //        ],
-        //    ],
-        //    [
-        //        'type' => '\\App\\Filament\\Blocks\\MyContentBlock'
-        //        'data' => [
-        //             'color'   => '#0f0',
-        //             'content' => 'Quisque id ex est. Ut feugiat enim neque, non scelerisque nisi ullamcorper sit amet.',
         //        ],
         //    ],
         // ];
 
         $service = app()->make(ContentFormatter::class);
-        $service->format($blocks);
+        $content $service->format($blocks);
+        // or...
+        $data = PostResource::fakeForm();
+        $content $service->format($data);
         
         // Make assertions of your formatted content...
     }
@@ -144,7 +108,7 @@ class FormatBlocksTest extends TestCase
 ## Faking Custom Blocks
 
 If you have added a plugin such as [Spatie Media Library](https://filamentphp.com/plugins/filament-spatie-media-library),
-which adds the `SpatieMediaLibraryFileUpload` component you can register it in `config/filament-block-faker.php` like so:
+which adds the `SpatieMediaLibraryFileUpload` component you can register it in `config/filament-faker.php` like so:
 
 ```php
 <?php
@@ -152,16 +116,16 @@ which adds the `SpatieMediaLibraryFileUpload` component you can register it in `
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 
 return [
-    'files' => [
+    'fakes' => [
         SpatieMediaLibraryFileUpload::class => fn (SpatieMediaLibraryFileUpload $component) => fake()->imageUrl(),
-        
-        // ...rest of faker methods
-    ]
+    ],
 ];
 ```
 
 If you do not register extra components, the `default` item in the config file will be used which returns the result of
 `fake()->sentence()`.
+
+You may also override the default faker method attached to built in components by adding them to the config.
 
 ## Faking Specific Components
 
@@ -170,98 +134,36 @@ the component.
 
 When faking a block the `mutateFake` method is used as a priority over `Component` class fakes.
 
-### Examples
-
-#### Email Field
-
-In this example we are returning a `Closure` which returns `fake()->safeEmail()` for the field named `email`. You must
-return `null` if you do not want to provide a fake for that specific component and rely on the fakes defined in 
-`config/filament-block-faker.php`.
-
 ```php
-namespace App\Filament\Blocks;
+<?php
 
-use Filament\Forms\Components\Builder;
+namespace App\Filament\Components;
 
-class MyContentBlock extends Builder\Block
-{    
-    /**
-     * @return null|Closure(Components\Field $component): mixed
-     */
-    public function mutateFake(Components\Field $component): ?Closure
+use Filament\Forms\Components\Field;
+use Filament\Forms\Components\TextInput;
+
+class MutatedComponent extends TextInput
+{
+    public function mutateFake(Field $component): string
     {
-        return match ($component->getName()) {
-            'email' => fn () => fake()->safeEmail(),
-            default => null,
-        };
-    }
-    
-    public static function make(string $name): static
-    {
-        return parent::make($name)
-            ->label('Rich Editor')
-            ->icon('heroicon-m-bars-3-bottom-left')
-            ->schema([
-                Components\Select::make('color')
-                     ->options([
-                         '#f00' => 'Red',
-                         '#0f0' => 'Green',
-                         '#00f' => 'Blue'
-                     ])  
-                     ->required(),
-                Components\RichEditor::make('content')->required(),
-                Components\TextInput::make('email')->email()->required(),
-            ]);
+        return fake()->randomHtml();
     }
 }
 ```
-
-#### Based On Record
-
-In this example we are first trying to match a fake callback to the field's name, if that does not exist we move onto to
-checking the `status` property of the `Model` the form is using.
-
 ```php
+<?php
+
 namespace App\Filament\Blocks;
 
-use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Builder\Block;
 
-class MyContentBlock extends Builder\Block
-{    
-    /**
-     * @return null|Closure(Components\Field $component): mixed
-     */
-    public function mutateFake(Components\Field $component): ?Closure
+class HeadingBlock extends Block
+{
+    public function mutateFake(Field $component): string
     {
-        if ($component->getName() === 'email') {
-            return fn () => fake()->safeEmail();
-        }
-
-        if ($component->getName() === 'published_at'
-        && $component->getRecord()->status === PostStatus::Published) {
-            return fn () => now();
-        }
-
-        return null;
-    }
-    
-    public static function make(string $name): static
-    {
-        return parent::make($name)
-            ->label('Rich Editor')
-            ->icon('heroicon-m-bars-3-bottom-left')
-            ->schema([
-                Components\Select::make('color')
-                     ->options([
-                         '#f00' => 'Red',
-                         '#0f0' => 'Green',
-                         '#00f' => 'Blue'
-                     ])  
-                     ->required(),
-                Components\RichEditor::make('content')->required(),
-                Components\TextInput::make('email')->email()->required(),
-                Components\DateTimePicker::make('published_at')->date()->required(),
-            ]);
+        return match($component->getName()){
+            'level' => fake()->numberBetween(1, 5),
+        };
     }
 }
 ```

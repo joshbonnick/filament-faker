@@ -31,7 +31,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
 
             Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this));
 
-            Resource::macro('fakeForm', fn () => static::form(Form::make(new EditRecord()))->fake());
+            Resource::macro('fakeForm', fn () => static::form(Form::make(new EditRecord()))->fake()); // @phpstan-ignore-line
 
             Form::macro('fake',
                 fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake($this, $withHidden)

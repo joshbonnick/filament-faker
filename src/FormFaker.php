@@ -51,6 +51,7 @@ class FormFaker implements FakesForms
     protected function getContentForBuilder(Builder $builder): array
     {
         return collect($builder->getBlocks())
+            ->filter(fn (Component $block) => $block instanceof Block)
             ->map(fn (Block $block) => $this->blockFaker->fake($block))
             ->toArray();
     }

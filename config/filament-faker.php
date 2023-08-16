@@ -15,26 +15,13 @@ return [
     'use_component_names_for_fake' => true,
 
     'fakes' => [
-        /*
-        |--------------------------------------------------------------------------
-        | Filament Config: Fakes
-        |--------------------------------------------------------------------------
-        |
-        | Override faking methods for a component or add custom components.
-        |
-        */
-        // Example override built in component
-        //
         // ColorPicker::class => fn (ColorPicker $component): string => '#f7f7f7',
 
-        // Example plugin component faking...
-        //
         // SpatieMediaLibraryFileUpload::class => fn (SpatieMediaLibraryFileUpload $component) => 'https://placehold.co/600x400.png',
         // IconPicker::class => fn (IconPicker $component) => 'fa-light fa-user',
     ],
 
     'slow_faker_methods' => [
-
         /*
         |--------------------------------------------------------------------------
         | Slow Faker Methods
