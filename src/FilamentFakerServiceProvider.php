@@ -6,6 +6,8 @@ namespace FilamentFaker;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
+use Filament\Forms\Form;
+use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Resource;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
@@ -26,9 +28,13 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
     {
         return tap($this, function () {
             Block::macro('fake', fn (): array => app()->make(FakesBlocks::class)->fake(static::make())); // @phpstan-ignore-line
+
             Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this));
-            Resource::macro('fakeForm',
-                fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake(static::class, $withHidden)
+
+            Resource::macro('fakeForm', fn () => static::form(Form::make(new EditRecord()))->fake());
+
+            Form::macro('fake',
+                fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake($this, $withHidden)
             );
         });
     }

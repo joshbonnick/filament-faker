@@ -9,10 +9,9 @@ use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use Filament\Resources\Pages\EditRecord;
-use Filament\Resources\Resource;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
+use InvalidArgumentException;
 
 class FormFaker implements FakesForms
 {
@@ -20,22 +19,25 @@ class FormFaker implements FakesForms
 
     public function __construct(
         protected readonly FakesBlocks $blockFaker
-    )
-    {
+    ) {
     }
 
     /**
-     * @param  class-string<resource>  $resource
-     * @return array<string, mixed>
+     * {@inheritDoc}
      */
-    public function fake(string $resource, bool $withHidden = false): array
+    public function fake(Form $form, bool $withHidden = false): array
     {
-        $this->form = $resource::form(Form::make(new EditRecord()));
+        $this->form = $form;
 
         return collect($this->form->getComponents($withHidden))
             ->mapWithKeys(function (Component $component) {
                 if ($component instanceof Builder) {
                     return [$component->getName() => $this->getContentForBuilder($component)];
+                }
+
+                if (! $component instanceof Field) {
+                    throw new InvalidArgumentException(
+                        sprintf('%s is not a supported component type.', $component::class));
                 }
 
                 return [$component->getName() => $this->getContentForComponent($component)];
@@ -46,7 +48,8 @@ class FormFaker implements FakesForms
     /**
      * @return array<string, mixed>
      */
-    protected function getContentForBuilder(Builder $builder) : array{
+    protected function getContentForBuilder(Builder $builder): array
+    {
         return collect($builder->getBlocks())
             ->map(fn (Block $block) => $this->blockFaker->fake($block))
             ->toArray();
