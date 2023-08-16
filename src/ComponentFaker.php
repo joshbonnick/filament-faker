@@ -53,14 +53,11 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
         return $this->format($content ?? $this->getCallback()($this->component));
     }
 
-    /**
-     * @throws ReflectionException
-     */
     protected function format(mixed $faked): mixed
     {
-        $formatter = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
-
         try {
+            $formatter = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
+
             $this->component->state(fn (Set $set) => $set($this->component->getName(), $faked));
 
             if (is_null($callback = $formatter->getValue($this->component))) {
@@ -70,7 +67,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             if ($callback instanceof Closure) {
                 return $callback($this->component, $faked)?->getState() ?? $faked;
             }
-        } catch (Throwable $e) {
+        } catch (ReflectionException $e) {
+            report($e);
+        } catch (Throwable $e){
+
         }
 
         return $faked;
