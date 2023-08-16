@@ -30,7 +30,8 @@ trait GeneratesFakesFromComponentName
         return fake()->$name;
     }
 
-    protected function isDisabledFakerMethod(string $componentName): bool{
+    protected function isDisabledFakerMethod(string $componentName): bool
+    {
         return in_array($componentName, $this->filteredFakerMethods());
     }
 

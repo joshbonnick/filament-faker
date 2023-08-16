@@ -81,7 +81,7 @@ it('can use fallback faker method', function () {
 });
 
 it('can mutate a specific component', function () {
-    $callable = (new Block('test'))->mutateFake($component = TextInput::make('email_field'));
+    $callable = Block::make('test')->mutateFake($component = TextInput::make('email_field'));
 
     expect($callable)
         ->toBeCallable()
