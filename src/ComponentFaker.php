@@ -69,8 +69,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             }
         } catch (ReflectionException $e) {
             report($e);
-        } catch (Throwable $e){
-
+        } catch (Throwable $e) {
         }
 
         return $faked;
