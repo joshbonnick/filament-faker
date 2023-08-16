@@ -9,6 +9,9 @@ use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
 use Livewire\Component;
 
+/**
+ * @codeCoverageIgnore
+ */
 final class FormsMock extends Component implements HasForms
 {
     use InteractsWithForms;
