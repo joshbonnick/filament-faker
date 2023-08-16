@@ -31,14 +31,8 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
 
     protected function getContentForComponent(Field $component): mixed
     {
-        if (method_exists($this->block, 'mutateFake')) {
-            $content = $this->block->mutateFake($component);
-
-            if (is_callable($content)) {
-                $content = $content($component);
-            }
-        }
-
-        return $content ?? $component->fake(); // @phpstan-ignore-line
+        return ($content = $this->mutate($this->block, $component)) instanceof Field
+            ? $content->fake() // @phpstan-ignore-line
+            : $content;
     }
 }

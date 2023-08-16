@@ -6,13 +6,12 @@ namespace FilamentFaker;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
-use Filament\Forms\Contracts\HasForms;
 use Filament\Forms\Form;
-use Filament\Resources\Pages\EditRecord;
 use Filament\Resources\Resource;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Support\FormsMock;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -33,11 +32,11 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
             Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this)); // @phpstan-ignore-line
 
             Resource::macro('fakeForm', function (string $form = 'form') {
-                $formBase = Form::make(resolve(HasForms::class));
+                $formBase = Form::make(FormsMock::make());
 
                 return rescue(
                     callback: fn () => static::$form($formBase)->fake(),
-                    rescue: fn () => (new static())->{$form}($formBase)->fake()
+                    rescue: fn () => (new static())->{$form}($formBase)->fake() // @phpstan-ignore-line
                 );
             });
 
@@ -53,8 +52,6 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
             $this->app->bind(FakesBlocks::class, BlockFaker::class);
             $this->app->bind(FakesComponents::class, ComponentFaker::class);
             $this->app->bind(FakesForms::class, FormFaker::class);
-
-            $this->app->bind(HasForms::class, EditRecord::class);
         });
     }
 }

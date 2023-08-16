@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FilamentFaker;
 
 use Closure;
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
@@ -18,21 +17,25 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Contracts\HasForms;
+use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use ReflectionException;
+use ReflectionProperty;
+use Throwable;
 
 class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
+    use InteractsWithFilamentContainer;
+
     protected Field $component;
 
     public function fake(Field $component): mixed
     {
-        $this->component = $component;
-
-        $this->component->container(ComponentContainer::make(resolve(HasForms::class)));
+        $this->component = tap($component)->container($this->container());
 
         return $this->fakeComponentContent();
     }
@@ -45,13 +48,31 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
         if ($this->shouldFakeUsingComponentName($this->component) && ! method_exists($this->component, 'getOptions')) {
             $content = $this->fakeUsingComponentName($this->component);
-
-            if (! is_null($content)) {
-                return $content;
-            }
         }
 
-        return $this->getCallback()($this->component);
+        return $this->format($content ?? $this->getCallback()($this->component));
+    }
+
+    protected function format(mixed $fakedContent): mixed
+    {
+        try {
+            $afterStateHydrated = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
+
+            $this->component->state(fn (Set $set) => $set($this->component->getName(), $fakedContent));
+
+            if (is_null($callback = $afterStateHydrated->getValue($this->component))) {
+                return $fakedContent;
+            }
+
+            if ($callback instanceof Closure) {
+                return $callback($this->component, $fakedContent)?->getState() ?? $fakedContent;
+            }
+        } catch (ReflectionException $e) {
+            report($e);
+        } catch (Throwable $e) {
+        }
+
+        return $fakedContent;
     }
 
     protected function getCallback(): Closure
