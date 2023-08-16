@@ -8,7 +8,6 @@ use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
@@ -18,23 +17,14 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
-use FilamentFaker\Concerns\GeneratesFakesFromComponentName;
-use FilamentFaker\Concerns\InteractsWithFakeConfig;
+use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
-class ComponentFaker implements FakesComponents
+class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
-    use GeneratesFakesFromComponentName;
-    use InteractsWithFakeConfig;
-
     protected Field $component;
-
-    public function __construct()
-    {
-        $this->setUpConfig();
-    }
 
     public function fake(Field $component): mixed
     {
@@ -60,9 +50,6 @@ class ComponentFaker implements FakesComponents
         return $this->getCallback()($this->component);
     }
 
-    /**
-     * @return Closure
-     */
     protected function getCallback(): Closure
     {
         if (Arr::has($this->fakesConfig, $this->component::class)) {

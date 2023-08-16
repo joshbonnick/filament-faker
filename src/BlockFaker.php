@@ -6,21 +6,12 @@ namespace FilamentFaker;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
-use FilamentFaker\Concerns\GeneratesFakesFromComponentName;
-use FilamentFaker\Concerns\InteractsWithFakeConfig;
+use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesBlocks;
 
-class BlockFaker implements FakesBlocks
+class BlockFaker extends GeneratesFakes implements FakesBlocks
 {
-    use GeneratesFakesFromComponentName;
-    use InteractsWithFakeConfig;
-
     protected Block $block;
-
-    public function __construct()
-    {
-        $this->setUpConfig();
-    }
 
     /**
      * {@inheritDoc}
@@ -33,12 +24,13 @@ class BlockFaker implements FakesBlocks
             'type' => $this->block::class,
             'data' => collect($this->block->getChildComponents())
                 ->filter(fn (mixed $component) => $component instanceof Field)
-                ->mapWithKeys(fn (Field $component)=>[$component->getName() => $this->getContentForComponent($component)])
+                ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForComponent($component)])
                 ->toArray(),
         ];
     }
 
-    protected function getContentForComponent(Field $component) : mixed{
+    protected function getContentForComponent(Field $component): mixed
+    {
         if (method_exists($this->block, 'mutateFake')) {
             $content = $this->block->mutateFake($component);
 
