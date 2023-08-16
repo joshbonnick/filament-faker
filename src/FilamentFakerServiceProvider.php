@@ -24,24 +24,8 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
     protected function registerMacros(): static
     {
         return tap($this, function () {
-            Block::macro('fake', function (string $name = 'faked') {
-                /** @var class-string<Block> $block */
-                $block = static::class;
-
-                return app()->make(FakesBlocks::class)->fake($block, $name);
-            });
-
-            Field::macro('fake', function (string $name = 'faked') {
-                /** @var class-string<Field> $field */
-                $field = static::class;
-
-                try {
-                    return app()->make(FakesComponents::class)->fake($this);
-                } catch (Throwable $e) {
-                }
-
-                return app()->make(FakesComponents::class)->fake($field::make($name));
-            });
+            Block::macro('fake', fn (): array => app()->make(FakesBlocks::class)->fake(static::make())); // @phpstan-ignore-line
+            Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this));
         });
     }
 

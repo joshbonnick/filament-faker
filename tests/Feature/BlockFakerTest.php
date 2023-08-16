@@ -1,8 +1,7 @@
 <?php
 
-use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use Illuminate\Support\Str;
+use Mockery\Mock;
 
 it('can generate fake blocks content', function () {
     expect($fake = MockBlock::fake())
@@ -71,7 +70,9 @@ it('can generate fake blocks content', function () {
 });
 
 it('can mutate a specific component', function () {
-    expect($fake = MockBlock::fake())
+    expect(MockBlock::make())
+        ->toHaveMethod('mutateFake')
+        ->and($fake = MockBlock::fake())
         ->toBeArray()
         ->toHaveKeys(['type', 'data'])
         ->and($fake['data'])
@@ -79,11 +80,4 @@ it('can mutate a specific component', function () {
         ->toBeEmpty()
         ->and($fake['data']['phone_number'])
         ->toBe('::phone::');
-});
-
-it('can accept name parameter', function () {
-    $block = tap(resolve(FakesBlocks::class))->fake(MockBlock::class, $name = Str::random(8));
-    $blockProperty = tap((new ReflectionClass($block))->getProperty('block'))->setAccessible(true);
-
-    expect($blockProperty->getValue($block)->getName())->toEqual($name);
 });

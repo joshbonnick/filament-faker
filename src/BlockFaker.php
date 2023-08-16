@@ -16,9 +16,9 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
     /**
      * {@inheritDoc}
      */
-    public function fake(string $block, string $name): array
+    public function fake(Block $block): array
     {
-        $this->block = $block::make($name);
+        $this->block = $block;
 
         return [
             'type' => $this->block::class,
@@ -39,6 +39,6 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
             }
         }
 
-        return $content ?? $component->fake();
+        return $content ?? $component->fake(); // @phpstan-ignore-line
     }
 }

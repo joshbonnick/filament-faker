@@ -34,7 +34,7 @@ it('returns an entry of the suggestions array for tags', function () {
 
     foreach ($tags as $tag) {
         if (! in_array($tag, $suggestions)) {
-            fail('Returned value was not in the suggestions array.');
+            fail("[$tag] was not in the suggestions array.");
         }
     }
 });

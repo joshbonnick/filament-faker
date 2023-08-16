@@ -36,29 +36,26 @@ it('can disable the usage of faking by component name', function () {
 });
 
 it('can disable the usage of faking by component name with method', function () {
-
     expect(TextInput::make('safe_email')->fake())
         ->toBeString()
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
 
-    expect(ComponentWithoutFakingFromNames::make('safe_email')->fake())
+    expect($component = ComponentWithoutFakingFromNames::make('safe_email'))
+        ->toHaveMethod('shouldFakeUsingComponentName')
+        ->and($component->fake())
         ->toBeString()
         ->not
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
 });
 
 test('mutate fake method is a priority over faker method', function () {
-    expect(MutatedComponent::make('phone_number')->fake())
+    expect($component = MutatedComponent::make('phone_number'))
+        ->toHaveMethod('mutateFake')
+        ->and($component->fake())
         ->toBeString()
         ->toEqual('::phone::');
 });
 
 it('uses option value even when faker method is available', function () {
-    expect($fake = MockBlock::fake())
-        ->toBeArray()
-        ->toHaveKeys(['data'])
-        ->and($fake['data'])
-        ->toHaveKey('company')
-        ->and($fake['data']['company'])
-        ->toBeIn(['foo', 'bar']);
+    expect(MockBlock::fake()['data']['company'])->toBeIn(['foo', 'bar']);
 });
