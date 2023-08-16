@@ -53,26 +53,26 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
         return $this->format($content ?? $this->getCallback()($this->component));
     }
 
-    protected function format(mixed $faked): mixed
+    protected function format(mixed $fakedContent): mixed
     {
         try {
-            $formatter = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
+            $afterStateHydrated = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
 
-            $this->component->state(fn (Set $set) => $set($this->component->getName(), $faked));
+            $this->component->state(fn (Set $set) => $set($this->component->getName(), $fakedContent));
 
-            if (is_null($callback = $formatter->getValue($this->component))) {
-                return $faked;
+            if (is_null($callback = $afterStateHydrated->getValue($this->component))) {
+                return $fakedContent;
             }
 
             if ($callback instanceof Closure) {
-                return $callback($this->component, $faked)?->getState() ?? $faked;
+                return $callback($this->component, $fakedContent)?->getState() ?? $fakedContent;
             }
         } catch (ReflectionException $e) {
             report($e);
         } catch (Throwable $e) {
         }
 
-        return $faked;
+        return $fakedContent;
     }
 
     protected function getCallback(): Closure
