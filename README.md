@@ -125,10 +125,10 @@ If you do not register extra components, the `default` item in the config file w
 
 You may also override the default faker method attached to built in components by adding them to the config.
 
-## Faking Specific Components
+## Mutating Faker Callback
 
-If you wish to fake a specific components value, you can override the `mutateFake` method which accepts an instance of
-the component.
+If you wish to fake a specific components value, you can add a `mutateFake` method which accepts an instance of
+the component and returns the faked value.
 
 When faking a block the `mutateFake` method is used as a priority over `Component` class fakes.
 
