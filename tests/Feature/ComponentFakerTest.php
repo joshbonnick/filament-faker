@@ -7,7 +7,6 @@ use Filament\Forms\Components\TextInput;
 use FilamentFaker\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
-use FilamentFaker\Tests\TestSupport\Database\factories\PostFactory;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 
 it('can fake components with options', function () {
