@@ -29,12 +29,12 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             Block::macro('fake', fn (): array => app()->make(FakesBlocks::class)->fake(static::make())); // @phpstan-ignore-line
 
-            Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this));
+            Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this)); // @phpstan-ignore-line
 
             Resource::macro('fakeForm', fn () => static::form(Form::make(new EditRecord()))->fake()); // @phpstan-ignore-line
 
             Form::macro('fake',
-                fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake($this, $withHidden)
+                fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake($this, $withHidden) // @phpstan-ignore-line
             );
         });
     }
