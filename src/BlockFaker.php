@@ -20,10 +20,6 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
     {
         $this->block = $block;
 
-        foreach ($this->block->getChildComponents() as $c){
-            dd($c->getName());
-        }
-
         return [
             'type' => $this->block::class,
             'data' => collect($this->block->getChildComponents())

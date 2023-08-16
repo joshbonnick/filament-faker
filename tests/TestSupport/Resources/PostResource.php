@@ -24,10 +24,24 @@ class PostResource extends Resource
             TextInput::make('title'),
             TextInput::make('company'),
             ColorPicker::make('brand_color')->hsl(),
+
+            Section::make()->schema([
+                Builder::make('section_content')->blocks([
+                    Builder\Block::make('Some Block')->schema([
+                        TextInput::make('blockfoo'),
+                    ]),
+                ]),
+            ]),
+
             Builder::make('content')->blocks([
                 MockBlock::make(),
                 MockBlockWithoutFakingFromNames::make(),
             ]),
+
+            Section::make()->schema([
+                TextInput::make('section_foo'),
+            ]),
+
             Group::make()->schema([
                 TextInput::make('foo'),
 

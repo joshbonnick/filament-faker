@@ -20,6 +20,7 @@ use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
+use Throwable;
 
 class FormFaker implements FakesForms
 {
@@ -72,7 +73,7 @@ class FormFaker implements FakesForms
      */
     protected function getContentForBuilder(Builder $builder): array
     {
-        return collect($builder->getBlocks())
+        return collect($builder->getChildComponents())
             ->filter(fn (Component $block) => $block instanceof Block)
             ->map(fn (Block $block) => $this->blockFaker->fake($block))
             ->toArray();
