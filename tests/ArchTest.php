@@ -8,14 +8,14 @@ it('will not use debugging functions')
     ->each->not->toBeUsed();
 
 test('config file entries for fakes are all callable', function () {
-    expect(config('filament-block-faker.fakes'))
+    expect(config('filament-faker.fakes'))
         ->not
         ->toBeEmpty()
         ->toContainOnlyInstancesOf(Closure::class);
 });
 
 test('config file entries for fakes do not return null', function () {
-    foreach (config('filament-block-faker.fakes') as $component => $callback) {
+    foreach (config('filament-faker.fakes') as $component => $callback) {
         if (! $callback instanceof Closure) {
             fail("$component does not return a Closure");
         }
@@ -33,9 +33,9 @@ test('config file entries for fakes do not return null', function () {
 });
 
 it('uses strict types')
-    ->expect('FilamentBlockFaker')
+    ->expect('FilamentFaker')
     ->toUseStrictTypes();
 
 test('only interfaces are in contracts directory')
-    ->expect('FilamentBlockFaker\Contracts')
+    ->expect('FilamentFaker\Contracts')
     ->toBeInterfaces();

@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentBlockFaker\Tests\TestSupport\Blocks;
+namespace FilamentFaker\Tests\TestSupport\Blocks;
 
 use Filament\Forms\Components;
 
@@ -45,11 +45,10 @@ class Block extends Components\Builder\Block
                 Components\TextInput::make('email_field'),
                 Components\TextInput::make('safe_email'),
                 Components\TextInput::make('phone_number'),
-                Components\Select::make('company')
-                    ->options([
-                        'foo' => 'bar',
-                        'bar' => 'foo',
-                    ]),
+                Components\Select::make('company')->options([
+                    'foo' => 'bar',
+                    'bar' => 'foo',
+                ]),
             ]);
     }
 }

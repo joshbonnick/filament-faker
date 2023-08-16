@@ -1,10 +1,11 @@
 <?php
 
-namespace FilamentBlockFaker\Tests\TestSupport\Blocks;
+namespace FilamentFaker\Tests\TestSupport\Components;
 
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\TextInput;
 
-class BlockWithoutFaker extends Block
+class ComponentWithoutFakingFromNames extends TextInput
 {
     public function shouldFakeUsingComponentName(Field $component): bool
     {

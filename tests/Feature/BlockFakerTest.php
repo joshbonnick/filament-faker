@@ -2,9 +2,9 @@
 
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
+use FilamentFaker\Contracts\FakesBlocks;
+use FilamentFaker\Tests\TestSupport\Blocks\Block;
 use Illuminate\Support\Str;
-use FilamentBlockFaker\BlockFaker;
-use FilamentBlockFaker\Tests\TestSupport\Blocks\Block;
 
 it('can generate fake blocks content', function () {
     expect($fake = Block::fake())
@@ -73,7 +73,7 @@ it('can generate fake blocks content', function () {
 });
 
 it('can use fallback faker method', function () {
-    $fakes = config('filament-block-faker.fakes');
+    $fakes = config('filament-faker.fakes');
 
     expect($fakes['default'])
         ->toBeCallable()
@@ -91,7 +91,7 @@ it('can mutate a specific component', function () {
 });
 
 it('can accept name parameter', function () {
-    $block = tap(resolve(BlockFaker::class))->fake(Block::class, $name = Str::random(8));
+    $block = tap(resolve(FakesBlocks::class))->fake(Block::class, $name = Str::random(8));
     $blockProperty = tap((new ReflectionClass($block))->getProperty('block'))->setAccessible(true);
 
     expect($blockProperty->getValue($block)->getName())->toEqual($name);

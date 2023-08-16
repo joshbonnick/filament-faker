@@ -1,5 +1,5 @@
 <?php
 
-use FilamentBlockFaker\Tests\TestCase;
+use FilamentFaker\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

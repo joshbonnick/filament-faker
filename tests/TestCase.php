@@ -1,8 +1,8 @@
 <?php
 
-namespace FilamentBlockFaker\Tests;
+namespace FilamentFaker\Tests;
 
-use FilamentBlockFaker\FilamentBlockFakerServiceProvider;
+use FilamentFaker\FilamentFakerServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
@@ -13,7 +13,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
-            FilamentBlockFakerServiceProvider::class,
+            FilamentFakerServiceProvider::class,
         ];
     }
 
