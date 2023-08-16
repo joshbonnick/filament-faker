@@ -33,21 +33,20 @@ class BlockFaker implements FakesBlocks
             'type' => $this->block::class,
             'data' => collect($this->block->getChildComponents())
                 ->filter(fn (mixed $component) => $component instanceof Field)
-                ->mapWithKeys(function (Field $component) {
-
-                    if (method_exists($this->block, 'mutateFake')) {
-                        $content = $this->block->mutateFake($component);
-
-                        if (is_callable($content)) {
-                            $content = $content($component);
-                        }
-                    }
-
-                    $content ??= $component->fake();
-
-                    return [$component->getName() => $content];
-                })
+                ->mapWithKeys(fn (Field $component)=>[$component->getName() => $this->getContentForComponent($component)])
                 ->toArray(),
         ];
+    }
+
+    protected function getContentForComponent(Field $component) : mixed{
+        if (method_exists($this->block, 'mutateFake')) {
+            $content = $this->block->mutateFake($component);
+
+            if (is_callable($content)) {
+                $content = $content($component);
+            }
+        }
+
+        return $content ?? $component->fake();
     }
 }
