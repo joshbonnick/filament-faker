@@ -16,9 +16,10 @@ return new class extends Migration
             $table->json('raw_content');
 
             $table->foreignId('parent_id')
+                ->nullable()
                 ->references('id')
                 ->on('posts')
-                ->constrained()->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->timestamps();
         });

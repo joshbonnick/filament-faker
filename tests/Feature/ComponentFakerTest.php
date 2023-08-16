@@ -7,6 +7,8 @@ use Filament\Forms\Components\TextInput;
 use FilamentFaker\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
+use FilamentFaker\Tests\TestSupport\Database\factories\PostFactory;
+use FilamentFaker\Tests\TestSupport\Models\Post;
 
 it('can fake components with options', function () {
     $components = [
@@ -67,4 +69,17 @@ it('uses methods added to config first', function () {
     ]);
 
     expect(TextInput::make('test')->fake())->toEqual('::test::');
+});
+
+it('uses an option value when options are a query', function () {
+    $posts = Post::factory()->count(2)->create();
+
+    $select = Select::make('parent_id')
+        ->relationship('parent', 'title')
+        ->label('Primary Category')
+        ->searchable()
+        ->options(fn () => Post::query()->select(['id', 'title'])->get()->pluck('title', 'id'))
+        ->required();
+
+    expect($select->fake())->toBeIn($posts->pluck('id')->toArray());
 });
