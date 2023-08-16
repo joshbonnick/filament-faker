@@ -6,6 +6,7 @@ All notable changes to `filament-faker` will be documented in this file.
 
 ### What's Changed
 
+- [1.x] Add support for multiple forms in a resource
 - [1.x] Add global disabling of faking using method names
 - [1.x] Ignore slow faker methods
 - [1.x] Fix dependency injection callbacks evaluated by Filament

@@ -1,6 +1,7 @@
 <?php
 
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\TestSupport\Resources\MultipleForms;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 it('can fake forms', function () {
@@ -29,4 +30,14 @@ it('can fake forms', function () {
         ->toBeString()
         ->and($fake['bar'])
         ->toBeString();
+});
+
+it('can fake multiple forms', function () {
+    expect(MultipleForms::fakeForm('editPostForm'))
+        ->toBeArray()
+        ->toHaveKeys(['title', 'content']);
+
+    expect(MultipleForms::fakeForm('createCommentForm'))
+        ->toBeArray()
+        ->toHaveKeys(['name', 'email', 'content']);
 });
