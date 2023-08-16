@@ -30,9 +30,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
     public function fake(Field $component): mixed
     {
-        $this->component = $component;
-
-        $this->component->container(ComponentContainer::make(resolve(HasForms::class)));
+        $this->component = tap($component)->container(ComponentContainer::make(resolve(HasForms::class)));
 
         return $this->fakeComponentContent();
     }
