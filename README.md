@@ -120,7 +120,7 @@ return [
 ];
 ```
 
-If you do not register extra components, the `default` item in the config file will be used which returns the result of
+If you do not register extra components, the `default` callback will be used which returns the result of
 `fake()->sentence()`.
 
 You may also override the default faker method attached to built in components by adding them to the config.
