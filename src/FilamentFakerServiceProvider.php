@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FilamentFaker;
 
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
