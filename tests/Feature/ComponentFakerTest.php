@@ -8,6 +8,7 @@ use FilamentFaker\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 use FilamentFaker\Tests\TestSupport\Models\Post;
+use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 it('can fake components with options', function () {
     $components = [
@@ -81,4 +82,15 @@ it('uses an option value when options are a query', function () {
         ->required();
 
     expect($select->fake())->toBeIn($posts->pluck('id')->toArray());
+});
+
+it('uses an option value when options use dependency injection', function () {
+    $select = Select::make('parent_id')
+        ->relationship('parent', 'title')
+        ->label('Primary Category')
+        ->searchable()
+        ->options(fn (InjectableService $service) => $service->get()->pluck('id', 'title')->toArray())
+        ->required();
+
+    expect($select->fake())->toBeIn(resolve(InjectableService::class)->get()->pluck('id', 'title')->toArray());
 });
