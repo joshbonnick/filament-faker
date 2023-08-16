@@ -2,28 +2,28 @@
 
 declare(strict_types=1);
 
-namespace JoshBonnick\FilamentBlockFaker;
+namespace FilamentFaker;
 
 use Filament\Forms\Components\Builder\Block;
-use JoshBonnick\FilamentBlockFaker\Contracts\BlockFaker as IBlockFaker;
+use FilamentFaker\Contracts\FakesBlocks;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
-class FilamentBlockFakerServiceProvider extends PackageServiceProvider
+class FilamentFakerServiceProvider extends PackageServiceProvider
 {
     public function configurePackage(Package $package): void
     {
         $package
-            ->name('filament-block-faker')
+            ->name('filament-faker')
             ->hasConfigFile();
 
-        $this->app->bind(IBlockFaker::class, BlockFaker::class);
+        $this->app->bind(FakesBlocks::class, BlockFaker::class);
 
         Block::macro('fake', function (string $name = 'faked') {
             /** @var class-string<Block> $block */
             $block = static::class;
 
-            return app()->make(IBlockFaker::class)->fake($block, $name);
+            return app()->make(FakesBlocks::class)->fake($block, $name);
         });
     }
 }

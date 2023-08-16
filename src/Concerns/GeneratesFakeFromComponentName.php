@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace JoshBonnick\FilamentBlockFaker\Concerns;
+namespace FilamentFaker\Concerns;
 
 use Filament\Forms\Components\Field;
 use InvalidArgumentException;
@@ -25,7 +25,7 @@ trait GeneratesFakeFromComponentName
     {
         return method_exists($this->block, 'shouldFakeUsingComponentName')
             ? $this->block->shouldFakeUsingComponentName($component)
-            : config('filament-block-faker.use_component_names_for_fake', true);
+            : config('filament-faker.use_component_names_for_fake', true);
     }
 
     /**
@@ -33,6 +33,6 @@ trait GeneratesFakeFromComponentName
      */
     private function filteredFakerMethods(): array
     {
-        return config('filament-block-faker.slow_faker_methods', []);
+        return config('filaments-faker.slow_faker_methods', []);
     }
 }

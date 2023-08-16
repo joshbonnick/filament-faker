@@ -1,8 +1,8 @@
 <?php
 
-namespace JoshBonnick\FilamentBlockFaker\Tests;
+namespace FilamentBlockFaker\Tests;
 
-use JoshBonnick\FilamentBlockFaker\FilamentBlockFakerServiceProvider;
+use FilamentBlockFaker\FilamentBlockFakerServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

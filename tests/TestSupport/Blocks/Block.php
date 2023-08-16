@@ -1,6 +1,6 @@
 <?php
 
-namespace JoshBonnick\FilamentBlockFaker\Tests\TestSupport\Blocks;
+namespace FilamentBlockFaker\Tests\TestSupport\Blocks;
 
 use Filament\Forms\Components;
 

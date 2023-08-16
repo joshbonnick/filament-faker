@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace JoshBonnick\FilamentBlockFaker\Contracts;
+namespace FilamentFaker\Contracts;
 
 use Filament\Forms\Components\Builder\Block;
 
-interface BlockFaker
+interface FakesBlocks
 {
     /**
      * @param  class-string<Block>  $block

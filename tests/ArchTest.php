@@ -33,9 +33,9 @@ test('config file entries for fakes do not return null', function () {
 });
 
 it('uses strict types')
-    ->expect('JoshBonnick\FilamentBlockFaker')
+    ->expect('FilamentBlockFaker')
     ->toUseStrictTypes();
 
 test('only interfaces are in contracts directory')
-    ->expect('JoshBonnick\FilamentBlockFaker\Contracts')
+    ->expect('FilamentBlockFaker\Contracts')
     ->toBeInterfaces();

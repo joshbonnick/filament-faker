@@ -1,9 +1,9 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use JoshBonnick\FilamentBlockFaker\Contracts\BlockFaker;
-use JoshBonnick\FilamentBlockFaker\Tests\TestSupport\Blocks\Block;
-use JoshBonnick\FilamentBlockFaker\Tests\TestSupport\Blocks\BlockWithoutFaker;
+use FilamentBlockFaker\Contracts\BlockFaker;
+use FilamentBlockFaker\Tests\TestSupport\Blocks\Block;
+use FilamentBlockFaker\Tests\TestSupport\Blocks\BlockWithoutFaker;
 
 it('does not execute slow methods listed in config file', function () {
     $reflection = new ReflectionClass($block = resolve(BlockFaker::class));

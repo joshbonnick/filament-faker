@@ -1,16 +1,16 @@
 {
-    "name": "joshbonnick/filament-block-faker",
-    "description": "Generate fake blocks content for Filament's Block feature",
+    "name": "joshbonnick/filament-faker",
+    "description": "Generate fake blocks content for Filament forms and blocks.",
     "keywords": [
         "joshbonnick",
         "laravel",
         "filament-block-faker"
     ],
-    "homepage": "https://github.com/joshbonnick/filament-block-faker",
+    "homepage": "https://github.com/joshbonnick/filament-faker",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/joshbonnick/filament-block-faker/issues",
-        "source": "https://github.com/joshbonnick/filament-block-faker"
+        "issues": "https://github.com/joshbonnick/filament-faker/issues",
+        "source": "https://github.com/joshbonnick/filament-faker"
     },
     "authors": [
         {
@@ -39,12 +39,12 @@
     },
     "autoload": {
         "psr-4": {
-            "JoshBonnick\\FilamentBlockFaker\\": "src/"
+            "FilamentFaker\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "JoshBonnick\\FilamentBlockFaker\\Tests\\": "tests/"
+            "FilamentFaker\\Tests\\": "tests/"
         }
     },
     "scripts": {
@@ -64,11 +64,8 @@
     "extra": {
         "laravel": {
             "providers": [
-                "JoshBonnick\\FilamentBlockFaker\\FilamentBlockFakerServiceProvider"
+                "FilamentFaker\\FilamentBlockFakerServiceProvider"
             ]
-        },
-        "branch-alias": {
-            "dev-main": "1.x-dev"
         }
     },
     "minimum-stability": "dev",

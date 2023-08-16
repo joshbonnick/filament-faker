@@ -3,8 +3,8 @@
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Support\Str;
-use JoshBonnick\FilamentBlockFaker\BlockFaker;
-use JoshBonnick\FilamentBlockFaker\Tests\TestSupport\Blocks\Block;
+use FilamentBlockFaker\BlockFaker;
+use FilamentBlockFaker\Tests\TestSupport\Blocks\Block;
 
 it('can generate fake blocks content', function () {
     expect($fake = Block::fake())

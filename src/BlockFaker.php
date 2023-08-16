@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace JoshBonnick\FilamentBlockFaker;
+namespace FilamentFaker;
 
 use Closure;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
+use FilamentFaker\Contracts\FakesBlocks;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use JoshBonnick\FilamentBlockFaker\Concerns\GeneratesFakeFromComponentName;
-use JoshBonnick\FilamentBlockFaker\Contracts\BlockFaker as IBlockFaker;
+use FilamentFaker\Concerns\GeneratesFakeFromComponentName;
 
-class BlockFaker implements IBlockFaker
+class BlockFaker implements FakesBlocks
 {
     use GeneratesFakeFromComponentName;
 
@@ -26,9 +26,7 @@ class BlockFaker implements IBlockFaker
 
     public function __construct()
     {
-        $this->fakesConfig = config('filament-block-faker.fakes', [
-            'default' => fn () => fake()->sentence(),
-        ]);
+        $this->fakesConfig = config('filament-faker.fakes', []);
     }
 
     /**
