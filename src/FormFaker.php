@@ -16,18 +16,20 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
+use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker implements FakesForms
+class FormFaker extends GeneratesFakes implements FakesForms
 {
     protected Form $form;
 
     public function __construct(
         protected readonly FakesBlocks $blockFaker
     ) {
+        parent::__construct();
     }
 
     /**
@@ -80,14 +82,8 @@ class FormFaker implements FakesForms
 
     protected function getContentForComponent(Field $component): mixed
     {
-        if (method_exists($this->form, 'mutateFake')) {
-            $content = $this->form->mutateFake($component);
-
-            if (is_callable($content)) {
-                $content = $content($component);
-            }
-        }
-
-        return $content ?? $component->fake(); // @phpstan-ignore-line
+        return ($content = $this->mutate($this->form, $component)) instanceof Field
+            ? $content->fake() // @phpstan-ignore-line
+            : $content;
     }
 }
