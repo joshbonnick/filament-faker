@@ -31,7 +31,7 @@ final class FormsMock extends Component implements HasForms
     }
 
     /**
-     * @param array<string, mixed> $data
+     * @param  array<string, mixed>  $data
      */
     public function data(array $data): self
     {
