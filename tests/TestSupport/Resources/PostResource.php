@@ -57,15 +57,15 @@ class PostResource extends Resource
                 ]),
             ]),
             Fieldset::make()
-                       ->schema([
-                           TextInput::make('fieldset_foo'),
-                           Group::make()->schema([
-                               TextInput::make('fieldset_bar'),
-                           ]),
-                           Section::make()->schema([
-                               TextInput::make('fieldset_foobar'),
-                           ]),
-                       ]),
+                ->schema([
+                    TextInput::make('fieldset_foo'),
+                    Group::make()->schema([
+                        TextInput::make('fieldset_bar'),
+                    ]),
+                    Section::make()->schema([
+                        TextInput::make('fieldset_foobar'),
+                    ]),
+                ]),
 
             Grid::make([
                 'default' => 1,
@@ -83,7 +83,7 @@ class PostResource extends Resource
                     Section::make()->schema([
                         TextInput::make('grid_foobar'),
                     ]),
-                ])
+                ]),
         ]);
     }
 }
