@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Blocks\Block;
+use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\ComponentWithoutFakingFromNames;
 use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
 
@@ -54,7 +54,7 @@ test('mutate fake method is a priority over faker method', function () {
 });
 
 it('uses option value even when faker method is available', function () {
-    expect($fake = Block::fake())
+    expect($fake = MockBlock::fake())
         ->toBeArray()
         ->toHaveKeys(['data'])
         ->and($fake['data'])

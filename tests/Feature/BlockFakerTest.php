@@ -1,13 +1,11 @@
 <?php
 
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\FakesBlocks;
-use FilamentFaker\Tests\TestSupport\Blocks\Block;
+use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use Illuminate\Support\Str;
 
 it('can generate fake blocks content', function () {
-    expect($fake = Block::fake())
+    expect($fake = MockBlock::fake())
         ->toBeArray()
         ->toHaveKeys(['type', 'data'])
         ->and($fake['data'])
@@ -72,26 +70,19 @@ it('can generate fake blocks content', function () {
         ->toStartWith('hsl(');
 });
 
-it('can use fallback faker method', function () {
-    $fakes = config('filament-faker.fakes');
-
-    expect($fakes['default'])
-        ->toBeCallable()
-        ->and($fakes['default'](Radio::make('test')))->toBeString();
-});
-
 it('can mutate a specific component', function () {
-    $callable = Block::make('test')->mutateFake($component = TextInput::make('email_field'));
-
-    expect($callable)
-        ->toBeCallable()
-        ->and($callable($component))
-        ->toBeString()
-        ->toEqual('dev@example.com');
+    expect($fake = MockBlock::fake())
+        ->toBeArray()
+        ->toHaveKeys(['type', 'data'])
+        ->and($fake['data'])
+        ->not
+        ->toBeEmpty()
+        ->and($fake['data']['phone_number'])
+        ->toBe('::phone::');
 });
 
 it('can accept name parameter', function () {
-    $block = tap(resolve(FakesBlocks::class))->fake(Block::class, $name = Str::random(8));
+    $block = tap(resolve(FakesBlocks::class))->fake(MockBlock::class, $name = Str::random(8));
     $blockProperty = tap((new ReflectionClass($block))->getProperty('block'))->setAccessible(true);
 
     expect($blockProperty->getValue($block)->getName())->toEqual($name);

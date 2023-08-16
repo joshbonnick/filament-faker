@@ -2,11 +2,12 @@
 
 namespace FilamentFaker\Tests\TestSupport\Blocks;
 
+use Closure;
 use Filament\Forms\Components;
 
-class Block extends Components\Builder\Block
+class MockBlock extends Components\Builder\Block
 {
-    public function mutateFake(Components\Field $component): ?callable
+    public function mutateFake(Components\Field $component): ?Closure
     {
         return match ($component->getName()) {
             'phone_number' => fn () => '::phone::',

@@ -3,6 +3,9 @@
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use FilamentFaker\ComponentFaker;
+use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 
 it('can fake components with options', function () {
     $components = [
@@ -32,5 +35,23 @@ it('returns an entry of the suggestions array for tags', function () {
         if (! in_array($tag, $suggestions)) {
             fail('Returned value was not in the suggestions array.');
         }
+    }
+});
+
+it('can use fallback faker method', function () {
+    $faker = tap(resolve(ComponentFaker::class))->fake($component = MockPluginComponent::make('icon_picker'));
+    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getCallback'))->setAccessible(true);
+
+    expect($getCallbackMethod->invoke($faker, $component))->toBeCallable();
+});
+
+test('default entries do not return null', function () {
+    $mockBlock = MockBlock::make('test'); // Replace with the appropriate class instantiation
+
+    $method = tap(new ReflectionMethod($faker = resolve(ComponentFaker::class), 'getCallback'))->setAccessible(true);
+
+    foreach ($mockBlock->getChildComponents() as $component) {
+        $callback = $method->invoke($faker, $component);
+        expect($callback($component))->not->toBeNull();
     }
 });

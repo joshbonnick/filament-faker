@@ -61,23 +61,18 @@ class ComponentFaker implements FakesComponents
         }
 
         return $this->getCallback($component)($component);
-
-        if (Arr::has($this->fakesConfig, $component::class)) {
-            return $this->fakesConfig[$component::class]($component);
-        }
-
-        return $this->fakesConfig['default']($component);
     }
 
     /**
-* @return Closure(Field $component): mixed
+     * @return Closure(Field $component): mixed
      */
-    protected function getCallback(Field $component): Closure{
+    protected function getCallback(Field $component): Closure
+    {
         if (Arr::has($this->fakesConfig, $component::class)) {
             return $this->fakesConfig[$component::class];
         }
 
-        return match($component::class){
+        return match ($component::class) {
             Select::class => fn (Select $component): mixed => fake()->randomElement(array_keys($component->getOptions())),
 
             Radio::class => fn (Radio $component): mixed => fake()->randomElement(array_keys($component->getOptions())),
@@ -124,6 +119,7 @@ class ComponentFaker implements FakesComponents
             },
 
             RichEditor::class => fn (RichEditor $component): string => str(fake()->sentence())->wrap('<p>', '</p>')->toString(),
+
             default => fn () => fake()->sentence(),
         };
     }
