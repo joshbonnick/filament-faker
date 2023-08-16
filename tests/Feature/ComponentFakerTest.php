@@ -58,3 +58,13 @@ test('default entries do not return null', function () {
         expect($callback($component))->not->toBeNull();
     }
 });
+
+it('uses methods added to config first', function () {
+    expect(TextInput::make('test')->fake())->not->toEqual('::test::');
+
+    config()->set('filament-faker.fakes', [
+        TextInput::class => fn () => '::test::',
+    ]);
+
+    expect(TextInput::make('test')->fake())->toEqual('::test::');
+});
