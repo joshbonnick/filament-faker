@@ -7,7 +7,10 @@ it('can fake forms', function () {
     expect($fake = PostResource::fakeForm())
         ->toBeArray()
         ->toHaveKeys([
-            'title', 'company', 'brand_color', 'content',
+            'title', 'company', 'brand_color', 'content', 'foo', 'bar',
+            'wiz_foo', 'wiz_bar', 'tab_foo', 'tab_foobar', 'tab_bar',
+            'fieldset_foo', 'fieldset_foobar', 'fieldset_bar',
+            'grid_foo', 'grid_foobar', 'grid_bar',
         ])
         ->and($fake['title'])
         ->toBeString()
@@ -20,5 +23,9 @@ it('can fake forms', function () {
         ->toBeArray()
         ->toHaveCount(2)
         ->and($fake['content'][0]['type'])
-        ->toEqual(MockBlock::class);
+        ->toEqual(MockBlock::class)
+        ->and($fake['foo'])
+        ->toBeString()
+        ->and($fake['bar'])
+        ->toBeString();
 });
