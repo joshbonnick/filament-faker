@@ -70,7 +70,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             if ($callback instanceof Closure) {
                 return $callback($this->component, $faked)?->getState() ?? $faked;
             }
-        } catch (Throwable $e){
+        } catch (Throwable $e) {
         }
 
         return $faked;
