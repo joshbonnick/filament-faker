@@ -8,6 +8,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
@@ -15,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlockWithoutFakingFromNames;
+use FilamentFaker\Tests\TestSupport\Models\Post;
 
 class PostResource extends Resource
 {
@@ -24,6 +26,13 @@ class PostResource extends Resource
             TextInput::make('title'),
             TextInput::make('company'),
             ColorPicker::make('brand_color')->hsl(),
+
+            Select::make('parent_id')
+                    ->relationship('parent', 'title')
+                    ->label('Primary Category')
+                    ->searchable()
+                    ->options(fn () => Post::query()->select(['id','title'])->get()->pluck('title', 'id'))
+                    ->required(),
 
             Section::make()->schema([
                 Builder::make('section_content')->blocks([

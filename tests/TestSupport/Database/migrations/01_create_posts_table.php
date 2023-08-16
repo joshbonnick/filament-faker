@@ -10,6 +10,8 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+
+            $table->string('title');
             $table->longText('content');
             $table->json('raw_content');
 
