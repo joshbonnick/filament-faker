@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FilamentFaker;
 
 use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesBlocks;

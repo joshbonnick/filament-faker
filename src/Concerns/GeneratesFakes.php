@@ -7,7 +7,6 @@ namespace FilamentFaker\Concerns;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use Throwable;
 use UnhandledMatchError;
 
 abstract class GeneratesFakes
@@ -25,7 +24,7 @@ abstract class GeneratesFakes
         if (method_exists($parent, 'mutateFake')) {
             try {
                 $content = $parent->mutateFake($component);
-            } catch(UnhandledMatchError $e){
+            } catch (UnhandledMatchError $e) {
                 return $component;
             }
 
