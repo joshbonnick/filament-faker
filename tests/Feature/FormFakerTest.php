@@ -10,7 +10,8 @@ it('can fake forms', function () {
             'title', 'company', 'brand_color', 'content', 'foo', 'bar',
             'wiz_foo', 'wiz_bar', 'tab_foo', 'tab_foobar', 'tab_bar',
             'fieldset_foo', 'fieldset_foobar', 'fieldset_bar',
-            'grid_foo', 'grid_foobar', 'grid_bar',
+            'grid_foo', 'grid_foobar', 'grid_bar', 'section_foo',
+            'section_content',
         ])
         ->and($fake['title'])
         ->toBeString()
