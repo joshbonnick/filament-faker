@@ -1,6 +1,5 @@
 <?php
 
-
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
@@ -11,11 +10,11 @@ it('uses an option value when options are a query', function () {
     $posts = Post::factory()->count(2)->create();
 
     $select = Select::make('parent_id')
-                    ->relationship('parent', 'title')
-                    ->label('Primary Category')
-                    ->searchable()
-                    ->options(fn () => Post::query()->select(['id', 'title'])->get()->pluck('title', 'id'))
-                    ->required();
+        ->relationship('parent', 'title')
+        ->label('Primary Category')
+        ->searchable()
+        ->options(fn () => Post::query()->select(['id', 'title'])->get()->pluck('title', 'id'))
+        ->required();
 
     expect($select->fake())->toBeIn($posts->pluck('id')->toArray());
 });
@@ -24,17 +23,16 @@ it('uses an option value when options use dependency injection', function () {
     Post::factory()->count(2)->create();
 
     $select = Select::make('parent_id')
-                    ->relationship('parent', 'title')
-                    ->label('Primary Category')
-                    ->searchable()
-                    ->options(fn (InjectableService $service) => $service->get()->pluck('title', 'id')->toArray())
-                    ->required();
+        ->relationship('parent', 'title')
+        ->label('Primary Category')
+        ->searchable()
+        ->options(fn (InjectableService $service) => $service->get()->pluck('title', 'id')->toArray())
+        ->required();
 
     $options = resolve(InjectableService::class)->get()->pluck('title', 'id')->keys()->toArray();
 
     expect($select->fake())->toBeIn($options);
 });
-
 
 it('can fake components with options', function () {
     $components = [

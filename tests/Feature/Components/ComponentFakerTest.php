@@ -1,19 +1,11 @@
 <?php
 
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Set;
 use FilamentFaker\ComponentFaker;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
-use FilamentFaker\Tests\TestSupport\Models\Post;
-use FilamentFaker\Tests\TestSupport\Services\InjectableService;
-use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Support\Facades\Log;
 
 it('can use fallback faker method', function () {
     $faker = tap(resolve(ComponentFaker::class))->fake($component = MockPluginComponent::make('icon_picker'));
@@ -45,8 +37,9 @@ it('uses methods added to config first', function () {
     expect(TextInput::make('test')->fake())->toEqual('::test::');
 });
 
-it('value is still returned when exception is thrown', function(){
-    class TestField extends Field {
+it('value is still returned when exception is thrown', function () {
+    class TestField extends Field
+    {
         protected string $name = 'test';
     }
     $componentMock = mock(TestField::class)->makePartial();
