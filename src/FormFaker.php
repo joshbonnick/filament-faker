@@ -20,7 +20,6 @@ use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
-use Throwable;
 
 class FormFaker implements FakesForms
 {
