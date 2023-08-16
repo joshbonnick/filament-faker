@@ -5,6 +5,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\ComponentFaker;
+use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 use FilamentFaker\Tests\TestSupport\Models\Post;
@@ -97,4 +98,12 @@ it('uses an option value when options use dependency injection', function () {
     $options = resolve(InjectableService::class)->get()->pluck('title', 'id')->keys()->toArray();
 
     expect($select->fake())->toBeIn($options);
+});
+
+it('respects formatStateUsing', function () {
+    $component = TextInput::make('email')->formatStateUsing(fn (string $state) => str($state)->wrap('<b>')->toString());
+
+    expect(resolve(FakesComponents::class)->fake($component))
+        ->toBeString()
+        ->toContain('<b>');
 });
