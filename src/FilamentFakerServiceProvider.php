@@ -21,7 +21,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         $this->registerServices()->registerMacros();
     }
 
-    protected function registerMacros(): self
+    protected function registerMacros(): static
     {
         return tap($this, function () {
             Block::macro('fake', function (string $name = 'faked') {
@@ -45,7 +45,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         });
     }
 
-    protected function registerServices(): self
+    protected function registerServices(): static
     {
         return tap($this, function () {
             $this->app->bind(FakesBlocks::class, BlockFaker::class);
