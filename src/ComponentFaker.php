@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FilamentFaker;
 
 use Closure;
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Contracts\HasForms;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
@@ -29,6 +31,8 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
     public function fake(Field $component): mixed
     {
         $this->component = $component;
+
+        $this->component->container(ComponentContainer::make(resolve(HasForms::class)));
 
         return $this->fakeComponentContent();
     }

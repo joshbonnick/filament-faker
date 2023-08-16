@@ -1,9 +1,11 @@
 <?php
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Contracts\HasForms;
 use FilamentFaker\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
@@ -85,12 +87,16 @@ it('uses an option value when options are a query', function () {
 });
 
 it('uses an option value when options use dependency injection', function () {
+    Post::factory()->count(2)->create();
+
     $select = Select::make('parent_id')
         ->relationship('parent', 'title')
         ->label('Primary Category')
         ->searchable()
-        ->options(fn (InjectableService $service) => $service->get()->pluck('id', 'title')->toArray())
+        ->options(fn (InjectableService $service) => $service->get()->pluck('title', 'id')->toArray())
         ->required();
 
-    expect($select->fake())->toBeIn(resolve(InjectableService::class)->get()->pluck('id', 'title')->toArray());
+    $options = resolve(InjectableService::class)->get()->pluck('title', 'id')->keys()->toArray();
+
+    expect($select->fake())->toBeIn($options);
 });
