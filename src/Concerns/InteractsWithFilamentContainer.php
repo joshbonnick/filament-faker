@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace FilamentFaker\Concerns;
 
 use Filament\Forms\ComponentContainer;
-use Filament\Forms\Contracts\HasForms;
+use FilamentFaker\Support\FormsMock;
 
 trait InteractsWithFilamentContainer
 {
     protected function container(): ComponentContainer
     {
-        return ComponentContainer::make(resolve(HasForms::class));
+        return ComponentContainer::make(FormsMock::make());
     }
 }

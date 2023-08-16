@@ -17,11 +17,15 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use ReflectionException;
+use ReflectionProperty;
+use Throwable;
 
 class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
@@ -44,13 +48,32 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
         if ($this->shouldFakeUsingComponentName($this->component) && ! method_exists($this->component, 'getOptions')) {
             $content = $this->fakeUsingComponentName($this->component);
-
-            if (! is_null($content)) {
-                return $content;
-            }
         }
 
-        return $this->getCallback()($this->component);
+        return $this->format($content ?? $this->getCallback()($this->component));
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    protected function format(mixed $faked): mixed
+    {
+        $formatter = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
+
+        try {
+            $this->component->state(fn (Set $set) => $set($this->component->getName(), $faked));
+
+            if (is_null($callback = $formatter->getValue($this->component))) {
+                return $faked;
+            }
+
+            if ($callback instanceof Closure) {
+                return $callback($this->component, $faked)?->getState() ?? $faked;
+            }
+        } catch (Throwable $e){
+        }
+
+        return $faked;
     }
 
     protected function getCallback(): Closure
