@@ -67,7 +67,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "FilamentFaker\\FilamentBlockFakerServiceProvider"
+                "FilamentFaker\\FilamentFakerServiceProvider"
             ]
         }
     },
