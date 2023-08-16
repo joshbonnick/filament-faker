@@ -8,6 +8,7 @@ use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
@@ -22,7 +23,6 @@ use FilamentFaker\Concerns\InteractsWithFakeConfig;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use InvalidArgumentException;
 
 class ComponentFaker implements FakesComponents
 {
@@ -40,39 +40,36 @@ class ComponentFaker implements FakesComponents
     {
         $this->component = $component;
 
-        return $this->fakeComponentContent($this->component);
+        return $this->fakeComponentContent();
     }
 
-    protected function fakeComponentContent(Field $component): mixed
+    protected function fakeComponentContent(): mixed
     {
-        if (method_exists($component, 'mutateFake')) {
-            return $component->mutateFake($component);
+        if (method_exists($this->component, 'mutateFake')) {
+            return $this->component->mutateFake($this->component);
         }
 
-        if ($this->shouldFakeUsingComponentName($component) && ! method_exists($component, 'getOptions')) {
-            try {
-                $content = $this->fakeUsingComponentName($component);
+        if ($this->shouldFakeUsingComponentName($this->component) && ! method_exists($this->component, 'getOptions')) {
+            $content = $this->fakeUsingComponentName($this->component);
 
-                if (! is_null($content)) {
-                    return $content;
-                }
-            } catch (InvalidArgumentException $e) {
+            if (! is_null($content)) {
+                return $content;
             }
         }
 
-        return $this->getCallback($component)($component);
+        return $this->getCallback()($this->component);
     }
 
     /**
-     * @return Closure(Field $component): mixed
+     * @return Closure
      */
-    protected function getCallback(Field $component): Closure
+    protected function getCallback(): Closure
     {
-        if (Arr::has($this->fakesConfig, $component::class)) {
-            return $this->fakesConfig[$component::class];
+        if (Arr::has($this->fakesConfig, $this->component::class)) {
+            return $this->fakesConfig[$this->component::class];
         }
 
-        return match ($component::class) {
+        return match ($this->component::class) {
             Select::class => fn (Select $component): mixed => fake()->randomElement(array_keys($component->getOptions())),
 
             Radio::class => fn (Radio $component): mixed => fake()->randomElement(array_keys($component->getOptions())),
@@ -120,7 +117,7 @@ class ComponentFaker implements FakesComponents
 
             RichEditor::class => fn (RichEditor $component): string => str(fake()->sentence())->wrap('<p>', '</p>')->toString(),
 
-            default => fn () => fake()->sentence(),
+            default => fn (Field $component) => fake()->sentence(),
         };
     }
 }

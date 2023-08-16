@@ -10,4 +10,5 @@ parameters:
     checkOctaneCompatibility: true
     checkModelProperties: true
     checkMissingIterableValueType: false
-
+    ignoreErrors:
+        - '#Call to an undefined method [a-zA-Z0-9\\_]+::fake\(\)#'

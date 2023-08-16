@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
+use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use InvalidArgumentException;
 
 trait GeneratesFakesFromComponentName
 {
+    protected Block $block;
+
+    protected Field $component;
+
     protected function shouldFakeUsingComponentName(Field $component): bool
     {
         $target = $this->component ?? $this->block;
@@ -27,7 +32,11 @@ trait GeneratesFakesFromComponentName
             return null;
         }
 
-        return fake()->$name;
+        try {
+            return fake()->$name;
+        } catch (InvalidArgumentException $e) {
+            return null;
+        }
     }
 
     protected function isDisabledFakerMethod(string $componentName): bool

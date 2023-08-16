@@ -3,6 +3,7 @@
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\TextInput;
 use FilamentFaker\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
@@ -46,9 +47,11 @@ it('can use fallback faker method', function () {
 });
 
 test('default entries do not return null', function () {
-    $mockBlock = MockBlock::make('test'); // Replace with the appropriate class instantiation
+    $mockBlock = MockBlock::make('test');
 
-    $method = tap(new ReflectionMethod($faker = resolve(ComponentFaker::class), 'getCallback'))->setAccessible(true);
+    $faker = tap(resolve(ComponentFaker::class))->fake(TextInput::make('test'));
+
+    $method = tap(new ReflectionMethod($faker, 'getCallback'))->setAccessible(true);
 
     foreach ($mockBlock->getChildComponents() as $component) {
         $callback = $method->invoke($faker, $component);
