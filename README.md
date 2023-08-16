@@ -36,8 +36,6 @@ Call the `fakeForm` method on a resource to retrieve and array of fields filled 
 $data = PostResource::fakeForm();
 ```
 
-### Disable Component Name Usage
-
 By default, component names are used to map to a Faker method for more accurate data. There are several ways to disable
 this behavior:
 
