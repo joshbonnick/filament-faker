@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to `filament-block-faker` will be documented in this file.
+All notable changes to `filament-faker` will be documented in this file.
 
 ## v1.1.4 - 2023-08-16
 
