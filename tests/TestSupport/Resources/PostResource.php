@@ -28,11 +28,11 @@ class PostResource extends Resource
             ColorPicker::make('brand_color')->hsl(),
 
             Select::make('parent_id')
-                    ->relationship('parent', 'title')
-                    ->label('Primary Category')
-                    ->searchable()
-                    ->options(fn () => Post::query()->select(['id','title'])->get()->pluck('title', 'id'))
-                    ->required(),
+                ->relationship('parent', 'title')
+                ->label('Primary Category')
+                ->searchable()
+                ->options(fn () => Post::query()->select(['id', 'title'])->get()->pluck('title', 'id'))
+                ->required(),
 
             Section::make()->schema([
                 Builder::make('section_content')->blocks([
