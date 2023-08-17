@@ -8,6 +8,7 @@ use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
@@ -107,6 +108,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             Checkbox::class,
             Toggle::class => $this->faker->checkbox(),
             TagsInput::class => $this->faker->withSuggestions($this->component),
+            DatePicker::class,
             DateTimePicker::class => $this->faker->date(),
             FileUpload::class => $this->faker->file($this->component),
             KeyValue::class => $this->faker->keyValue($this->component),

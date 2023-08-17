@@ -59,9 +59,7 @@ it('returns an entry of the suggestions array for tags', function () {
     expect($tags)->toBeArray();
 
     foreach ($tags as $tag) {
-        if (! in_array($tag, $suggestions)) {
-            fail("[$tag] was not in the suggestions array.");
-        }
+        expect($tag)->toBeIn($suggestions, "[$tag] was not in the suggestions array.");
     }
 });
 

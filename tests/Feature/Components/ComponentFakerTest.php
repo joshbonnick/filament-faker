@@ -1,5 +1,8 @@
 <?php
 
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
+use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\FakerProvider;
@@ -115,4 +118,17 @@ test('mutate fake method is a priority over faker method', function () {
 
 it('uses option value even when faker method is available', function () {
     expect(MockBlock::fake()['data']['company'])->toBeIn(['foo', 'bar']);
+});
+
+it('returns a date from date components', function () {
+    $datepicker = DatePicker::make('published_at')
+        ->label('Published Date')
+        ->nullable()
+        ->date();
+
+    expect($carbon = Carbon::parse($datepicker->fake()))
+        ->not
+        ->toThrow(InvalidFormatException::class)
+        ->and($carbon->isValid())
+        ->toBeTrue();
 });
