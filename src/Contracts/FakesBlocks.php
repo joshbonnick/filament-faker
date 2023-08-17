@@ -10,4 +10,6 @@ interface FakesBlocks
      * @return array<string, mixed>
      */
     public function fake(): array;
+
+    public function shouldFakeUsingComponentName(bool $should = true): static;
 }

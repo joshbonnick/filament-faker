@@ -20,4 +20,6 @@ interface FakesForms
      * @param  class-string<Factory<Model>>|null  $factory
      */
     public function withFactory(string $factory = null): static;
+
+    public function shouldFakeUsingComponentName(bool $should = true): static;
 }

@@ -8,6 +8,10 @@ use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use FilamentFaker\Contracts\FakesBlocks;
+use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\FakesResources;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use UnhandledMatchError;
@@ -15,10 +19,13 @@ use UnhandledMatchError;
 abstract class GeneratesFakes
 {
     use InteractsWithFakeConfig;
+    use InteractsWithFactories;
 
     protected Block $block;
 
     protected Field $component;
+
+    protected bool $shouldFakeUsingComponentName = true;
 
     public function __construct()
     {
@@ -40,8 +47,19 @@ abstract class GeneratesFakes
         return $component;
     }
 
-    protected function shouldFakeUsingComponentName(Field $component): bool
+    public function shouldFakeUsingComponentName(bool $should = true): static
     {
+        return tap($this, function () use ($should) {
+            $this->shouldFakeUsingComponentName = $should;
+        });
+    }
+
+    protected function getShouldFakeUsingComponentName(Field $component): bool
+    {
+        if ($this->shouldFakeUsingComponentName === false) {
+            return false;
+        }
+
         $target = $this->component ?? $this->block;
 
         return method_exists($target, 'shouldFakeUsingComponentName')
@@ -78,5 +96,29 @@ abstract class GeneratesFakes
     private function filteredFakerMethods(): array
     {
         return config('filament-faker.slow_faker_methods', []);
+    }
+
+    protected function getFormFaker(Form $form): FakesForms
+    {
+        return tap($form->faker(), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
+    }
+
+    protected function getComponentFaker(Field $component): FakesComponents
+    {
+        return tap($component->faker(), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
+    }
+
+    protected function getBlockFaker(Block $block): FakesBlocks
+    {
+        return tap($block->faker(), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
+    }
+
+    protected function applyFakerMutations(FakesBlocks|FakesResources|FakesForms|FakesComponents $faker): void
+    {
+        $faker->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
+
+        if ($this->usesFactory()) {
+            $faker->withFactory($this->factory, $this->onlyAttributes);
+        }
     }
 }

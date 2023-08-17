@@ -33,7 +33,7 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
     protected function getContentForComponent(Field $component): mixed
     {
         return ($content = $this->mutate($this->block, $component)) instanceof Field
-            ? $content->fake() // @phpstan-ignore-line
+            ? $this->getComponentFaker($content)->fake()
             : $content;
     }
 }

@@ -23,4 +23,6 @@ interface FakesResources
     public function withFactory(string $factory = null): static;
 
     public function getForm(): Form;
+
+    public function shouldFakeUsingComponentName(bool $should = true): static;
 }

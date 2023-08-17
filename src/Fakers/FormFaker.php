@@ -83,7 +83,7 @@ class FormFaker extends GeneratesFakes implements FakesForms
     {
         return collect($builder->getChildComponents())
             ->filter(fn (Component $block) => $block instanceof Block)
-            ->map(fn (Block $block) => $block->faker()->fake())
+            ->map(fn (Block $block) => $this->getBlockFaker($block)->fake())
             ->toArray();
     }
 
@@ -93,8 +93,6 @@ class FormFaker extends GeneratesFakes implements FakesForms
             return $content;
         }
 
-        return $this->usesFactory()
-            ? $content->faker()->withFactory($this->factory, $this->onlyAttributes)->fake()
-            : $content->faker()->fake();
+        return $this->getComponentFaker($content)->fake();
     }
 }
