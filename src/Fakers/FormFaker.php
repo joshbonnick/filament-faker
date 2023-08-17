@@ -17,28 +17,26 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\GeneratesFakes;
+use FilamentFaker\Contracts\FakeBuilder;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker extends GeneratesFakes implements FakesForms
+class FormFaker extends GeneratesFakes implements FakesForms, FakeBuilder
 {
-    protected Form $form;
-
     public function __construct(
-        protected readonly FakesBlocks $blockFaker
+        protected readonly FakesBlocks $blockFaker,
+        protected Form $form,
     ) {
         parent::__construct();
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<string, mixed>
      */
-    public function fake(Form $form, bool $withHidden = false): array
+    public function fake(bool $withHidden = false): array
     {
-        $this->form = $form;
-
         return $this->fakeComponents(collect($this->form->getComponents($withHidden)));
     }
 

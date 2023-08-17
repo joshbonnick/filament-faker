@@ -20,6 +20,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\FakeBuilder;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -27,16 +28,21 @@ use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents
+class ComponentFaker extends GeneratesFakes implements FakesComponents, FakeBuilder
 {
     use InteractsWithFilamentContainer;
 
     protected Field $component;
 
-    public function fake(Field $component): mixed
+    public function __construct(Field $component)
     {
-        $this->component = tap($component)->container($this->container());
+        parent::__construct();
 
+        $this->component = tap($component)->container($this->container());
+    }
+
+    public function fake(): mixed
+    {
         return $this->fakeComponentContent();
     }
 

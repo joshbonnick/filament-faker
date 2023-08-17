@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts;
 
-interface FakesForms
+interface FakeBuilder
 {
+    public function fake(): array;
 }

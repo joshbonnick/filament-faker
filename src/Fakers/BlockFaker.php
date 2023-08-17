@@ -7,19 +7,21 @@ namespace FilamentFaker\Fakers;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\GeneratesFakes;
+use FilamentFaker\Contracts\FakeBuilder;
 use FilamentFaker\Contracts\FakesBlocks;
 
-class BlockFaker extends GeneratesFakes implements FakesBlocks
+class BlockFaker extends GeneratesFakes implements FakesBlocks, FakeBuilder
 {
-    protected Block $block;
+    public function __construct(protected Block $block)
+    {
+        parent::__construct();
+    }
 
     /**
-     * {@inheritDoc}
+     * @return array<string, mixed>
      */
-    public function fake(Block $block): array
+    public function fake(): array
     {
-        $this->block = $block;
-
         return [
             'type' => $this->block::class,
             'data' => collect($this->block->getChildComponents())
