@@ -11,5 +11,5 @@ interface FakesForms
      */
     public function fake(): array;
 
-    public function withHidden(bool $withHidden = false): static;
+    public function withoutHidden(bool $withoutHidden = false): static;
 }

@@ -11,8 +11,6 @@ use FilamentFaker\Contracts\FakesBlocks;
 
 class BlockFaker extends GeneratesFakes implements FakesBlocks
 {
-    protected bool $withHidden = false;
-
     public function __construct(protected Block $block)
     {
         parent::__construct();
@@ -30,13 +28,6 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
                 ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForComponent($component)])
                 ->toArray(),
         ];
-    }
-
-    public function withHidden(bool $withHidden = false): static
-    {
-        return tap($this, function () use ($withHidden) {
-            $this->withHidden = $withHidden;
-        });
     }
 
     protected function getContentForComponent(Field $component): mixed

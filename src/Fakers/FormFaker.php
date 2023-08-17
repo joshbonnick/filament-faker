@@ -11,20 +11,20 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class FormFaker extends GeneratesFakes implements FakesForms
 {
-    protected bool $withHidden = false;
+    protected bool $withHidden = true;
 
     public function __construct(
         protected Form $form,
@@ -40,10 +40,10 @@ class FormFaker extends GeneratesFakes implements FakesForms
         return $this->fakeComponents(collect($this->form->getComponents($this->withHidden)));
     }
 
-    public function withHidden(bool $withHidden = false): static
+    public function withoutHidden(bool $withoutHidden = true): static
     {
-        return tap($this, function () use ($withHidden) {
-            $this->withHidden = $withHidden;
+        return tap($this, function () use ($withoutHidden) {
+            $this->withHidden = !$withoutHidden;
         });
     }
 
