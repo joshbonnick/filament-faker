@@ -10,10 +10,10 @@ it('does not execute slow methods listed in config file', function () {
 
     expect(TextInput::make('safe_email')->fake())
         ->not
+        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/')
+        ->and(TextInput::make('email')->fake())
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
 
-    expect(TextInput::make('email')->fake())
-        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
 });
 
 it('can use a faker method if it exists', function () {
@@ -38,14 +38,14 @@ it('can disable the usage of faking by component name', function () {
 it('can disable the usage of faking by component name with method', function () {
     expect(TextInput::make('safe_email')->fake())
         ->toBeString()
-        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
-
-    expect($component = ComponentWithoutFakingFromNames::make('safe_email'))
+        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/')
+        ->and($component = ComponentWithoutFakingFromNames::make('safe_email'))
         ->toHaveMethod('shouldFakeUsingComponentName')
         ->and($component->fake())
         ->toBeString()
         ->not
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
+
 });
 
 test('mutate fake method is a priority over faker method', function () {
