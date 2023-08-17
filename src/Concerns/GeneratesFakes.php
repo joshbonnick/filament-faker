@@ -15,7 +15,6 @@ use UnhandledMatchError;
 abstract class GeneratesFakes
 {
     use InteractsWithFakeConfig;
-    use InteractsWithFactories;
 
     protected Block $block;
 

@@ -19,6 +19,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
+use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
@@ -30,6 +31,7 @@ use Throwable;
 class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
     use InteractsWithFilamentContainer;
+    use InteractsWithFactories;
 
     protected Field $component;
 
