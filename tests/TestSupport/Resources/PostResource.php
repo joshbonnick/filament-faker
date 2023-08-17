@@ -20,6 +20,8 @@ use FilamentFaker\Tests\TestSupport\Models\Post;
 
 class PostResource extends Resource
 {
+    protected static ?string $model = Post::class;
+
     public static function form(Form $form): Form
     {
         return $form->schema([

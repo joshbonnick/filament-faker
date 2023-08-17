@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
-use Filament\Forms\Components\Field;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -14,8 +13,6 @@ use InvalidArgumentException;
 
 trait InteractsWithFactories
 {
-    protected Field $component;
-
     /**
      * @var Factory<Model>|null
      */
@@ -34,6 +31,8 @@ trait InteractsWithFactories
     protected array $onlyAttributes = [];
 
     /**
+     * Generate fake data using model factories.
+     *
      * @param  array<int, string>  $onlyAttributes
      * @param  Factory<Model>|class-string<Factory<Model>>|null  $factory
      */
@@ -53,7 +52,7 @@ trait InteractsWithFactories
                     $this->factory = resolve($factory);
                 }
             } catch (BindingResolutionException $e) {
-                if (is_null($model = $this->component->getModel())) {
+                if (is_null($model = $this->resolveModel())) {
                     throw new InvalidArgumentException("Unable to find Model for {$this->component->getName()}");
                 }
 
@@ -61,7 +60,7 @@ trait InteractsWithFactories
                     throw new InvalidArgumentException("Unable to find Factory for $model");
                 }
 
-                $this->factory = $model::factory();
+                $this->factory = $model::factory(); // @phpstan-ignore-line
             }
         });
     }
@@ -72,15 +71,27 @@ trait InteractsWithFactories
     }
 
     /**
+     * @return class-string<Model>|string|null
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function resolveModel(): ?string
+    {
+        return match (true) {
+            isset($this->component) => $this->component->getModel(),
+            isset($this->form) => $this->form->getModel(),
+            isset($this->block) => $this->block->getModel(),
+            isset($this->resource) => $this->resource::getModel(),
+            default => throw new InvalidArgumentException('Unable to find resolve Model.')
+        };
+    }
+
+    /**
      * @param  (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed>  $attributes
      */
     protected function getModelInstance(callable|array $attributes = []): ?Model
     {
-        if ($this->model) {
-            return $this->model;
-        }
-
-        return tap($this->factory?->makeOne($attributes), function (?Model $model) {
+        return tap($this->getFactory()?->makeOne($attributes), function (?Model $model) {
             $this->model = $model;
         });
     }
@@ -90,10 +101,6 @@ trait InteractsWithFactories
      */
     protected function getModelAttributes(): array
     {
-        if ($this->modelAttributes) {
-            return $this->modelAttributes;
-        }
-
         $instance = $this->getModelInstance()?->toArray() ?? [];
 
         $attributes = empty($this->onlyAttributes)

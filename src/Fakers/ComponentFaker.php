@@ -22,7 +22,6 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\FilamentFaker;
@@ -34,8 +33,6 @@ use Throwable;
 
 class ComponentFaker extends GeneratesFakes implements FakesComponents, FilamentFaker
 {
-    use InteractsWithFilamentContainer;
-
     protected Field $component;
 
     public function __construct(
@@ -44,7 +41,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents, Filament
     ) {
         parent::__construct();
 
-        $this->component = tap($component)->container($this->container());
+        $this->component = $this->setUpComponent($component);
     }
 
     public function fake(): mixed
@@ -117,7 +114,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents, Filament
     protected function attemptToCallMutationMacro(): mixed
     {
         try {
-            $mutateCallback = $this->component->mutateFake($this->component);
+            $mutateCallback = $this->component->mutateFake($this->component); // @phpstan-ignore-line
 
             if ($mutateCallback instanceof Closure) {
                 return $mutateCallback($this->component);

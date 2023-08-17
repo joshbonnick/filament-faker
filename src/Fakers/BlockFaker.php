@@ -18,7 +18,7 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks, FilamentFaker
     }
 
     /**
-     * @return array<string, mixed>
+     * {@inheritDoc}
      */
     public function fake(): array
     {
@@ -26,15 +26,8 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks, FilamentFaker
             'type' => $this->block::class,
             'data' => collect($this->block->getChildComponents())
                 ->filter(fn (mixed $component) => $component instanceof Field)
-                ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForComponent($component)])
+                ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForComponent($component, $this->block)])
                 ->toArray(),
         ];
-    }
-
-    protected function getContentForComponent(Field $component): mixed
-    {
-        return ($content = $this->mutate($this->block, $component)) instanceof Field
-            ? $this->getComponentFaker($content)->fake()
-            : $content;
     }
 }

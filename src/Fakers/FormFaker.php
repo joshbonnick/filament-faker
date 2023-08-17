@@ -69,7 +69,7 @@ class FormFaker extends GeneratesFakes implements FakesForms, FilamentFaker
                 $component instanceof Group,
                 $component instanceof Section => $this->fakeComponents(collect($component->getChildComponents())),
 
-                $component instanceof Field => [$component->getName() => $this->getContentForComponent($component)],
+                $component instanceof Field => [$component->getName() => $this->getContentForComponent($component, $this->form)],
 
                 default => throw new InvalidArgumentException(
                     sprintf('%s is not a supported component type.', $component::class)
@@ -86,14 +86,5 @@ class FormFaker extends GeneratesFakes implements FakesForms, FilamentFaker
             ->filter(fn (Component $block) => $block instanceof Block)
             ->map(fn (Block $block) => $this->getBlockFaker($block)->fake())
             ->toArray();
-    }
-
-    protected function getContentForComponent(Field $component): mixed
-    {
-        if (! ($content = $this->mutate($this->form, $component)) instanceof Field) {
-            return $content;
-        }
-
-        return $this->getComponentFaker($content)->fake();
     }
 }
