@@ -59,7 +59,7 @@ class DefaultFakers implements FakerProvider
             return 'https://placehold.co/600x400.png';
         }
 
-        return str(Str::random(8))->append('.txt')->toString();
+        return Str::random(8).'.txt';
     }
 
     /**
@@ -73,7 +73,7 @@ class DefaultFakers implements FakerProvider
     public function color(ColorPicker $color): string
     {
         return match ($color->getFormat()) {
-            'hsl' => str(fake()->hslColor())->wrap('hsl(', ')')->toString(),
+            'hsl' => Str::wrap(fake()->hslColor(), 'hsl(', ')'),
             'rgb' => fake()->rgbCssColor(),
             'rgba' => fake()->rgbaCssColor(),
             default => fake()->safeHexColor(),
@@ -82,7 +82,7 @@ class DefaultFakers implements FakerProvider
 
     public function html(): string
     {
-        return str(fake()->sentence())->wrap('<p>', '</p>')->toString();
+        return Str::wrap(fake()->sentence(), '<p>', '</p>');
     }
 
     public function checkbox(): bool

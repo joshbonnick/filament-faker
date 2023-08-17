@@ -54,7 +54,7 @@ abstract class GeneratesFakes
      */
     protected function fakeUsingComponentName(Field $component): mixed
     {
-        if ($this->isDisabledFakerMethod($name = str($component->getName())->camel()->toString())) {
+        if ($this->isDisabledFakerMethod($name = Str::camel($component->getName()))) {
             return null;
         }
 
