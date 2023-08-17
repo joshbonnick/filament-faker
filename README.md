@@ -55,7 +55,19 @@ this behavior:
 Set `use_component_names_for_fake` to `false` in `config/filament-faker.php` which will disable the behavior for
 the entire package as default.
 
-Add a `shouldFakeUsingComponentName` method to your `Block` or `Component`, the method should return a `bool`
+You can chain `shouldFakeUsingComponentName` on the Faker API to disable the feature per test.
+
+```php
+<?php
+
+$data = PostResource::faker()->shouldFakeUsingComponentName(false)->fake();
+// or
+$data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake();
+// or
+$data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
+```
+
+You may also add a `shouldFakeUsingComponentName` method to your `Block` or `Component`, the method should return a `bool`
 
 ```php
 <?php
@@ -71,18 +83,6 @@ class HeadingBlock extends Block
         return false;
     }
 }
-```
-
-You can also chain this one the Faker API.
-
-```php
-<?php
-
-$data = PostResource::faker()->shouldFakeUsingComponentName(false)->fake();
-// or
-$data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake();
-// or
-$data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
 ```
 
 ### Usage In Tests
@@ -202,6 +202,13 @@ class MutatedComponent extends TextInput
 
 ### Fake Using Factory Definitions
 
+If you need increased accuracy for a specific test then you can enable the usage of Factories. The faked data will then be 
+generated used definitions from the factory provided. If no factory is provided the package will attempt to resolve one from
+the given resource, form or component.
+
+As this feature causes `Factory::makeOne` under the hood, I recommend only using it in tests where the accuracy of the faked 
+data is of significant importance.
+
 ```php
 <?php
 
@@ -226,6 +233,16 @@ class FormatBlocksTest extends TestCase
 ```
 
 If you need to specify a factory you can use you can pass a `class-string` or instance of a `Factory` to the `withFactory()` method.
+
+#### Selecting Definitions
+
+If you want to select only a specific set of definitions from your factory you can pass an `array` as to the `withFactory()` method.
+
+```php
+<?php 
+
+$data = PostResource::faker()->withFactory(onlyAttributes: ['title', 'slug'])->fake();
+```
 
 ## IDE Support
 
