@@ -20,9 +20,9 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use ReflectionException;
 use ReflectionProperty;
 use Throwable;
@@ -33,8 +33,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
     protected Field $component;
 
-    public function __construct(Field $component)
-    {
+    public function __construct(
+        protected readonly FakerProvider $faker,
+        Field $component,
+    ) {
         parent::__construct();
 
         $this->component = tap($component)->container($this->container());
@@ -55,7 +57,11 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             $content = $this->fakeUsingComponentName($this->component);
         }
 
-        return $this->format($content ?? $this->getCallback()($this->component));
+        $content ??= ($faked = $this->getFake()) instanceof Closure
+            ? $faked($this->component)
+            : $faked;
+
+        return $this->format($content);
     }
 
     protected function format(mixed $fakedContent): mixed
@@ -80,61 +86,25 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
         return $fakedContent;
     }
 
-    protected function getCallback(): Closure
+    protected function getFake(): mixed
     {
         if (Arr::has($this->fakesConfig, $this->component::class)) {
             return $this->fakesConfig[$this->component::class];
         }
 
         return match ($this->component::class) {
-            Select::class => fn (Select $component): mixed => fake()->randomElement(array_keys($component->getOptions())),
-
-            Radio::class => fn (Radio $component): mixed => fake()->randomElement(array_keys($component->getOptions())),
-
-            TagsInput::class => function (TagsInput $component): array {
-                if (empty($suggestions = $component->getSuggestions())) {
-                    return fake()->rgbColorAsArray();
-                }
-
-                return fake()->randomElements(
-                    array: $suggestions,
-                    count: count($suggestions) > 1
-                        ? fake()->numberBetween(1, count($suggestions) - 1)
-                        : 1
-                );
-            },
-
-            Checkbox::class => fn (Checkbox $component): bool => fake()->boolean(),
-
-            CheckboxList::class => fn (CheckboxList $component): array => fake()->randomElements(
-                array: array_keys($options = $component->getOptions()),
-                count: fake()->numberBetween(1, count($options))
-            ),
-
-            Toggle::class => fn (Toggle $component): bool => fake()->boolean(),
-
-            DateTimePicker::class => fn (DateTimePicker $component): string => now()->toFormattedDateString(),
-
-            FileUpload::class => function (FileUpload $component): string {
-                if (in_array('image/*', $component->getAcceptedFileTypes() ?? [])) {
-                    return 'https://placehold.co/600x400.png';
-                }
-
-                return str(Str::random(8))->append('.txt')->toString();
-            },
-
-            KeyValue::class => fn (KeyValue $component): array => ['key' => 'value'],
-
-            ColorPicker::class => fn (ColorPicker $component): string => match ($component->getFormat()) {
-                'hsl' => str(fake()->hslColor())->wrap('hsl(', ')')->toString(),
-                'rgb' => fake()->rgbCssColor(),
-                'rgba' => fake()->rgbaCssColor(),
-                default => fake()->safeHexColor(),
-            },
-
-            RichEditor::class => fn (RichEditor $component): string => str(fake()->sentence())->wrap('<p>', '</p>')->toString(),
-
-            default => fn (Field $component) => fake()->sentence(),
+            CheckboxList::class,
+            Radio::class,
+            Select::class => $this->faker->withOptions($this->component),
+            Checkbox::class,
+            Toggle::class => $this->faker->checkbox(),
+            TagsInput::class => $this->faker->withSuggestions($this->component),
+            DateTimePicker::class => $this->faker->date(),
+            FileUpload::class => $this->faker->file($this->component),
+            KeyValue::class => $this->faker->keyValue($this->component),
+            ColorPicker::class => $this->faker->color($this->component),
+            RichEditor::class => $this->faker->html(),
+            default => fn (Field $component) => $this->faker->defaultCallback($this->component),
         };
     }
 }

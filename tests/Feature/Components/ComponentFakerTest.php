@@ -2,13 +2,14 @@
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
+use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 
 it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
-    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getCallback'))->setAccessible(true);
+    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getFake'))->setAccessible(true);
 
     expect($getCallbackMethod->invoke($faker, $component))->toBeCallable();
 });
@@ -18,11 +19,16 @@ test('default entries do not return null', function () {
 
     $faker = TextInput::make('test')->faker();
 
-    $method = tap(new ReflectionMethod($faker, 'getCallback'))->setAccessible(true);
+    $method = tap(new ReflectionMethod($faker, 'getFake'))->setAccessible(true);
 
     foreach ($mockBlock->getChildComponents() as $component) {
         $callback = $method->invoke($faker, $component);
-        expect($callback($component))->not->toBeNull();
+
+        if($callback instanceof Closure){
+            expect($callback($component))->not->toBeNull();
+        } else {
+            expect($callback)->not->toBeNull();
+        }
     }
 });
 
@@ -46,4 +52,10 @@ test('value is still returned when exception is thrown', function () {
 
     expect(resolve(FakesComponents::class, compact('component'))
         ->fake())->not->toBeNull();
+});
+
+it('handles invalid options field', function () {
+    expect(resolve(FakerProvider::class)
+        ->withOptions(TextInput::make('test')))
+        ->toBeString();
 });
