@@ -2,12 +2,14 @@
 
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Tests\TestSupport\Database\factories\PostFactory;
+use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
+use FilamentFaker\Tests\TestSupport\Models\Post;
 
 it('can use factory definitions', function () {
-    spy(PostFactory::class)->shouldReceive('definition')->andReturn(['title' => '::title::']);
+    $component = TextInput::make('title')->model(Post::class);
 
-    expect(TextInput::make('title')->faker()->withFactory()->fake())
+    expect($component->faker()->withFactory(TestFactory::class)->fake())
         ->toBeString()->toEqual('::title::')
-        ->and(TextInput::make('title')->faker()->fake())
+        ->and($component->faker()->fake())
         ->toBeString()->not->toEqual('::title::');
 });

@@ -21,30 +21,44 @@ trait InteractsWithFactories
     protected ?Factory $factory = null;
 
     /**
-     * @param  class-string<Factory<Model>>|null  $factory
+     * @param  Factory<Model>|class-string<Factory<Model>>|null  $factory
      */
-    public function withFactory(string $factory = null): static
+    public function withFactory(Factory|string $factory = null): static
     {
         return tap($this, function () use ($factory): void {
+            if ($factory instanceof Factory) {
+                $this->factory = $factory;
+
+                return;
+            }
+
             try {
                 if (! is_null($factory)) {
                     $this->factory = resolve($factory);
 
                     return;
                 }
-
-                if (is_null($model = $this->component->getModel())) {
-                    throw new InvalidArgumentException("Unable to find Model for {$this->component->getName()}");
-                }
-
-                if (! in_array(HasFactory::class, class_uses_recursive($model))) {
-                    throw new InvalidArgumentException("Unable to find Factory for $model");
-                }
-
-                $this->factory = $model::factory();
             } catch (BindingResolutionException $e) {
             }
+
+            if (is_null($model = $this->component->getModel())) {
+                throw new InvalidArgumentException("Unable to find Model for {$this->component->getName()}");
+            }
+
+            if (! in_array(HasFactory::class, class_uses_recursive($model))) {
+                throw new InvalidArgumentException("Unable to find Factory for $model");
+            }
+
+            $this->factory = $model::factory();
         });
+    }
+
+    /**
+     * @param  (callable(array<string, mixed>): array<string, mixed>)|array<string, mixed>  $attributes
+     */
+    protected function getModelInstance(callable|array $attributes = []): ?Model
+    {
+        return $this->factory?->makeOne($attributes);
     }
 
     /**

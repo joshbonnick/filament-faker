@@ -35,6 +35,11 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
     protected Field $component;
 
+    /**
+     * @var array<string, mixed>
+     */
+    protected ?array $model = null;
+
     public function __construct(
         protected readonly FakerProvider $faker,
         Field $component,
@@ -53,6 +58,14 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
     {
         if (method_exists($this->component, 'mutateFake')) {
             return $this->component->mutateFake($this->component);
+        }
+
+        if ($this->factory && is_null($this->model)) {
+            $this->model = $this->getModelInstance()?->toArray();
+        }
+
+        if ($this->model && Arr::has($this->model, $this->component->getName())) {
+            return $this->model[$this->component->getName()];
         }
 
         if ($this->shouldFakeUsingComponentName($this->component) && ! method_exists($this->component, 'getOptions')) {
