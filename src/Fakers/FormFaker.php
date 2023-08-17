@@ -11,7 +11,6 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
-use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
@@ -43,7 +42,7 @@ class FormFaker extends GeneratesFakes implements FakesForms
     public function withoutHidden(bool $withoutHidden = true): static
     {
         return tap($this, function () use ($withoutHidden) {
-            $this->withHidden = !$withoutHidden;
+            $this->withHidden = ! $withoutHidden;
         });
     }
 
