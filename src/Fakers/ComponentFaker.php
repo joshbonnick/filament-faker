@@ -112,7 +112,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             KeyValue::class => $this->faker->keyValue($this->component),
             ColorPicker::class => $this->faker->color($this->component),
             RichEditor::class => $this->faker->html(),
-            default => fn (Field $component) => $this->faker->defaultCallback($this->component),
+            default => $this->faker->defaultCallback($this->component),
         };
     }
 }
