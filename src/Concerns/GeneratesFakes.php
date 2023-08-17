@@ -20,6 +20,7 @@ abstract class GeneratesFakes
 {
     use InteractsWithFakeConfig;
     use InteractsWithFactories;
+    use MutatesFakes;
 
     protected Block $block;
 
@@ -119,6 +120,10 @@ abstract class GeneratesFakes
 
         if ($this->usesFactory()) {
             $faker->withFactory($this->factory, $this->onlyAttributes);
+        }
+
+        if ($this->hasMutations()) {
+            $faker->mutateFake($this->mutateCallback);
         }
     }
 }
