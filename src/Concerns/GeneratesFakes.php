@@ -35,6 +35,7 @@ abstract class GeneratesFakes
 
         return $component;
     }
+
     protected Block $block;
 
     protected Field $component;
