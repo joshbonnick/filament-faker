@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts;
 
+use Filament\Forms\Components\Field;
+
 interface FakesBlocks
 {
     /**
@@ -12,4 +14,6 @@ interface FakesBlocks
     public function fake(): array;
 
     public function shouldFakeUsingComponentName(bool $should = true): static;
+
+    public function mutateFake(Field $component): static;
 }
