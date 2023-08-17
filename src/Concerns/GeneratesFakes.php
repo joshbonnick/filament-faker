@@ -16,6 +16,10 @@ abstract class GeneratesFakes
 {
     use InteractsWithFakeConfig;
 
+    protected Block $block;
+
+    protected Field $component;
+
     public function __construct()
     {
         $this->setUpConfig();
@@ -35,9 +39,6 @@ abstract class GeneratesFakes
 
         return $component;
     }
-    protected Block $block;
-
-    protected Field $component;
 
     protected function shouldFakeUsingComponentName(Field $component): bool
     {
