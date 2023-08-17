@@ -114,7 +114,7 @@ abstract class GeneratesFakes
         return tap($block->faker(), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
     }
 
-    protected function applyFakerMutations(FakesBlocks|FakesResources|FakesForms|FakesComponents $faker): void
+    protected function applyFakerMutations(GeneratesFakes $faker): void
     {
         $faker->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
 
