@@ -115,3 +115,4 @@ test('mutate fake method is a priority over faker method', function () {
 
 it('uses option value even when faker method is available', function () {
     expect(MockBlock::fake()['data']['company'])->toBeIn(['foo', 'bar']);
+});
