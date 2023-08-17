@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker;
+namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;

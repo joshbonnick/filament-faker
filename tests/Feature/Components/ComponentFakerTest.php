@@ -2,8 +2,8 @@
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\ComponentFaker;
 use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Fakers\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 

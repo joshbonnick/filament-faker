@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker;
+namespace FilamentFaker\Fakers;
 
 use Closure;
 use Filament\Forms\Components\Checkbox;
