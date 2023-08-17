@@ -24,7 +24,7 @@ test('default entries do not return null', function () {
     foreach ($mockBlock->getChildComponents() as $component) {
         $callback = $method->invoke($faker, $component);
 
-        if($callback instanceof Closure){
+        if ($callback instanceof Closure) {
             expect($callback($component))->not->toBeNull();
         } else {
             expect($callback)->not->toBeNull();

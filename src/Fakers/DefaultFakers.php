@@ -22,7 +22,7 @@ class DefaultFakers implements FakerProvider
             return $this->defaultCallback($component);
         }
 
-        if(empty($options = $component->getOptions())){
+        if (empty($options = $component->getOptions())) {
             return fake()->randomElement(array_keys($options));
         }
 
