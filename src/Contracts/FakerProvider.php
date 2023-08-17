@@ -16,12 +16,18 @@ interface FakerProvider
 
     public function defaultCallback(Field $component): string;
 
+    /**
+     * @return array<int, string|int|float>
+     */
     public function withSuggestions(TagsInput $component): array;
 
     public function date(): string;
 
     public function file(FileUpload $upload): string;
 
+    /**
+     * @return string[]
+     */
     public function keyValue(KeyValue $component): array;
 
     public function color(ColorPicker $color): string;

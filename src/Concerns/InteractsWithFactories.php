@@ -15,32 +15,41 @@ trait InteractsWithFactories
 {
     protected Field $component;
 
+    /**
+     * @var Factory<Model>|null
+     */
     protected ?Factory $factory = null;
 
     /**
-     * @param  class-string<Factory>|null  $factory
+     * @param  class-string<Factory<Model>>|null  $factory
      */
     public function withFactory(string $factory = null): static
     {
         return tap($this, function () use ($factory): void {
             try {
-                $this->factory = resolve($factory);
-            } catch (BindingResolutionException $e) {
-                /** @var Model $model */
-                if (is_null($model = $this->component->getModel())) {
-                    throw $e;
+                if (! is_null($factory)) {
+                    $this->factory = resolve($factory);
+
+                    return;
                 }
 
-                /** @var HasFactory $model */
+                if (is_null($model = $this->component->getModel())) {
+                    throw new InvalidArgumentException("Unable to find Model for {$this->component->getName()}");
+                }
+
                 if (! in_array(HasFactory::class, class_uses_recursive($model))) {
                     throw new InvalidArgumentException("Unable to find Factory for $model");
                 }
 
                 $this->factory = $model::factory();
+            } catch (BindingResolutionException $e) {
             }
         });
     }
 
+    /**
+     * @return ?Factory<Model>
+     */
     protected function getFactory(): ?Factory
     {
         return $this->factory;

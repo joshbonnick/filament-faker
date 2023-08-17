@@ -6,7 +6,6 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\Concerns\HasOptions;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
@@ -18,12 +17,10 @@ class DefaultFakers implements FakerProvider
 {
     public function withOptions(Field $component): mixed
     {
-        if (! in_array(HasOptions::class, class_uses_recursive($component))) {
+        if (! method_exists($component, 'getOptions')
+            || empty($options = $component->getOptions())
+        ) {
             return $this->defaultCallback($component);
-        }
-
-        if (empty($options = $component->getOptions())) {
-            return fake()->randomElement(array_keys($options));
         }
 
         if ($component instanceof CheckboxList
@@ -34,6 +31,9 @@ class DefaultFakers implements FakerProvider
         return fake()->randomElement(array_keys($options));
     }
 
+    /**
+     * @return array<int, string|int|float>
+     */
     public function withSuggestions(TagsInput $component): array
     {
         if (empty($suggestions = $component->getSuggestions())) {
@@ -42,8 +42,8 @@ class DefaultFakers implements FakerProvider
 
         return fake()->randomElements(
             array: $suggestions,
-            count: count($suggestions) > 1
-                ? fake()->numberBetween(1, count($suggestions) - 1)
+            count: ($numOfSuggestions = count($suggestions)) > 1
+                ? fake()->numberBetween(1, $numOfSuggestions - 1)
                 : 1
         );
     }
@@ -62,6 +62,9 @@ class DefaultFakers implements FakerProvider
         return str(Str::random(8))->append('.txt')->toString();
     }
 
+    /**
+     * @return string[]
+     */
     public function keyValue(KeyValue $component): array
     {
         return ['key' => 'value'];
