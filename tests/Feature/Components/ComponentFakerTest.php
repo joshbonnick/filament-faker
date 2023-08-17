@@ -8,10 +8,7 @@ use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Components\ComponentWithoutFakingFromNames;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
-use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();

@@ -1,11 +1,8 @@
 <?php
 
-
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\ComponentWithoutFakingFromNames;
 use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 it('can disable the usage of faking by component name', function () {
     expect(TextInput::make('safe_email')->fake())
