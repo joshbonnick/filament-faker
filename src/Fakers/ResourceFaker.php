@@ -44,7 +44,7 @@ class ResourceFaker implements FakesResources
 
     public function fake(): array
     {
-        return $this->getForm()->fake();
+        return $this->getForm()->faker()->withFactory($this->factory, $this->onlyAttributes)->fake();
     }
 
     public function getForm(): Form

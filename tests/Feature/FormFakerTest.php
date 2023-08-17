@@ -7,7 +7,7 @@ use FilamentFaker\Tests\TestSupport\Resources\MultipleForms;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 it('can fake forms', function () {
-    expect($fake = PostResource::fakeForm())
+    expect($fake = PostResource::fake())
         ->toBeArray()
         ->toHaveKeys([
             'title', 'company', 'brand_color', 'content', 'foo', 'bar',
@@ -35,16 +35,25 @@ it('can fake forms', function () {
 });
 
 it('can fake multiple forms', function () {
-    expect(MultipleForms::fakeForm('editPostForm'))
+    expect(MultipleForms::fake('editPostForm'))
         ->toBeArray()
         ->toHaveKeys(['title', 'content'])
-        ->and(MultipleForms::fakeForm('createCommentForm'))
+        ->and(MultipleForms::fake('createCommentForm'))
+        ->toBeArray()
+        ->toHaveKeys(['name', 'email', 'content']);
+});
+
+it('can fake multiple forms using resource faker', function () {
+    expect(MultipleForms::faker()->withForm('editPostForm')->fake())
+        ->toBeArray()
+        ->toHaveKeys(['title', 'content'])
+        ->and(MultipleForms::faker()->withForm('createCommentForm')->fake())
         ->toBeArray()
         ->toHaveKeys(['name', 'email', 'content']);
 });
 
 it('returns hidden fields when withHidden used', function () {
-    $form = PostResource::form(Form::make(FormsMock::make()));
+    $form = PostResource::faker()->getForm();
 
     expect($form->faker()->withoutHidden()->fake())
         ->not

@@ -12,8 +12,9 @@ Generate fake content for Filament forms, blocks and components.
 * [Installation](#installation)
 * [Usage](#usage)
   * [Usage In Tests](#usage-in-tests)
-  * [Faking Custom Blocks](#faking-custom-blocks)
+  * [Faking Custom & Plugin Components](#faking-custom--plugin-components)
   * [Mutating Fake Responses](#mutating-fake-responses)
+  * [Fake Using Factory Definitions](#fake-using-factory-definitions)
 <!-- TOC -->
 
 ## Requirements
@@ -69,7 +70,7 @@ class HeadingBlock extends Block
 }
 ```
 
-## Usage In Tests
+### Usage In Tests
 
 You can use the faked data in your tests.
 
@@ -112,7 +113,7 @@ class FormatBlocksTest extends TestCase
 }
 ```
 
-## Faking Custom Blocks
+### Faking Custom & Plugin Components
 
 If you have added a plugin such as [Spatie Media Library](https://filamentphp.com/plugins/filament-spatie-media-library),
 which adds the `SpatieMediaLibraryFileUpload` component you can register it in `config/filament-faker.php` like so:
@@ -134,7 +135,7 @@ If you do not register extra components, the `default` callback will be used whi
 
 You may also override the default faker method attached to built in components by adding them to the config.
 
-## Mutating Fake Responses
+### Mutating Fake Responses
 
 If you wish to fake a specific components value, you can add a `mutateFake` method which accepts an instance of
 the component and returns the faked value.

@@ -57,7 +57,7 @@ class Macros
                 return resolve(FakesResources::class, ['resource' => static::class]);
             });
 
-            Resource::macro('fakeForm', function (string $form = 'form'): array {
+            Resource::macro('fake', function (string $form = 'form'): array {
                 return static::faker()->withForm($form)->fake();
             });
         });

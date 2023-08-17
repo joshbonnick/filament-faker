@@ -21,7 +21,7 @@ it('can use factory definitions', function () {
 });
 
 it('can use factory through block faker', function () {
-    $form = PostResource::form(Form::make(FormsMock::make()));
+    $form = PostResource::faker()->getForm();
     $factory = resolve(TestFactory::class);
 
     expect($fake = $form->faker()->withFactory(TestFactory::class)->fake())
@@ -36,8 +36,28 @@ it('can use factory through block faker', function () {
         ->toEqual($factory->definition()['title']);
 });
 
+it('can use factory through resource faker', function(){
+    $factory = resolve(TestFactory::class);
+
+    expect($fake = PostResource::faker()->withFactory(TestFactory::class)->fake())
+        ->toBeArray()
+        ->toHaveKey('title')
+        ->and($fake['title'])
+        ->toEqual($factory->definition()['title'])
+        ->and($fake = PostResource::faker()->fake())
+        ->toHaveKey('title')
+        ->and($fake['title'])
+        ->not
+        ->toEqual($factory->definition()['title'])
+        ->and($fake = PostResource::fake())
+        ->toHaveKey('title')
+        ->and($fake['title'])
+        ->not
+        ->toEqual($factory->definition()['title']);
+});
+
 it('will return only keys added to onlyAttributes', function () {
-    $form = PostResource::form(Form::make(FormsMock::make()))->schema([
+    $form = PostResource::faker()->getForm()->schema([
         TextInput::make('title'),
         TextInput::make('content'),
     ]);
