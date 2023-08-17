@@ -18,10 +18,10 @@ it('respects formatStateUsing', function () {
 it('returns a formatted date', function () {
     $datepicker = PostResource::faker()->getForm()->schema([
         DateTimePicker::make('created_at')
-            ->format('Y-m-d'),
+            ->format('jS F Y'),
 
         DatePicker::make('published_at')
-            ->format('Y-m-d'),
+            ->format('jS F Y'),
     ]);
 
     [$published_at, $created_at] = array_values($datepicker->fake());
