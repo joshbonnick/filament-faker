@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts;
 
-use Filament\Forms\Components\Field;
+use Closure;
 
 interface FakesBlocks
 {
@@ -15,5 +15,5 @@ interface FakesBlocks
 
     public function shouldFakeUsingComponentName(bool $should = true): static;
 
-    public function mutateFake(Field $component): static;
+    public function mutateFake(Closure $callback): static;
 }

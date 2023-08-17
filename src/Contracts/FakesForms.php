@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts;
 
-use Filament\Forms\Components\Field;
+use Closure;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -24,5 +24,5 @@ interface FakesForms
 
     public function shouldFakeUsingComponentName(bool $should = true): static;
 
-    public function mutateFake(Field $component): static;
+    public function mutateFake(Closure $callback): static;
 }
