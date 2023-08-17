@@ -53,6 +53,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents, Filament
 
     protected function fakeComponentContent(): mixed
     {
+        if ($this->mutateCallback instanceof Closure) {
+            return ($this->mutateCallback)($this->component);
+        }
+
         if (method_exists($this->component, 'mutateFake')) {
             return $this->component->mutateFake($this->component);
         }
