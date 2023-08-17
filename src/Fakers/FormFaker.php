@@ -94,7 +94,7 @@ class FormFaker extends GeneratesFakes implements FakesForms
         }
 
         return $this->usesFactory()
-            ? $content->faker()->withFactory($this->factory)->fake()
+            ? $content->faker()->withFactory($this->factory, $this->onlyAttributes)->fake()
             : $content->faker()->fake();
     }
 }

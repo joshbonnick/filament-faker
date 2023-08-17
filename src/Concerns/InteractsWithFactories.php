@@ -80,7 +80,9 @@ trait InteractsWithFactories
             return $this->model;
         }
 
-        return $this->factory?->makeOne($attributes);
+        return tap($this->factory?->makeOne($attributes), function (?Model $model) {
+            $this->model = $model;
+        });
     }
 
     /**
@@ -94,9 +96,13 @@ trait InteractsWithFactories
 
         $instance = $this->getModelInstance()?->toArray() ?? [];
 
-        return ! empty($this->onlyAttributes)
-            ? Arr::only($instance, $this->onlyAttributes)
-            : $instance;
+        $attributes = empty($this->onlyAttributes)
+            ? $instance
+            : Arr::only($instance, $this->onlyAttributes);
+
+        return tap($attributes, function (array $attributes) {
+            $this->modelAttributes = $attributes;
+        });
     }
 
     /**

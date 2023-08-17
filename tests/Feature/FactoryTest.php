@@ -37,18 +37,20 @@ it('can use factory through block faker', function () {
 });
 
 it('will return only keys added to onlyAttributes', function () {
-    $form = PostResource::form(Form::make(FormsMock::make()));
+    $form = PostResource::form(Form::make(FormsMock::make()))->schema([
+        TextInput::make('title'),
+        TextInput::make('content'),
+    ]);
+
     $factory = resolve(TestFactory::class);
 
-    expect($fake = $form->faker()->withFactory(TestFactory::class)->fake())
+    expect($fake = $form->faker()->withFactory(TestFactory::class, ['title'])->fake())
         ->toBeArray()
         ->toHaveKey('title')
         ->and($fake['title'])
         ->toEqual($factory->definition()['title'])
-        ->and($fake = $form->faker()->fake())
-        ->toHaveKey('title')
-        ->and($fake['title'])
+        ->and($fake['content'])
         ->not
-        ->toEqual($factory->definition()['title']);
+        ->toEqual($factory->definition()['content']);
 
 });
