@@ -126,9 +126,9 @@ it('returns a date from date components', function () {
         ->nullable()
         ->date();
 
-    expect($carbon = Carbon::parse($datepicker->fake())
+    expect($carbon = Carbon::parse($datepicker->fake()))
         ->not
         ->toThrow(InvalidFormatException::class)
-        ->and($carbon->isValid()))
+        ->and($carbon->isValid())
         ->toBeTrue();
 });
