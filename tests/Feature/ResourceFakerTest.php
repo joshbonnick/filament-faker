@@ -30,3 +30,17 @@ it('can fake resources', function () {
         ->and($fake['bar'])
         ->toBeString();
 });
+
+it('accepts an instance of a form', function () {
+    $form = PostResource::faker()->getForm();
+
+    expect(PostResource::faker()->withForm($form)->fake())
+        ->toBeArray()
+        ->toHaveKeys([
+            'title', 'company', 'brand_color', 'content', 'foo', 'bar',
+            'wiz_foo', 'wiz_bar', 'tab_foo', 'tab_foobar', 'tab_bar',
+            'fieldset_foo', 'fieldset_foobar', 'fieldset_bar',
+            'grid_foo', 'grid_foobar', 'grid_bar', 'section_foo',
+            'section_content',
+        ]);
+});

@@ -41,3 +41,14 @@ it('returns a formatted date', function () {
         ->and($created_at)
         ->toEqual(now()->format('jS F Y'));
 });
+
+it('throws an exception if attempt to formatDate on none date component', function () {
+    $componentFaker = TextInput::make('test')->faker();
+
+    /** @var ReflectionMethod $reflectionMethod */
+    $reflectionMethod = tap((new ReflectionMethod($componentFaker, 'formatDate')))->setAccessible(true);
+
+    expect(fn () => $reflectionMethod->invoke($componentFaker, 'hello world'))
+        ->toThrow(InvalidArgumentException::class);
+
+});

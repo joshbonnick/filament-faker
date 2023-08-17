@@ -38,3 +38,20 @@ test('mutateFake macros are used', function () {
 
     TextInput::flushMacros();
 });
+
+test('mutateFake closure macros are used', function () {
+    TextInput::macro('mutateFake', function () {
+        return function (Field $component) {
+            if ($component->getName() === 'test') {
+                return '::test::';
+            }
+
+            return null;
+        };
+    });
+
+    expect(TextInput::make('test')->fake())
+        ->toEqual('::test::');
+
+    TextInput::flushMacros();
+});
