@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use BadMethodCallException;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\Checkbox;
@@ -57,8 +58,8 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents, Filament
             return ($this->mutateCallback)($this->component);
         }
 
-        if (method_exists($this->component, 'mutateFake')) {
-            return $this->component->mutateFake($this->component);
+        if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
+            return $mutateCallbackResponse;
         }
 
         if (Arr::has($model = $this->getModelAttributes(), $componentName = $this->component->getName())) {
@@ -111,6 +112,24 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents, Filament
         }
 
         return Carbon::parse($fakedContent)->format($this->component->getFormat());
+    }
+
+    protected function attemptToCallMutationMacro(): mixed
+    {
+        try {
+            $mutateCallback = $this->component->mutateFake($this->component);
+
+            if ($mutateCallback instanceof Closure) {
+                return $mutateCallback($this->component);
+            }
+
+            if (! is_null($mutateCallback)) {
+                return $mutateCallback;
+            }
+        } catch (BadMethodCallException $e) {
+        }
+
+        return null;
     }
 
     protected function getFake(): mixed
