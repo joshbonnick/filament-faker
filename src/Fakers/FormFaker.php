@@ -19,10 +19,11 @@ use Filament\Forms\Form;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\FilamentFaker;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker extends GeneratesFakes implements FakesForms
+class FormFaker extends GeneratesFakes implements FakesForms, FilamentFaker
 {
     use InteractsWithFactories;
 

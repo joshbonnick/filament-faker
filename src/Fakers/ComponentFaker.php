@@ -24,13 +24,14 @@ use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Contracts\FilamentFaker;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents
+class ComponentFaker extends GeneratesFakes implements FakesComponents, FilamentFaker
 {
     use InteractsWithFilamentContainer;
 
