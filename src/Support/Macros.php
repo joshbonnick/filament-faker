@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\FakesResources;
 
 class Macros
 {
@@ -26,7 +27,7 @@ class Macros
     protected function macroComponents(): static
     {
         return tap($this, function () {
-            Field::macro('faker', function () {
+            Field::macro('faker', function (): FakesComponents {
                 /* @var Field $this */
                 return app()->make(FakesComponents::class, ['component' => $this]);
             });
@@ -52,13 +53,12 @@ class Macros
     protected function macroResources(): static
     {
         return tap($this, function () {
-            Resource::macro('fakeForm', function (string $form = 'form') {
-                $formBase = Form::make(FormsMock::make());
+            Resource::macro('faker', function (): FakesResources {
+                return resolve(FakesResources::class, ['resource' => static::class]);
+            });
 
-                return rescue(
-                    callback: fn () => static::$form($formBase)->fake(),
-                    rescue: fn () => resolve(static::class)->{$form}($formBase)->fake()
-                );
+            Resource::macro('fakeForm', function (string $form = 'form'): array {
+                return static::faker()->withForm($form)->fake();
             });
         });
     }
