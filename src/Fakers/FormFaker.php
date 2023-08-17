@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker;
+namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
@@ -17,29 +17,33 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class FormFaker extends GeneratesFakes implements FakesForms
 {
-    protected Form $form;
+    protected bool $withHidden = true;
 
     public function __construct(
-        protected readonly FakesBlocks $blockFaker
+        protected Form $form,
     ) {
         parent::__construct();
     }
 
     /**
-     * {@inheritDoc}
+     * @return array<string, mixed>
      */
-    public function fake(Form $form, bool $withHidden = false): array
+    public function fake(): array
     {
-        $this->form = $form;
+        return $this->fakeComponents(collect($this->form->getComponents($this->withHidden)));
+    }
 
-        return $this->fakeComponents(collect($this->form->getComponents($withHidden)));
+    public function withoutHidden(bool $withoutHidden = true): static
+    {
+        return tap($this, function () use ($withoutHidden) {
+            $this->withHidden = ! $withoutHidden;
+        });
     }
 
     /**
@@ -76,7 +80,7 @@ class FormFaker extends GeneratesFakes implements FakesForms
     {
         return collect($builder->getChildComponents())
             ->filter(fn (Component $block) => $block instanceof Block)
-            ->map(fn (Block $block) => $this->blockFaker->fake($block))
+            ->map(fn (Block $block) => $block->faker()->fake())
             ->toArray();
     }
 

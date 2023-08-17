@@ -2,14 +2,14 @@
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\ComponentFaker;
+use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 
 it('can use fallback faker method', function () {
-    $faker = tap(resolve(ComponentFaker::class))->fake($component = MockPluginComponent::make('icon_picker'));
-    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getCallback'))->setAccessible(true);
+    $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
+    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getFake'))->setAccessible(true);
 
     expect($getCallbackMethod->invoke($faker, $component))->toBeCallable();
 });
@@ -17,13 +17,18 @@ it('can use fallback faker method', function () {
 test('default entries do not return null', function () {
     $mockBlock = MockBlock::make('test');
 
-    $faker = tap(resolve(ComponentFaker::class))->fake(TextInput::make('test'));
+    $faker = TextInput::make('test')->faker();
 
-    $method = tap(new ReflectionMethod($faker, 'getCallback'))->setAccessible(true);
+    $method = tap(new ReflectionMethod($faker, 'getFake'))->setAccessible(true);
 
     foreach ($mockBlock->getChildComponents() as $component) {
         $callback = $method->invoke($faker, $component);
-        expect($callback($component))->not->toBeNull();
+
+        if ($callback instanceof Closure) {
+            expect($callback($component))->not->toBeNull();
+        } else {
+            expect($callback)->not->toBeNull();
+        }
     }
 });
 
@@ -37,13 +42,20 @@ it('uses methods added to config first', function () {
     expect(TextInput::make('test')->fake())->toEqual('::test::');
 });
 
-it('value is still returned when exception is thrown', function () {
+test('value is still returned when exception is thrown', function () {
     class TestField extends Field
     {
         protected string $name = 'test';
     }
-    $componentMock = mock(TestField::class)->makePartial();
-    $componentMock->shouldReceive('state')->andThrow(ReflectionException::class);
+    $component = mock(TestField::class)->makePartial();
+    $component->shouldReceive('state')->andThrow(ReflectionException::class);
 
-    expect(resolve(FakesComponents::class)->fake($componentMock))->not->toBeNull();
+    expect(resolve(FakesComponents::class, compact('component'))
+        ->fake())->not->toBeNull();
+});
+
+it('handles invalid options field', function () {
+    expect(resolve(FakerProvider::class)
+        ->withOptions(TextInput::make('test')))
+        ->toBeString();
 });

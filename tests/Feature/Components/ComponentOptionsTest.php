@@ -64,3 +64,13 @@ it('returns an entry of the suggestions array for tags', function () {
         }
     }
 });
+
+it('returns an array if field with options is multiselectable', function () {
+    $select = Select::make('test')->options(['foo' => 'bar', 'hello' => 'world']);
+
+    expect($select->fake())
+        ->toBeString()
+        ->toBeIn(['foo', 'hello'])
+        ->and($select->multiple()->fake())
+        ->toBeArray();
+});
