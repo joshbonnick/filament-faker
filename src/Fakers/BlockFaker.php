@@ -8,8 +8,9 @@ use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesBlocks;
+use FilamentFaker\Contracts\FilamentFaker;
 
-class BlockFaker extends GeneratesFakes implements FakesBlocks
+class BlockFaker extends GeneratesFakes implements FakesBlocks, FilamentFaker
 {
     public function __construct(protected Block $block)
     {
@@ -33,7 +34,7 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
     protected function getContentForComponent(Field $component): mixed
     {
         return ($content = $this->mutate($this->block, $component)) instanceof Field
-            ? $content->fake() // @phpstan-ignore-line
+            ? $this->getComponentFaker($content)->fake()
             : $content;
     }
 }

@@ -6,11 +6,13 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Contracts\FakesResources;
+use FilamentFaker\Contracts\FilamentFaker;
 use FilamentFaker\Support\FormsMock;
 
-class ResourceFaker implements FakesResources
+class ResourceFaker extends GeneratesFakes implements FakesResources, FilamentFaker
 {
     use InteractsWithFactories;
 
@@ -26,6 +28,8 @@ class ResourceFaker implements FakesResources
      */
     public function __construct(string $resource)
     {
+        parent::__construct();
+
         $this->resource = $resource;
     }
 
@@ -47,7 +51,7 @@ class ResourceFaker implements FakesResources
 
     public function fake(): array
     {
-        return $this->getForm()->faker()->withFactory($this->factory, $this->onlyAttributes)->fake();
+        return $this->getFormFaker($this->getForm())->fake();
     }
 
     public function getForm(): Form

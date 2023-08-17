@@ -23,6 +23,7 @@ class PostResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
+            TextInput::make('safe_email'),
             TextInput::make('hidden_field')->hidden(),
             TextInput::make('title'),
             TextInput::make('company'),

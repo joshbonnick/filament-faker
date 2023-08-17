@@ -21,20 +21,19 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Contracts\FilamentFaker;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents
+class ComponentFaker extends GeneratesFakes implements FakesComponents, FilamentFaker
 {
     use InteractsWithFilamentContainer;
-    use InteractsWithFactories;
 
     protected Field $component;
 
@@ -54,6 +53,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
     protected function fakeComponentContent(): mixed
     {
+        if ($this->mutateCallback instanceof Closure) {
+            return ($this->mutateCallback)($this->component);
+        }
+
         if (method_exists($this->component, 'mutateFake')) {
             return $this->component->mutateFake($this->component);
         }
@@ -62,7 +65,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             return $model[$componentName];
         }
 
-        if ($this->shouldFakeUsingComponentName($this->component)
+        if ($this->getShouldFakeUsingComponentName($this->component)
             && ! method_exists($this->component, 'getOptions')
         ) {
             $content = $this->fakeUsingComponentName($this->component);
