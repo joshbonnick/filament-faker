@@ -13,7 +13,7 @@ it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
     $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getFake'))->setAccessible(true);
 
-    expect($getCallbackMethod->invoke($faker, $component))->toBeCallable();
+    expect($getCallbackMethod->invoke($faker, $component))->toBeString();
 });
 
 test('default entries do not return null', function () {
