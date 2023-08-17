@@ -7,6 +7,7 @@ use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
@@ -23,6 +24,7 @@ class PostResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
+            Hidden::make('hidden_field'),
             TextInput::make('title'),
             TextInput::make('company'),
             ColorPicker::make('brand_color')->hsl(),

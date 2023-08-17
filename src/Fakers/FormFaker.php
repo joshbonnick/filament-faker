@@ -17,16 +17,16 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\FakeBuilder;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker extends GeneratesFakes implements FakesForms, FakeBuilder
+class FormFaker extends GeneratesFakes implements FakesForms
 {
+    protected bool $withHidden = false;
+
     public function __construct(
-        protected readonly FakesBlocks $blockFaker,
         protected Form $form,
     ) {
         parent::__construct();
@@ -35,9 +35,16 @@ class FormFaker extends GeneratesFakes implements FakesForms, FakeBuilder
     /**
      * @return array<string, mixed>
      */
-    public function fake(bool $withHidden = false): array
+    public function fake(): array
     {
-        return $this->fakeComponents(collect($this->form->getComponents($withHidden)));
+        return $this->fakeComponents(collect($this->form->getComponents($this->withHidden)));
+    }
+
+    public function withHidden(bool $withHidden = false): static
+    {
+        return tap($this, function () use ($withHidden) {
+            $this->withHidden = $withHidden;
+        });
     }
 
     /**
@@ -74,7 +81,7 @@ class FormFaker extends GeneratesFakes implements FakesForms, FakeBuilder
     {
         return collect($builder->getChildComponents())
             ->filter(fn (Component $block) => $block instanceof Block)
-            ->map(fn (Block $block) => $this->blockFaker->fake($block))
+            ->map(fn (Block $block) => $block->faker()->fake())
             ->toArray();
     }
 

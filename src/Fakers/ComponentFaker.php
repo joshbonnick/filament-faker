@@ -20,7 +20,6 @@ use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
-use FilamentFaker\Contracts\FakeBuilder;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
@@ -28,7 +27,7 @@ use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents, FakeBuilder
+class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
     use InteractsWithFilamentContainer;
 

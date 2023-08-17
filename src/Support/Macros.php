@@ -16,21 +16,61 @@ class Macros
 {
     public function register(): void
     {
-        Block::macro('fake', fn (): array => app()->make(FakesBlocks::class)->fake(static::make())); // @phpstan-ignore-line
+        $this
+            ->macroComponents()
+            ->macroBlocks()
+            ->macroResources()
+            ->macroForms();
+    }
 
-        Field::macro('fake', fn (): mixed => app()->make(FakesComponents::class)->fake($this)); // @phpstan-ignore-line
+    protected function macroComponents(): static
+    {
+        return tap($this, function () {
+            Field::macro('faker', function () {
+                /* @var Field $this */
+                return app()->make(FakesComponents::class, ['component' => $this]);
+            });
 
-        Resource::macro('fakeForm', function (string $form = 'form') {
-            $formBase = Form::make(FormsMock::make());
-
-            return rescue(
-                callback: fn () => static::$form($formBase)->fake(),
-                rescue: fn () => resolve(static::class)->{$form}($formBase)->fake()
-            );
+            Field::macro('fake', fn (): mixed => $this->faker()->fake()); // @phpstan-ignore-line
         });
+    }
 
-        Form::macro('fake',
-            fn (bool $withHidden = false): array => app()->make(FakesForms::class)->fake($this, $withHidden) // @phpstan-ignore-line
-        );
+    protected function macroForms(): static
+    {
+        return tap($this, function () {
+            Form::macro('faker', function (): FakesForms {
+                /* @var Form $this */
+                return app()->make(FakesForms::class, ['form' => $this]);
+            });
+
+            Form::macro('fake', function (): array {
+                return $this->faker()->fake(); // @phpstan-ignore-line
+            });
+        });
+    }
+
+    protected function macroResources(): static
+    {
+        return tap($this, function () {
+            Resource::macro('fakeForm', function (string $form = 'form') {
+                $formBase = Form::make(FormsMock::make());
+
+                return rescue(
+                    callback: fn () => static::$form($formBase)->fake(),
+                    rescue: fn () => resolve(static::class)->{$form}($formBase)->fake()
+                );
+            });
+        });
+    }
+
+    protected function macroBlocks(): static
+    {
+        return tap($this, function () {
+            Block::macro('faker', function (string $name = 'faked'): FakesBlocks {
+                return app()->make(FakesBlocks::class, ['block' => static::make($name)]); // @phpstan-ignore-line
+            });
+
+            Block::macro('fake', fn (): array => static::faker()->fake()); // @phpstan-ignore-line
+        });
     }
 }

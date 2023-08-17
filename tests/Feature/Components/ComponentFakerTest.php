@@ -8,7 +8,7 @@ use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 
 it('can use fallback faker method', function () {
-    $faker = tap(resolve(ComponentFaker::class))->fake($component = MockPluginComponent::make('icon_picker'));
+    $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
     $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('getCallback'))->setAccessible(true);
 
     expect($getCallbackMethod->invoke($faker, $component))->toBeCallable();
@@ -17,7 +17,7 @@ it('can use fallback faker method', function () {
 test('default entries do not return null', function () {
     $mockBlock = MockBlock::make('test');
 
-    $faker = tap(resolve(ComponentFaker::class))->fake(TextInput::make('test'));
+    $faker = TextInput::make('test')->faker();
 
     $method = tap(new ReflectionMethod($faker, 'getCallback'))->setAccessible(true);
 
@@ -37,13 +37,14 @@ it('uses methods added to config first', function () {
     expect(TextInput::make('test')->fake())->toEqual('::test::');
 });
 
-it('value is still returned when exception is thrown', function () {
+test('value is still returned when exception is thrown', function () {
     class TestField extends Field
     {
         protected string $name = 'test';
     }
-    $componentMock = mock(TestField::class)->makePartial();
-    $componentMock->shouldReceive('state')->andThrow(ReflectionException::class);
+    $component = mock(TestField::class)->makePartial();
+    $component->shouldReceive('state')->andThrow(ReflectionException::class);
 
-    expect(resolve(FakesComponents::class)->fake($componentMock))->not->toBeNull();
+    expect(resolve(FakesComponents::class, compact('component'))
+        ->fake())->not->toBeNull();
 });

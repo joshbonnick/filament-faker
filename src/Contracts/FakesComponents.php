@@ -6,4 +6,5 @@ namespace FilamentFaker\Contracts;
 
 interface FakesComponents
 {
+    public function fake(): mixed;
 }

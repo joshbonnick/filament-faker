@@ -7,11 +7,12 @@ namespace FilamentFaker\Fakers;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\FakeBuilder;
 use FilamentFaker\Contracts\FakesBlocks;
 
-class BlockFaker extends GeneratesFakes implements FakesBlocks, FakeBuilder
+class BlockFaker extends GeneratesFakes implements FakesBlocks
 {
+    protected bool $withHidden = false;
+
     public function __construct(protected Block $block)
     {
         parent::__construct();
@@ -29,6 +30,13 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks, FakeBuilder
                 ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForComponent($component)])
                 ->toArray(),
         ];
+    }
+
+    public function withHidden(bool $withHidden = false): static
+    {
+        return tap($this, function () use ($withHidden) {
+            $this->withHidden = $withHidden;
+        });
     }
 
     protected function getContentForComponent(Field $component): mixed

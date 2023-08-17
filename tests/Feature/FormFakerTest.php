@@ -35,9 +35,16 @@ it('can fake forms', function () {
 it('can fake multiple forms', function () {
     expect(MultipleForms::fakeForm('editPostForm'))
         ->toBeArray()
-        ->toHaveKeys(['title', 'content']);
-
-    expect(MultipleForms::fakeForm('createCommentForm'))
+        ->toHaveKeys(['title', 'content'])
+        ->and(MultipleForms::fakeForm('createCommentForm'))
         ->toBeArray()
         ->toHaveKeys(['name', 'email', 'content']);
+});
+
+it('returns hidden fields when withHidden used', function () {
+    expect($fake = PostResource::fakeForm())
+        ->toBeArray()
+        ->toHaveKeys([
+            'hidden_field',
+        ]);
 });
