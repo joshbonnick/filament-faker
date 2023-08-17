@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -25,6 +26,7 @@ use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
 use Illuminate\Support\Arr;
+use InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
 use Throwable;
@@ -76,6 +78,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
     protected function format(mixed $fakedContent): mixed
     {
         try {
+            if (is_a($this->component, DateTimePicker::class)) {
+                return $this->formatDate($fakedContent);
+            }
+
             $afterStateHydrated = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
 
             $this->component->state(fn (Set $set) => $set($this->component->getName(), $fakedContent));
@@ -93,6 +99,15 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
         }
 
         return $fakedContent;
+    }
+
+    protected function formatDate(string $fakedContent): string
+    {
+        if (! is_a($this->component, DateTimePicker::class)) {
+            throw new InvalidArgumentException("{$this->component->getName()} cannot be formatted into a date.");
+        }
+
+        return Carbon::parse($fakedContent)->format($this->component->getFormat());
     }
 
     protected function getFake(): mixed
