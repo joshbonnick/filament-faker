@@ -36,7 +36,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
 
                 return rescue(
                     callback: fn () => static::$form($formBase)->fake(),
-                    rescue: fn () => (new static())->{$form}($formBase)->fake() // @phpstan-ignore-line
+                    rescue: fn () => resolve(static::class)->{$form}($formBase)->fake() // @phpstan-ignore-line
                 );
             });
 
