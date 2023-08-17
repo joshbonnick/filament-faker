@@ -17,12 +17,15 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\GeneratesFakes;
+use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class FormFaker extends GeneratesFakes implements FakesForms
 {
+    use InteractsWithFactories;
+
     protected bool $withHidden = true;
 
     public function __construct(
@@ -86,8 +89,12 @@ class FormFaker extends GeneratesFakes implements FakesForms
 
     protected function getContentForComponent(Field $component): mixed
     {
-        return ($content = $this->mutate($this->form, $component)) instanceof Field
-            ? $content->fake() // @phpstan-ignore-line
-            : $content;
+        if (! ($content = $this->mutate($this->form, $component)) instanceof Field) {
+            return $content;
+        }
+
+        return $this->usesFactory()
+            ? $content->faker()->withFactory($this->factory, $this->onlyAttributes)->fake()
+            : $content->faker()->fake();
     }
 }

@@ -9,3 +9,10 @@ parameters:
     tmpDir: build/phpstan
     checkOctaneCompatibility: true
     checkModelProperties: true
+    ignoreErrors:
+        - '#Call to an undefined method Filament\\Forms\\Components\\Builder\\Block::faker\(\)#'
+        - '#Call to an undefined method Filament\\Forms\\Components\\Field::faker\(\)#'
+        - '#Call to an undefined method Filament\\Forms\\Form::faker\(\)#'
+        - '#Call to an undefined method FilamentFaker\\Support\\Macros::faker\(\)#'
+        - '#Call to an undefined static method static\(FilamentFaker\\Support\\Macros\)::faker\(\)#'
+        - '#Call to an undefined static method static\(FilamentFaker\\Support\\Macros\)::make\(\)#'

@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
+use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use Illuminate\Support\Str;
+use InvalidArgumentException;
 use UnhandledMatchError;
 
 abstract class GeneratesFakes
 {
     use InteractsWithFakeConfig;
-    use GeneratesFakesFromComponentName;
+
+    protected Block $block;
+
+    protected Field $component;
 
     public function __construct()
     {
@@ -32,5 +38,45 @@ abstract class GeneratesFakes
         }
 
         return $component;
+    }
+
+    protected function shouldFakeUsingComponentName(Field $component): bool
+    {
+        $target = $this->component ?? $this->block;
+
+        return method_exists($target, 'shouldFakeUsingComponentName')
+            ? $target->shouldFakeUsingComponentName($component)
+            : config('filament-faker.use_component_names_for_fake', true);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    protected function fakeUsingComponentName(Field $component): mixed
+    {
+        if ($this->isDisabledFakerMethod($name = Str::camel($component->getName()))) {
+            return null;
+        }
+
+        try {
+            return fake()->$name;
+        } catch (InvalidArgumentException $e) {
+            return null;
+        }
+    }
+
+    protected function isDisabledFakerMethod(string $componentName): bool
+    {
+        $methods = $this->filteredFakerMethods();
+
+        return in_array(Str::camel($componentName), $methods) || in_array(Str::snake($componentName), $methods);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function filteredFakerMethods(): array
+    {
+        return config('filament-faker.slow_faker_methods', []);
     }
 }

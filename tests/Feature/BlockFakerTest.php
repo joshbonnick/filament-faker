@@ -71,7 +71,7 @@ it('can generate fake blocks content', function () {
 it('can mutate a specific component', function () {
     expect(MockBlock::make())
         ->toHaveMethod('mutateFake')
-        ->and($fake = MockBlock::fake())
+        ->and($fake = MockBlock::faker()->fake())
         ->toBeArray()
         ->toHaveKeys(['type', 'data'])
         ->and($fake['data'])

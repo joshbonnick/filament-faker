@@ -19,6 +19,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
+use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
@@ -30,6 +31,7 @@ use Throwable;
 class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
     use InteractsWithFilamentContainer;
+    use InteractsWithFactories;
 
     protected Field $component;
 
@@ -53,7 +55,13 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             return $this->component->mutateFake($this->component);
         }
 
-        if ($this->shouldFakeUsingComponentName($this->component) && ! method_exists($this->component, 'getOptions')) {
+        if (Arr::has($model = $this->getModelAttributes(), $componentName = $this->component->getName())) {
+            return $model[$componentName];
+        }
+
+        if ($this->shouldFakeUsingComponentName($this->component)
+            && ! method_exists($this->component, 'getOptions')
+        ) {
             $content = $this->fakeUsingComponentName($this->component);
         }
 
@@ -104,7 +112,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             KeyValue::class => $this->faker->keyValue($this->component),
             ColorPicker::class => $this->faker->color($this->component),
             RichEditor::class => $this->faker->html(),
-            default => fn (Field $component) => $this->faker->defaultCallback($this->component),
+            default => $this->faker->defaultCallback($this->component),
         };
     }
 }

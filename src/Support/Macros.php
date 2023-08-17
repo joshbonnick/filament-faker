@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\FakesResources;
 
 class Macros
 {
@@ -26,12 +27,12 @@ class Macros
     protected function macroComponents(): static
     {
         return tap($this, function () {
-            Field::macro('faker', function () {
+            Field::macro('faker', function (): FakesComponents {
                 /* @var Field $this */
                 return app()->make(FakesComponents::class, ['component' => $this]);
             });
 
-            Field::macro('fake', fn (): mixed => $this->faker()->fake()); // @phpstan-ignore-line
+            Field::macro('fake', fn (): mixed => $this->faker()->fake());
         });
     }
 
@@ -44,7 +45,7 @@ class Macros
             });
 
             Form::macro('fake', function (): array {
-                return $this->faker()->fake(); // @phpstan-ignore-line
+                return $this->faker()->fake();
             });
         });
     }
@@ -52,13 +53,12 @@ class Macros
     protected function macroResources(): static
     {
         return tap($this, function () {
-            Resource::macro('fakeForm', function (string $form = 'form') {
-                $formBase = Form::make(FormsMock::make());
+            Resource::macro('faker', function (): FakesResources {
+                return resolve(FakesResources::class, ['resource' => static::class]);
+            });
 
-                return rescue(
-                    callback: fn () => static::$form($formBase)->fake(),
-                    rescue: fn () => resolve(static::class)->{$form}($formBase)->fake()
-                );
+            Resource::macro('fake', function (string $form = 'form'): array {
+                return static::faker()->withForm($form)->fake();
             });
         });
     }
@@ -67,10 +67,10 @@ class Macros
     {
         return tap($this, function () {
             Block::macro('faker', function (string $name = 'faked'): FakesBlocks {
-                return app()->make(FakesBlocks::class, ['block' => static::make($name)]); // @phpstan-ignore-line
+                return app()->make(FakesBlocks::class, ['block' => static::make($name)]);
             });
 
-            Block::macro('fake', fn (): array => static::faker()->fake()); // @phpstan-ignore-line
+            Block::macro('fake', fn (): array => static::faker()->fake());
         });
     }
 }
