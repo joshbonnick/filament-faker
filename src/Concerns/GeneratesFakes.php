@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\FakesResources;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use UnhandledMatchError;
