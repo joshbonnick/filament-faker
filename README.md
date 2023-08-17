@@ -97,7 +97,7 @@ namespace Tests\Feature\Services\ContentFormatting;
 use App\Contracts\ContentFormatter;
 use App\Filament\Blocks\HeadingBlock;
 use App\Filament\Resources\PostResource;
-use Tests\TestCase;
+use Filament\Forms\Components\Field;use Tests\TestCase;
 
 class FormatBlocksTest extends TestCase
 {
@@ -120,8 +120,13 @@ class FormatBlocksTest extends TestCase
         $service = app()->make(ContentFormatter::class);
         $content = $service->format($blocks);
         // or...
-        $data = PostResource::fakeForm();
+        $data = PostResource::fake();
         $content = $service->format($data);
+        // or apply mutations...
+        $data = PostResource::faker()->mutateFake(fn (Field $component): ?string => match ($component->getName()) {
+            'title' => fake()->jobTitle(),
+            default => null,
+        })->fake();
         
         // Test the content...
     }
@@ -194,25 +199,9 @@ class MutatedComponent extends TextInput
     }
 }
 ```
-```php
-<?php
-
-namespace App\Filament\Blocks;
-
-use Filament\Forms\Components\Builder\Block;
-
-class HeadingBlock extends Block
-{
-    public function mutateFake(Field $component): string
-    {
-        return match($component->getName()){
-            'level' => fake()->numberBetween(1, 5),
-        };
-    }
-}
-```
 
 ### Fake Using Factory Definitions
+
 ```php
 <?php
 
