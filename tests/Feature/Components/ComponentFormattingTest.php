@@ -3,6 +3,7 @@
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
@@ -16,20 +17,27 @@ it('respects formatStateUsing', function () {
 
 it('returns a formatted date', function () {
     $datepicker = PostResource::faker()->getForm()->schema([
+        DateTimePicker::make('created_at')
+            ->format('Y-m-d'),
+
         DatePicker::make('published_at')
-            ->label('Published Date')
-            ->nullable()
-            ->default('31-12-2000')
             ->format('Y-m-d'),
     ]);
 
-    $date = $datepicker->fake()['published_at'];
+    [$published_at, $created_at] = array_values($datepicker->fake());
 
-    expect($carbon = Carbon::parse($date))
+    expect($carbon = Carbon::parse($published_at))
         ->not
         ->toThrow(InvalidFormatException::class)
         ->and($carbon->isValid())
         ->toBeTrue()
-        ->and($date)
-        ->toEqual('2000-12-31');
+        ->and($published_at)
+        ->toEqual(now()->format('jS F Y'))
+        ->and($carbon = Carbon::parse($created_at))
+        ->not
+        ->toThrow(InvalidFormatException::class)
+        ->and($carbon->isValid())
+        ->toBeTrue()
+        ->and($created_at)
+        ->toEqual(now()->format('jS F Y'));
 });
