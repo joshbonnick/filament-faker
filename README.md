@@ -30,7 +30,7 @@ Generate fake content for Filament forms, blocks and components.
 You can install the package via composer:
 
 ```bash
-composer require joshbonnick/filament-faker
+composer require joshbonnick/filament-faker --dev
 ```
 
 You can publish the config file with:
