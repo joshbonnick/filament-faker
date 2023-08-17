@@ -15,7 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
           ref: ${{ github.event.release.target_commitish }}
 
       - name: Update Changelog
