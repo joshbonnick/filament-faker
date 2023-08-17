@@ -9,6 +9,10 @@ class TestFactory extends PostFactory
      */
     public function definition(): array
     {
-        return [...parent::definition(), 'title' => '::title::'];
+        return [
+            ...parent::definition(),
+            'title' => '::title::',
+            'content' => '::content::',
+        ];
     }
 }
