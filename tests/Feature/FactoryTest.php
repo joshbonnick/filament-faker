@@ -1,7 +1,6 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Database\factories\PostFactory;
 use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 
