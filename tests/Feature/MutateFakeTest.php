@@ -29,3 +29,12 @@ test('mutateFake can be chained onto components', function () {
     expect(TextInput::make('test')->faker()->mutateFake(fn (TextInput $input) => '::test::')->fake())
         ->toEqual('::test::');
 });
+
+test('mutateFake macros are used', function () {
+    TextInput::macro('mutateFake', fn () => '::test::');
+
+    expect(TextInput::make('test')->fake())
+        ->toEqual('::test::');
+
+    TextInput::flushMacros();
+});
