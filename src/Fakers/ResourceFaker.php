@@ -21,6 +21,9 @@ class ResourceFaker implements FakesResources
 
     protected ?Form $form = null;
 
+    /**
+     * @param  class-string<resource>  $resource
+     */
     public function __construct(string $resource)
     {
         $this->resource = $resource;

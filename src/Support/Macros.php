@@ -32,7 +32,7 @@ class Macros
                 return app()->make(FakesComponents::class, ['component' => $this]);
             });
 
-            Field::macro('fake', fn (): mixed => $this->faker()->fake()); // @phpstan-ignore-line
+            Field::macro('fake', fn (): mixed => $this->faker()->fake());
         });
     }
 
@@ -45,7 +45,7 @@ class Macros
             });
 
             Form::macro('fake', function (): array {
-                return $this->faker()->fake(); // @phpstan-ignore-line
+                return $this->faker()->fake();
             });
         });
     }
@@ -67,10 +67,10 @@ class Macros
     {
         return tap($this, function () {
             Block::macro('faker', function (string $name = 'faked'): FakesBlocks {
-                return app()->make(FakesBlocks::class, ['block' => static::make($name)]); // @phpstan-ignore-line
+                return app()->make(FakesBlocks::class, ['block' => static::make($name)]);
             });
 
-            Block::macro('fake', fn (): array => static::faker()->fake()); // @phpstan-ignore-line
+            Block::macro('fake', fn (): array => static::faker()->fake());
         });
     }
 }

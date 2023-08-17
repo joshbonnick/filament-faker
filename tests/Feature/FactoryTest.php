@@ -1,8 +1,6 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Form;
-use FilamentFaker\Support\FormsMock;
 use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
@@ -36,7 +34,7 @@ it('can use factory through block faker', function () {
         ->toEqual($factory->definition()['title']);
 });
 
-it('can use factory through resource faker', function(){
+it('can use factory through resource faker', function () {
     $factory = resolve(TestFactory::class);
 
     expect($fake = PostResource::faker()->withFactory(TestFactory::class)->fake())
