@@ -30,6 +30,8 @@ use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
+use function FilamentFaker\callOrReturn;
+
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
     protected Field $component;
@@ -60,11 +62,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
             $content = $this->realTimeFactory->fakeFromName($this->component->getName());
         }
 
-        $content ??= ($faked = $this->getFake()) instanceof Closure
-            ? $faked($this->component)
-            : $faked;
-
-        return $this->format($content);
+        return $this->format($content ?? callOrReturn($this->generateComponentData(), $this->component));
     }
 
     protected function format(mixed $fakedContent): mixed
@@ -120,7 +118,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         return null;
     }
 
-    protected function getFake(): mixed
+    protected function generateComponentData(): mixed
     {
         if (Arr::has($config = $this->config(), $class = $this->component::class)) {
             return $config[$class];
