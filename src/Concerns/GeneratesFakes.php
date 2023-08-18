@@ -5,17 +5,16 @@ declare(strict_types=1);
 namespace FilamentFaker\Concerns;
 
 use Closure;
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use FilamentFaker\Support\FormsMock;
 
 abstract class GeneratesFakes
 {
     use ResolvesFakerInstances;
     use InteractsWithFactories;
     use TransformsFakes;
+    use InteractsWithFilamentContainer;
 
     /**
      * @var array<string|class-string<Field>, Closure>
@@ -23,16 +22,6 @@ abstract class GeneratesFakes
     protected array $fakesConfig;
 
     protected bool $shouldFakeUsingComponentName = true;
-
-    public function setUpComponent(Field $component): Field
-    {
-        return tap($component)->container($this->container());
-    }
-
-    protected function container(): ComponentContainer
-    {
-        return ComponentContainer::make(FormsMock::make());
-    }
 
     /**
      * Attempt to apply mutations from the parent component instance before returning

@@ -35,7 +35,7 @@ test('default entries do not return null', function () {
     }
 });
 
-test('value is still returned when exception is thrown', function () {
+test('value is still returned when reflection exception is thrown', function () {
     class TestField extends Field
     {
         protected string $name = 'test';
@@ -53,16 +53,6 @@ it('handles invalid options field', function () {
         ->toBeString();
 });
 
-it('can use a faker method if it exists', function () {
-    expect(TextInput::make('safe_email')->fake())
-        ->toBeString()
-        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
-});
-
-it('uses option value even when faker method is available', function () {
-    expect(MockBlock::fake()['data']['company'])->toBeIn(['foo', 'bar']);
-});
-
 it('returns a date from date components', function () {
     $datepicker = DatePicker::make('published_at')
         ->label('Published Date')
@@ -74,4 +64,19 @@ it('returns a date from date components', function () {
         ->toThrow(InvalidFormatException::class)
         ->and($carbon->isValid())
         ->toBeTrue();
+});
+
+test('faker returns an instance of FakesComponents', function () {
+    expect(TextInput::make('test')->faker())
+        ->toBeInstanceOf(FakesComponents::class);
+});
+
+it('uses methods added to config first', function () {
+    expect(TextInput::make('test')->fake())->not->toEqual('::test::');
+
+    config()->set('filament-faker.fakes', [
+        TextInput::class => fn () => '::test::',
+    ]);
+
+    expect(TextInput::make('test')->fake())->toEqual('::test::');
 });

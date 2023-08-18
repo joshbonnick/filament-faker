@@ -215,6 +215,8 @@ class FormatBlocksTest extends TestCase
 ```
 
 If you need to specify a factory you can use you can pass a `class-string` or instance of a `Factory` to the `withFactory()` method.
+Only Resources can resolve a factory automatically, if you wish to use a factory with a Block or Component, you must provide the
+factory.
 
 #### Selecting Definitions
 

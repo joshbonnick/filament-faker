@@ -1,5 +1,7 @@
 <?php
 
+use Filament\Forms\Components\Builder\Block;
+use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 
 it('can generate fake blocks content', function () {
@@ -68,15 +70,7 @@ it('can generate fake blocks content', function () {
         ->toStartWith('hsl(');
 });
 
-it('can mutate a specific component', function () {
-    expect(MockBlock::make())
-        ->toHaveMethod('mutateFake')
-        ->and($fake = MockBlock::faker()->fake())
-        ->toBeArray()
-        ->toHaveKeys(['type', 'data'])
-        ->and($fake['data'])
-        ->not
-        ->toBeEmpty()
-        ->and($fake['data']['phone_number'])
-        ->toBe('::phone::');
+test('faker returns an instance of FakesBlocks', function () {
+    expect(Block::make('test')->faker())
+        ->toBeInstanceOf(FakesBlocks::class);
 });

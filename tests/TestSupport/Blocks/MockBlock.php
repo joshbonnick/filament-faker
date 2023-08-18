@@ -45,6 +45,7 @@ class MockBlock extends Components\Builder\Block
                 Components\TextInput::make('email_field'),
                 Components\TextInput::make('safe_email'),
                 Components\TextInput::make('phone_number'),
+                Components\TextInput::make('title'),
                 Components\Select::make('company')->options([
                     'foo' => 'bar',
                     'bar' => 'foo',

@@ -11,8 +11,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
+/**
+ * @internal
+ */
 trait InteractsWithFactories
 {
+    use InteractsWithFilamentContainer;
+
     /**
      * @var Factory<Model>|null
      */
@@ -47,27 +52,32 @@ trait InteractsWithFactories
                 return;
             }
 
+            if (is_null($factory) && ! (isset($this->resource) || isset($this->form))) {
+                throw new InvalidArgumentException('You must provide a factory.');
+            }
+
             try {
-                if (! is_null($factory)) {
-                    $this->factory = resolve($factory);
+                if (is_null($factory)) {
+                    throw new BindingResolutionException();
                 }
+
+                $this->factory = resolve($factory);
             } catch (BindingResolutionException $e) {
                 if (is_null($model = $this->resolveModel())) {
-                    throw new InvalidArgumentException("Unable to find Model for {$this->component->getName()}");
+                    throw new InvalidArgumentException('Unable to find Model.');
                 }
 
                 if (! in_array(HasFactory::class, class_uses_recursive($model))) {
-                    throw new InvalidArgumentException("Unable to find Factory for $model");
+                    throw new InvalidArgumentException("Unable to find Factory for $model.");
                 }
 
                 $this->factory = $model::factory(); // @phpstan-ignore-line
             }
-        });
-    }
 
-    protected function usesFactory(): bool
-    {
-        return ! is_null($this->factory);
+            if(!$this->factory){
+                throw new InvalidArgumentException("Unable to resolve Factory.");
+            }
+        });
     }
 
     /**
@@ -80,10 +90,14 @@ trait InteractsWithFactories
         return match (true) {
             isset($this->component) => $this->component->getModel(),
             isset($this->form) => $this->form->getModel(),
-            isset($this->block) => $this->block->getModel(),
             isset($this->resource) => $this->resource::getModel(),
-            default => throw new InvalidArgumentException('Unable to find resolve Model.')
+            default => throw new InvalidArgumentException('Unable to resolve Model.')
         };
+    }
+
+    protected function usesFactory(): bool
+    {
+        return ! is_null($this->factory);
     }
 
     /**
