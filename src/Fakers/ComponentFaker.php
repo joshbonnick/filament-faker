@@ -22,7 +22,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\DefaultFakerProvider;
+use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\RealTimeFactory;
 use Illuminate\Support\Arr;
@@ -36,7 +36,7 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
     protected Field $component;
 
     public function __construct(
-        protected readonly DefaultFakerProvider $faker,
+        protected readonly DataGenerator $faker,
         protected readonly RealTimeFactory $realTimeFactory,
         Field $component,
     ) {

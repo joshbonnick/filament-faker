@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Fakers;
+namespace FilamentFaker;
 
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
@@ -10,10 +10,10 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
-use FilamentFaker\Contracts\DefaultFakerProvider;
+use FilamentFaker\Contracts\DataGenerator;
 use Illuminate\Support\Str;
 
-class DefaultFakers implements DefaultFakerProvider
+class ComponentDataGenerator implements DataGenerator
 {
     public function withOptions(Field $component): mixed
     {

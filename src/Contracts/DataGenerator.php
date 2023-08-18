@@ -10,7 +10,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
 
-interface DefaultFakerProvider
+interface DataGenerator
 {
     public function withOptions(Field $component): mixed;
 

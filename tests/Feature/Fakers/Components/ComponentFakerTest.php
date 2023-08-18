@@ -5,7 +5,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Contracts\DefaultFakerProvider;
+use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
@@ -48,7 +48,7 @@ test('value is still returned when reflection exception is thrown', function () 
 });
 
 it('handles invalid options field', function () {
-    expect(resolve(DefaultFakerProvider::class)
+    expect(resolve(DataGenerator::class)
         ->withOptions(TextInput::make('test')))
         ->toBeString();
 });
