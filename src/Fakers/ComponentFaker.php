@@ -103,15 +103,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     protected function attemptToCallMutationMacro(): mixed
     {
         try {
-            $mutateCallback = $this->component->mutateFake($this->component); // @phpstan-ignore-line
-
-            if ($mutateCallback instanceof Closure) {
-                return $mutateCallback($this->component);
-            }
-
-            if (! is_null($mutateCallback)) {
-                return $mutateCallback;
-            }
+            return callOrReturn($this->component->mutateFake($this->component), $this->component); // @phpstan-ignore-line
         } catch (BadMethodCallException $e) {
         }
 
