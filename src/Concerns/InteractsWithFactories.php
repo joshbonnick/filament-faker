@@ -74,8 +74,8 @@ trait InteractsWithFactories
                 $this->factory = $model::factory(); // @phpstan-ignore-line
             }
 
-            if(!$this->factory){
-                throw new InvalidArgumentException("Unable to resolve Factory.");
+            if (! $this->factory) {
+                throw new InvalidArgumentException('Unable to resolve Factory.');
             }
         });
     }
