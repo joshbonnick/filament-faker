@@ -16,8 +16,6 @@ use InvalidArgumentException;
  */
 trait InteractsWithFactories
 {
-    use InteractsWithFilamentContainer;
-
     /**
      * @var Factory<Model>|null
      */
