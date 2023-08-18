@@ -133,7 +133,8 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         };
     }
 
-    protected function componentHasOverride(): bool {
+    protected function componentHasOverride(): bool
+    {
         return Arr::has($this->config(), $this->component::class);
     }
 
