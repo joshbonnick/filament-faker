@@ -13,4 +13,4 @@ it('returns value if not closure')
 it('accepts params')
     ->expect(callOrReturn(fn ($a, $b, $c) => [$a, $b, $c], 1, 2, 3))
     ->toBeArray()
-    ->toEqual([1,2,3]);
+    ->toEqual([1, 2, 3]);
