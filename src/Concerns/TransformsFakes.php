@@ -47,8 +47,10 @@ trait TransformsFakes
      * Get mutation methods from given components parent.
      *
      * Returns the component if no mutate methods exist.
+     *
+     * @return string|float|bool|array<int|string, mixed>|Field
      */
-    protected function getMutationsFromParent(Component|Form $parent, Field $component): mixed
+    protected function getMutationsFromParent(Component|Form $parent, Field $component): string|float|bool|array|Field
     {
         if (method_exists($parent, 'mutateFake')) {
             try {

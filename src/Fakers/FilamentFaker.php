@@ -25,19 +25,19 @@ abstract class FilamentFaker
      */
     protected array $fakesConfig;
 
-    protected bool $shouldFakeUsingComponentName = true;
-
     /**
      * Attempt to apply mutations from the parent component instance before returning
      * the components faker response.
      */
     protected function getContentForComponent(Field $component, Component|Form $parent): mixed
     {
-        if (! ($content = $this->getMutationsFromParent($parent, $component)) instanceof Field) {
-            return $content;
+        $transformed = $this->getMutationsFromParent($parent, $component);
+
+        if ($transformed instanceof Field) {
+            return $this->getComponentFaker($transformed)->fake();
         }
 
-        return $this->getComponentFaker($content)->fake();
+        return $transformed;
     }
 
     /**

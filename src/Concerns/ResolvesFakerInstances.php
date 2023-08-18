@@ -13,6 +13,8 @@ use FilamentFaker\Contracts\FakesForms;
 
 trait ResolvesFakerInstances
 {
+    protected bool $shouldFakeUsingComponentName = true;
+
     protected function getFormFaker(Form $form): FakesForms
     {
         return tap($form->faker(), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
