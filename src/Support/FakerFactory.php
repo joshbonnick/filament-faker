@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Support;
 
-use Faker\Generator;
 use FilamentFaker\Contracts\RealTimeFactory;
 use Illuminate\Support\Str;
 use InvalidArgumentException;

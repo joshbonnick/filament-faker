@@ -8,6 +8,9 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Support\FormsMock;
 
+/**
+ * @internal
+ */
 trait InteractsWithFilamentContainer
 {
     public function setUpComponent(Field $component): Field

@@ -11,6 +11,9 @@ use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\FakesForms;
 
+/**
+ * @internal
+ */
 trait ResolvesFakerInstances
 {
     protected bool $shouldFakeUsingComponentName = true;

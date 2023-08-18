@@ -10,6 +10,9 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
 use UnhandledMatchError;
 
+/**
+ * @internal
+ */
 trait TransformsFakes
 {
     protected ?Closure $mutateCallback = null;
