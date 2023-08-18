@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
+use BadMethodCallException;
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use UnhandledMatchError;
 
 use function FilamentFaker\callOrReturn;
 
@@ -57,16 +57,10 @@ trait TransformsFakes
      */
     protected function getMutationsFromParent(Component|Form $parent, Field $component): string|float|bool|array|Field
     {
-        if (method_exists($parent, 'mutateFake')) {
-            try {
-                $parentMutationCallback = $parent->mutateFake($component);
-            } catch (UnhandledMatchError $e) {
-                return $component;
-            }
-
-            return callOrReturn($parentMutationCallback, $component) ?? $component;
+        try {
+            return callOrReturn($parent->mutateFake($component), $component) ?? $component; // @phpstan-ignore-line
+        } catch (BadMethodCallException $e) {
+            return $component;
         }
-
-        return $component;
     }
 }

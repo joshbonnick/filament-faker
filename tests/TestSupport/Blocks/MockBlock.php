@@ -12,6 +12,7 @@ class MockBlock extends Components\Builder\Block
         return match ($component->getName()) {
             'phone_number' => fn () => '::phone::',
             'email_field' => fn () => 'dev@example.com',
+            default => null,
         };
     }
 
