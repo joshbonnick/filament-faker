@@ -9,10 +9,9 @@ use Filament\Resources\Resource;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Contracts\FakesResources;
-use FilamentFaker\Contracts\FilamentFaker;
 use FilamentFaker\Support\FormsMock;
 
-class ResourceFaker extends GeneratesFakes implements FakesResources, FilamentFaker
+class ResourceFaker extends GeneratesFakes implements FakesResources
 {
     use InteractsWithFactories;
 

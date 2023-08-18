@@ -24,14 +24,13 @@ use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
-use FilamentFaker\Contracts\FilamentFaker;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents, FilamentFaker
+class ComponentFaker extends GeneratesFakes implements FakesComponents
 {
     protected Field $component;
 

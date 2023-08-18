@@ -1,8 +1,6 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Contracts\FakesComponents;
-use FilamentFaker\Fakers\ComponentFaker;
 use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 use FilamentFaker\Tests\TestSupport\Models\WithoutFactory;
@@ -71,10 +69,10 @@ test('exception is thrown if cannot resolve model', function () {
         ->toThrow(InvalidArgumentException::class, 'Unable to find Model for test');
 });
 
-test('exception is thrown if model does not use HasFactory', function(){
+test('exception is thrown if model does not use HasFactory', function () {
     expect(fn () => TextInput::make('test')->model(WithoutFactory::class)->faker()->withFactory('')->fake())
         ->toThrow(
             InvalidArgumentException::class,
-            'Unable to find Factory for ' . WithoutFactory::class
+            'Unable to find Factory for '.WithoutFactory::class
         );
 });

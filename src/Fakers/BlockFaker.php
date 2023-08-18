@@ -8,9 +8,8 @@ use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesBlocks;
-use FilamentFaker\Contracts\FilamentFaker;
 
-class BlockFaker extends GeneratesFakes implements FakesBlocks, FilamentFaker
+class BlockFaker extends GeneratesFakes implements FakesBlocks
 {
     public function __construct(protected Block $block)
     {
