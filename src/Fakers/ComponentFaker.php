@@ -44,11 +44,6 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     public function fake(): mixed
     {
-        return $this->fakeComponentContent();
-    }
-
-    protected function fakeComponentContent(): mixed
-    {
         if ($this->mutateCallback instanceof Closure) {
             return ($this->mutateCallback)($this->component);
         }
@@ -57,14 +52,12 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
             return $mutateCallbackResponse;
         }
 
-        if (Arr::has($model = $this->getModelAttributes(), $componentName = $this->component->getName())) {
-            return $model[$componentName];
+        if ($this->factoryDefinitionExists()) {
+            return $this->getModelAttributes()[$this->component->getName()];
         }
 
-        if ($this->getShouldFakeUsingComponentName()
-            && ! method_exists($this->component, 'getOptions')
-        ) {
-            $content = $this->realTimeFactory->fakeFromName($componentName);
+        if ($this->getShouldFakeUsingComponentName()) {
+            $content = $this->realTimeFactory->fakeFromName($this->component->getName());
         }
 
         $content ??= ($faked = $this->getFake()) instanceof Closure
@@ -150,6 +143,11 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         };
     }
 
+    protected function factoryDefinitionExists(): bool
+    {
+        return Arr::has($this->getModelAttributes(), $this->component->getName());
+    }
+
     /**
      * Resolve whether Faker should be using the components name for generating data.
      */
@@ -159,6 +157,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
             return false;
         }
 
-        return config('filament-faker.use_component_names_for_fake', true);
+        return config('filament-faker.fake_using_component_name', true)
+            && ! method_exists($this->component, 'getOptions');
     }
 }

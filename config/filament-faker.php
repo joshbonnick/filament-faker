@@ -18,7 +18,7 @@ return [
      *
      * You can disable this feature for the package or disable it per faker instance.
      */
-    'use_component_names_for_fake' => true,
+    'fake_using_component_name' => true,
 
     /**
      * This section allows you to specify an array of Faker methods that should not be

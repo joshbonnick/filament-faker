@@ -31,7 +31,7 @@ it('can disable the usage of faking by component name from config', function () 
         ->toBeString()
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
 
-    config()->set('filament-faker.use_component_names_for_fake', false);
+    config()->set('filament-faker.fake_using_component_name', false);
 
     expect(TextInput::make('safe_email')->fake())
         ->toBeString()
