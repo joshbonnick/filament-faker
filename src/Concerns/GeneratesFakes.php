@@ -4,27 +4,34 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
-use Filament\Forms\Components\Builder\Block;
+use Closure;
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use FilamentFaker\Support\FormsMock;
 
 abstract class GeneratesFakes
 {
     use ResolvesFakerInstances;
-    use InteractsWithFakeConfig;
     use InteractsWithFactories;
-    use MutatesFakes;
-    use InteractsWithFilamentContainer;
-    use InteractsWithFaker;
+    use TransformsFakes;
 
-    protected Block $block;
+    /**
+     * @var array<string|class-string<Field>, Closure>
+     */
+    protected array $fakesConfig;
 
-    protected Field $component;
+    protected bool $shouldFakeUsingComponentName = true;
 
-    public function __construct()
+    public function setUpComponent(Field $component): Field
     {
-        $this->setUpConfig();
+        return tap($component)->container($this->container());
+    }
+
+    protected function container(): ComponentContainer
+    {
+        return ComponentContainer::make(FormsMock::make());
     }
 
     /**
@@ -38,5 +45,15 @@ abstract class GeneratesFakes
         }
 
         return $this->getComponentFaker($content)->fake();
+    }
+
+    /**
+     * @return array<string|class-string<Field>, Closure>
+     */
+    protected function config(): array
+    {
+        return $this->fakesConfig ?? tap(config('filament-faker.fakes', []), function (array $config) {
+            $this->fakesConfig = $config;
+        });
     }
 }

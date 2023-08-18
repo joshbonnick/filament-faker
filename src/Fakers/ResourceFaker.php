@@ -7,14 +7,11 @@ namespace FilamentFaker\Fakers;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Contracts\FakesResources;
 use FilamentFaker\Support\FormsMock;
 
 class ResourceFaker extends GeneratesFakes implements FakesResources
 {
-    use InteractsWithFactories;
-
     /**
      * @var class-string<resource>
      */
@@ -27,8 +24,6 @@ class ResourceFaker extends GeneratesFakes implements FakesResources
      */
     public function __construct(string $resource)
     {
-        parent::__construct();
-
         $this->resource = $resource;
     }
 

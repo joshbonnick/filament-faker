@@ -10,10 +10,10 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
-use FilamentFaker\Contracts\FakerProvider;
+use FilamentFaker\Contracts\DefaultFakerProvider;
 use Illuminate\Support\Str;
 
-class DefaultFakers implements FakerProvider
+class DefaultFakers implements DefaultFakerProvider
 {
     public function withOptions(Field $component): mixed
     {

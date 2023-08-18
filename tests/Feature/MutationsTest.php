@@ -1,7 +1,6 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Components\ComponentWithoutFakingFromNames;
 use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
 
 it('can disable the usage of faking by component name', function () {
@@ -18,7 +17,7 @@ it('can disable the usage of faking by component name', function () {
 });
 
 it('does not execute slow methods listed in config file', function () {
-    config()->set('filament-faker.slow_faker_methods', ['safeEmail']);
+    config()->set('filament-faker.excluded_faker_methods', ['safeEmail']);
 
     expect(TextInput::make('safe_email')->fake())
         ->not
@@ -35,18 +34,6 @@ it('uses methods added to config first', function () {
     ]);
 
     expect(TextInput::make('test')->fake())->toEqual('::test::');
-});
-
-it('can disable the usage of faking by component name with method', function () {
-    expect(TextInput::make('safe_email')->fake())
-        ->toBeString()
-        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/')
-        ->and($component = ComponentWithoutFakingFromNames::make('safe_email'))
-        ->toHaveMethod('shouldFakeUsingComponentName')
-        ->and($component->fake())
-        ->toBeString()
-        ->not
-        ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/');
 });
 
 test('mutate fake method is a priority over faker method', function () {

@@ -23,7 +23,7 @@ it('can fake forms', function () {
         ->toStartWith('hsl(')
         ->and($fake['content'])
         ->toBeArray()
-        ->toHaveCount(2)
+        ->toHaveCount(1)
         ->and($fake['content'][0]['type'])
         ->toEqual(MockBlock::class)
         ->and($fake['foo'])

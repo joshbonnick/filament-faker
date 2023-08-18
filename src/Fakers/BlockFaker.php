@@ -13,7 +13,6 @@ class BlockFaker extends GeneratesFakes implements FakesBlocks
 {
     public function __construct(protected Block $block)
     {
-        parent::__construct();
     }
 
     /**

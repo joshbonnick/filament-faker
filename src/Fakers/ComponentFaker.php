@@ -22,8 +22,9 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\FakerProvider;
+use FilamentFaker\Contracts\DefaultFakerProvider;
 use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Contracts\RealTimeFactory;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
@@ -35,11 +36,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
     protected Field $component;
 
     public function __construct(
-        protected readonly FakerProvider $faker,
+        protected readonly DefaultFakerProvider $faker,
+        protected readonly RealTimeFactory $realTimeFactory,
         Field $component,
     ) {
-        parent::__construct();
-
         $this->component = $this->setUpComponent($component);
     }
 
@@ -62,10 +62,10 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             return $model[$componentName];
         }
 
-        if ($this->getShouldFakeUsingComponentName($this->component)
+        if ($this->getShouldFakeUsingComponentName()
             && ! method_exists($this->component, 'getOptions')
         ) {
-            $content = $this->fakeUsingComponentName($this->component);
+            $content = $this->realTimeFactory->fakeFromName($componentName);
         }
 
         $content ??= ($faked = $this->getFake()) instanceof Closure
@@ -130,8 +130,8 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
 
     protected function getFake(): mixed
     {
-        if (Arr::has($this->fakesConfig, $this->component::class)) {
-            return $this->fakesConfig[$this->component::class];
+        if (Arr::has($config = $this->config(), $class = $this->component::class)) {
+            return $config[$class];
         }
 
         return match ($this->component::class) {
@@ -149,5 +149,17 @@ class ComponentFaker extends GeneratesFakes implements FakesComponents
             RichEditor::class => $this->faker->html(),
             default => $this->faker->defaultCallback($this->component),
         };
+    }
+
+    /**
+     * Resolve whether Faker should be using the components name for generating data.
+     */
+    protected function getShouldFakeUsingComponentName(): bool
+    {
+        if ($this->shouldFakeUsingComponentName === false) {
+            return false;
+        }
+
+        return config('filament-faker.use_component_names_for_fake', true);
     }
 }
