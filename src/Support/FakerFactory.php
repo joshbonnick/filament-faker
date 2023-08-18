@@ -11,13 +11,6 @@ use InvalidArgumentException;
 
 class FakerFactory implements RealTimeFactory
 {
-    protected readonly Generator $faker;
-
-    public function __construct()
-    {
-        $this->faker = fake();
-    }
-
     public function fakeFromName(string $name): mixed
     {
         if ($this->isDisabledFakerMethod($name = Str::camel($name))) {
@@ -25,7 +18,7 @@ class FakerFactory implements RealTimeFactory
         }
 
         try {
-            return $this->faker->$name;
+            return fake()->$name;
         } catch (InvalidArgumentException $e) {
             return null;
         }
