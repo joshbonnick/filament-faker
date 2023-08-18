@@ -5,21 +5,21 @@ declare(strict_types=1);
 namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Form;
-use Filament\Resources\Resource;
+use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\FakesResources;
 use FilamentFaker\Support\FormsMock;
 
 class ResourceFaker extends GeneratesFakes implements FakesResources
 {
     /**
-     * @var class-string<resource>
+     * @var class-string<FilamentResource>
      */
     protected readonly string $resource;
 
     protected ?Form $form = null;
 
     /**
-     * @param  class-string<resource>  $resource
+     * @param  class-string<FilamentResource>  $resource
      */
     public function __construct(string $resource)
     {
@@ -39,6 +39,10 @@ class ResourceFaker extends GeneratesFakes implements FakesResources
                 callback: fn () => $this->resource::$form($this->baseForm()),
                 rescue: fn () => resolve($this->resource)->{$form}($this->baseForm())
             );
+
+            if (isset($this->resource::$model)) {
+                $this->form?->model($this->resource::model);
+            }
         });
     }
 
