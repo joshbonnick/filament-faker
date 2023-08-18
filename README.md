@@ -67,24 +67,6 @@ $data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake
 $data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
 ```
 
-You may also add a `shouldFakeUsingComponentName` method to your `Block` or `Component`, the method should return a `bool`
-
-```php
-<?php
-
-namespace App\Filament\Blocks;
-
-use Filament\Forms\Components\Builder\Block;
-
-class HeadingBlock extends Block
-{
-    public function shouldFakeUsingComponentName(): bool
-    {
-        return false;
-    }
-}
-```
-
 ### Usage In Tests
 
 You can use the faked data in your tests.
