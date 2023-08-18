@@ -10,6 +10,8 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
 use UnhandledMatchError;
 
+use function FilamentFaker\callOrReturn;
+
 /**
  * @internal
  */
@@ -57,12 +59,12 @@ trait TransformsFakes
     {
         if (method_exists($parent, 'mutateFake')) {
             try {
-                $content = $parent->mutateFake($component);
+                $parentMutationCallback = $parent->mutateFake($component);
             } catch (UnhandledMatchError $e) {
                 return $component;
             }
 
-            return (is_callable($content) ? $content($component) : $content) ?? $component;
+            return callOrReturn($parentMutationCallback, $component) ?? $component;
         }
 
         return $component;
