@@ -21,7 +21,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
-use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\RealTimeFactory;

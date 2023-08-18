@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Concerns;
+namespace FilamentFaker\Fakers;
 
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use FilamentFaker\Concerns\InteractsWithFactories;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Concerns\ResolvesFakerInstances;
+use FilamentFaker\Concerns\TransformsFakes;
 
 abstract class GeneratesFakes
 {

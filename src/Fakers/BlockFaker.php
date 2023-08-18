@@ -6,7 +6,6 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
-use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesBlocks;
 
 class BlockFaker extends GeneratesFakes implements FakesBlocks

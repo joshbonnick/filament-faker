@@ -6,7 +6,6 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use FilamentFaker\Concerns\GeneratesFakes;
 use FilamentFaker\Contracts\FakesResources;
 use FilamentFaker\Support\FormsMock;
 
