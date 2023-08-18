@@ -7,7 +7,7 @@ namespace FilamentFaker\Concerns;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
-use FilamentFaker\Support\MockForm;
+use FilamentFaker\Support\Livewire;
 
 /**
  * @internal
@@ -26,6 +26,6 @@ trait InteractsWithFilamentContainer
 
     protected function container(): ComponentContainer
     {
-        return ComponentContainer::make(MockForm::make());
+        return ComponentContainer::make(Livewire::make());
     }
 }

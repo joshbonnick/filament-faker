@@ -7,7 +7,7 @@ namespace FilamentFaker\Fakers;
 use Filament\Forms\Form;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\FakesResources;
-use FilamentFaker\Support\MockForm;
+use FilamentFaker\Support\Livewire;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
 {
@@ -65,6 +65,6 @@ class ResourceFaker extends FilamentFaker implements FakesResources
 
     protected function baseForm(): Form
     {
-        return Form::make(MockForm::make());
+        return Form::make(Livewire::make());
     }
 }

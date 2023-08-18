@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace FilamentFaker\Fakers;
 
 use BadMethodCallException;
-use Carbon\Carbon;
-use Carbon\Exceptions\InvalidFormatException;
 use Closure;
-use DateTime;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
@@ -22,14 +19,13 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
-use FilamentFaker\Contracts\ComponentAPI;
 use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\RealTimeFactory;
+use FilamentFaker\Support\ComponentDecorator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use Throwable;
 
 use function FilamentFaker\callOrReturn;
 
@@ -38,7 +34,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     public function __construct(
         protected readonly DataGenerator $faker,
         protected readonly RealTimeFactory $realTimeFactory,
-        protected readonly ComponentAPI $component,
+        protected readonly ComponentDecorator $component,
         Field $field,
     ) {
         $this->component->setUp($field);
@@ -59,45 +55,12 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         if ($this->getShouldFakeUsingComponentName()) {
-            $content = $this->realTimeFactory->fakeFromName($this->component()->getName());
+            $data = $this->realTimeFactory->fakeFromName($this->component()->getName());
         }
 
-        return $this->format($content ?? callOrReturn($this->generateComponentData(), $this->component()));
-    }
-
-    protected function format(mixed $data): mixed
-    {
-        if ($this->component->canBeDateFormatted()) {
-            return $this->formatDate($data);
-        }
-
-        try {
-            $this->component->setState($data);
-
-            if (is_null($callback = $this->component->getAfterStateHydrated())) {
-                return $data;
-            }
-
-            if ($callback instanceof Closure) {
-                return $callback($this->component(), $data)?->getState() ?? $data;
-            }
-        } catch (Throwable $e) {
-        }
-
-        return $data;
-    }
-
-    protected function formatDate(string|DateTime $date): string
-    {
-        if (! method_exists($component = $this->component(), 'getFormat')) {
-            throw new InvalidArgumentException("{$this->component()->getName()} cannot be formatted into a date.");
-        }
-
-        try {
-            return Carbon::parse($date)->format($component->getFormat());
-        } catch (InvalidFormatException $e) {
-            throw new InvalidArgumentException("{$this->component()->getName()} cannot be formatted into a date.");
-        }
+        return $this->component
+            ->setState($data ?? callOrReturn($this->generateComponentData(), $this->component()))
+            ->format();
     }
 
     protected function attemptToCallMutationMacro(): mixed

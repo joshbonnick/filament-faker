@@ -8,7 +8,7 @@ use FilamentFaker\Contracts\RealTimeFactory;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
-class FakerFactory implements RealTimeFactory
+class Faker implements RealTimeFactory
 {
     public function fakeFromName(string $name): mixed
     {
