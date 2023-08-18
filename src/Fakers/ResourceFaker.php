@@ -7,7 +7,7 @@ namespace FilamentFaker\Fakers;
 use Filament\Forms\Form;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\FakesResources;
-use FilamentFaker\Support\FormsMock;
+use FilamentFaker\Support\MockForm;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
 {
@@ -58,8 +58,13 @@ class ResourceFaker extends FilamentFaker implements FakesResources
             : $this->form;
     }
 
+    protected function resolveModel(): ?string
+    {
+        return $this->resource::getModel();
+    }
+
     protected function baseForm(): Form
     {
-        return Form::make(FormsMock::make());
+        return Form::make(MockForm::make());
     }
 }

@@ -27,4 +27,9 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
                 ->toArray(),
         ];
     }
+
+    protected function resolveModel(): ?string
+    {
+        return $this->setUpBlock($this->block)->getModel();
+    }
 }

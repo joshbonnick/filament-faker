@@ -4,6 +4,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
@@ -40,10 +41,11 @@ test('value is still returned when reflection exception is thrown', function () 
     {
         protected string $name = 'test';
     }
-    $component = mock(TestField::class)->makePartial();
-    $component->shouldReceive('state')->andThrow(ReflectionException::class);
 
-    expect(resolve(FakesComponents::class, compact('component'))
+    $field = mock(TestField::class)->makePartial();
+    $field->shouldReceive('state')->andThrow(ReflectionException::class);
+
+    expect(resolve(FakesComponents::class, compact('field'))
         ->fake())->not->toBeNull();
 });
 
@@ -75,8 +77,25 @@ it('uses methods added to config first', function () {
     expect(TextInput::make('test')->fake())->not->toEqual('::test::');
 
     config()->set('filament-faker.fakes', [
-        TextInput::class => fn () => '::test::',
+        TextInput::class => '::test::',
     ]);
 
     expect(TextInput::make('test')->fake())->toEqual('::test::');
+});
+
+it('supports closures in config overrides', function () {
+    expect(TextInput::make('test')->fake())
+        ->not->toEqual('::test::')
+        ->and(RichEditor::make('test')->fake())
+        ->not->toEqual('::test-two::');
+
+    config()->set('filament-faker.fakes', [
+        TextInput::class => '::test::',
+        RichEditor::class => fn (RichEditor $component) => '::test-two::',
+    ]);
+
+    expect(TextInput::make('test')->fake())
+        ->toEqual('::test::')
+        ->and(RichEditor::make('test')->fake())
+        ->toEqual('::test-two::');
 });

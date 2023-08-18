@@ -34,6 +34,13 @@ trait InteractsWithFactories
     protected array $onlyAttributes = [];
 
     /**
+     * @return class-string<Model>|string|null
+     *
+     * @throws InvalidArgumentException
+     */
+    abstract protected function resolveModel(): ?string;
+
+    /**
      * Generate fake data using model factories.
      *
      * @param  array<int, string>  $onlyAttributes
@@ -72,21 +79,6 @@ trait InteractsWithFactories
                 $this->factory = $model::factory(); // @phpstan-ignore-line
             }
         });
-    }
-
-    /**
-     * @return class-string<Model>|string|null
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function resolveModel(): ?string
-    {
-        return match (true) {
-            isset($this->component) => $this->component->getModel(),
-            isset($this->form) => $this->form->getModel(),
-            isset($this->resource) => $this->resource::getModel(),
-            default => throw new InvalidArgumentException('Unable to resolve Model.')
-        };
     }
 
     protected function usesFactory(): bool

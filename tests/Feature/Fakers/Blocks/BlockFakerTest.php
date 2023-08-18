@@ -1,5 +1,7 @@
 <?php
 
+use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\Builder\Block;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
@@ -45,8 +47,9 @@ it('can generate fake blocks content', function () {
         ->toBeArray()
         ->and($fake['data']['toggle'])
         ->toBeBool()
-        ->and($fake['data']['datetime'])
-        ->toBeInstanceOf(DateTime::class)
+        ->and($carbon = Carbon::parse($fake['data']['datetime']))
+        ->not
+        ->toThrow(InvalidFormatException::class)
         ->and($fake['data']['some_image'])
         ->toBeString()
         ->toContain('.png')

@@ -29,7 +29,7 @@ class Macros
         return tap($this, function () {
             Field::macro('faker', function (): FakesComponents {
                 /* @var Field $this */
-                return app()->make(FakesComponents::class, ['component' => $this]);
+                return app()->make(FakesComponents::class, ['field' => $this]);
             });
 
             Field::macro('fake', fn (): mixed => $this->faker()->fake());

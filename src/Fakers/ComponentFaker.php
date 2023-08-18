@@ -6,7 +6,9 @@ namespace FilamentFaker\Fakers;
 
 use BadMethodCallException;
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use Closure;
+use DateTime;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
@@ -20,34 +22,32 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Forms\Set;
+use FilamentFaker\Contracts\ComponentAPI;
 use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Contracts\RealTimeFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-use ReflectionException;
-use ReflectionProperty;
 use Throwable;
 
 use function FilamentFaker\callOrReturn;
 
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
-    protected Field $component;
-
     public function __construct(
         protected readonly DataGenerator $faker,
         protected readonly RealTimeFactory $realTimeFactory,
-        Field $component,
+        protected readonly ComponentAPI $component,
+        Field $field,
     ) {
-        $this->component = $this->setUpComponent($component);
+        $this->component->setUp($field);
     }
 
     public function fake(): mixed
     {
         if ($this->mutateCallback instanceof Closure) {
-            return ($this->mutateCallback)($this->component);
+            return ($this->mutateCallback)($this->component());
         }
 
         if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
@@ -55,55 +55,55 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         if ($this->factoryDefinitionExists()) {
-            return $this->getModelAttributes()[$this->component->getName()];
+            return $this->getModelAttributes()[$this->component()->getName()];
         }
 
         if ($this->getShouldFakeUsingComponentName()) {
-            $content = $this->realTimeFactory->fakeFromName($this->component->getName());
+            $content = $this->realTimeFactory->fakeFromName($this->component()->getName());
         }
 
-        return $this->format($content ?? callOrReturn($this->generateComponentData(), $this->component));
+        return $this->format($content ?? callOrReturn($this->generateComponentData(), $this->component()));
     }
 
-    protected function format(mixed $fakedContent): mixed
+    protected function format(mixed $data): mixed
     {
+        if ($this->component->canBeDateFormatted()) {
+            return $this->formatDate($data);
+        }
+
         try {
-            if (is_a($this->component, DateTimePicker::class)) {
-                return $this->formatDate($fakedContent);
-            }
+            $this->component->setState($data);
 
-            $afterStateHydrated = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
-
-            $this->component->state(fn (Set $set) => $set($this->component->getName(), $fakedContent));
-
-            if (is_null($callback = $afterStateHydrated->getValue($this->component))) {
-                return $fakedContent;
+            if (is_null($callback = $this->component->getAfterStateHydrated())) {
+                return $data;
             }
 
             if ($callback instanceof Closure) {
-                return $callback($this->component, $fakedContent)?->getState() ?? $fakedContent;
+                return $callback($this->component(), $data)?->getState() ?? $data;
             }
-        } catch (ReflectionException $e) {
-            report($e);
         } catch (Throwable $e) {
         }
 
-        return $fakedContent;
+        return $data;
     }
 
-    protected function formatDate(string $fakedContent): string
+    protected function formatDate(string|DateTime $date): string
     {
-        if (! is_a($this->component, DateTimePicker::class)) {
-            throw new InvalidArgumentException("{$this->component->getName()} cannot be formatted into a date.");
+        if (! method_exists($component = $this->component(), 'getFormat')) {
+            throw new InvalidArgumentException("{$this->component()->getName()} cannot be formatted into a date.");
         }
 
-        return Carbon::parse($fakedContent)->format($this->component->getFormat());
+        try {
+            return Carbon::parse($date)->format($component->getFormat());
+        } catch (InvalidFormatException $e) {
+            throw new InvalidArgumentException("{$this->component()->getName()} cannot be formatted into a date.");
+        }
     }
 
     protected function attemptToCallMutationMacro(): mixed
     {
         try {
-            return callOrReturn($this->component->mutateFake($this->component), $this->component); // @phpstan-ignore-line
+            return callOrReturn($this->component()->mutateFake($this->component()), $this->component()); // @phpstan-ignore-line
         } catch (BadMethodCallException $e) {
         }
 
@@ -112,35 +112,45 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     protected function generateComponentData(): mixed
     {
-        if ($this->componentHasOverride()) {
-            return $this->config()[$this->component::class];
+        if ($this->component->hasOverride()) {
+            return callOrReturn($this->config()[$this->component()::class], $this->component());
         }
 
-        return match ($this->component::class) {
+        return match ($this->component()::class) {
             CheckboxList::class,
             Radio::class,
-            Select::class => $this->faker->withOptions($this->component),
+            Select::class => $this->faker->withOptions($this->component()),
             Checkbox::class,
             Toggle::class => $this->faker->checkbox(),
-            TagsInput::class => $this->faker->withSuggestions($this->component),
+            TagsInput::class => $this->faker->withSuggestions($this->component()),
             DatePicker::class,
             DateTimePicker::class => $this->faker->date(),
-            FileUpload::class => $this->faker->file($this->component),
-            KeyValue::class => $this->faker->keyValue($this->component),
-            ColorPicker::class => $this->faker->color($this->component),
+            FileUpload::class => $this->faker->file($this->component()),
+            KeyValue::class => $this->faker->keyValue($this->component()),
+            ColorPicker::class => $this->faker->color($this->component()),
             RichEditor::class => $this->faker->html(),
-            default => $this->faker->defaultCallback($this->component),
+            default => $this->faker->defaultCallback($this->component()),
         };
     }
 
-    protected function componentHasOverride(): bool
+    protected function component(): Field
     {
-        return Arr::has($this->config(), $this->component::class);
+        return $this->component->component();
+    }
+
+    /**
+     * @return class-string<Model>|string|null
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function resolveModel(): ?string
+    {
+        return $this->component()->getModel();
     }
 
     protected function factoryDefinitionExists(): bool
     {
-        return Arr::has($this->getModelAttributes(), $this->component->getName());
+        return Arr::has($this->getModelAttributes(), $this->component()->getName());
     }
 
     /**
@@ -153,6 +163,6 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         return config('filament-faker.fake_using_component_name', true)
-            && ! method_exists($this->component, 'getOptions');
+            && ! $this->component->hasOptions();
     }
 }

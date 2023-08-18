@@ -12,7 +12,7 @@ use Livewire\Component;
 /**
  * @codeCoverageIgnore
  */
-final class FormsMock extends Component implements HasForms
+final class MockForm extends Component implements HasForms
 {
     use InteractsWithForms;
 

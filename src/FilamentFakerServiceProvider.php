@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker;
 
+use FilamentFaker\Contracts\ComponentAPI;
 use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesBlocks;
 use FilamentFaker\Contracts\FakesComponents;
@@ -14,6 +15,7 @@ use FilamentFaker\Fakers\BlockFaker;
 use FilamentFaker\Fakers\ComponentFaker;
 use FilamentFaker\Fakers\FormFaker;
 use FilamentFaker\Fakers\ResourceFaker;
+use FilamentFaker\Support\ComponentFactory;
 use FilamentFaker\Support\FakerFactory;
 use FilamentFaker\Support\Macros;
 use Spatie\LaravelPackageTools\Package;
@@ -35,6 +37,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             $this->app->singleton(DataGenerator::class, ComponentDataGenerator::class);
             $this->app->bind(RealTimeFactory::class, FakerFactory::class);
+            $this->app->bind(ComponentAPI::class, ComponentFactory::class);
             $this->app->bind(FakesBlocks::class, BlockFaker::class);
             $this->app->bind(FakesComponents::class, ComponentFaker::class);
             $this->app->bind(FakesForms::class, FormFaker::class);

@@ -71,6 +71,11 @@ class FormFaker extends FilamentFaker implements FakesForms
             })->toArray();
     }
 
+    protected function resolveModel(): ?string
+    {
+        return $this->form->getModel();
+    }
+
     /**
      * @return array<string, mixed>
      */

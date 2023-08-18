@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use FilamentFaker\Concerns\InteractsWithConfig;
 use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesFakerInstances;
@@ -15,15 +15,11 @@ use FilamentFaker\Concerns\TransformsFakes;
 
 abstract class FilamentFaker
 {
-    use ResolvesFakerInstances;
-    use InteractsWithFactories;
-    use TransformsFakes;
     use InteractsWithFilamentContainer;
-
-    /**
-     * @var array<string|class-string<Field>, Closure>
-     */
-    protected array $fakesConfig;
+    use InteractsWithFactories;
+    use InteractsWithConfig;
+    use ResolvesFakerInstances;
+    use TransformsFakes;
 
     /**
      * Attempt to apply mutations from the parent component instance before returning
@@ -38,15 +34,5 @@ abstract class FilamentFaker
         }
 
         return $transformed;
-    }
-
-    /**
-     * @return array<string|class-string<Field>, Closure>
-     */
-    protected function config(): array
-    {
-        return $this->fakesConfig ?? tap(config('filament-faker.fakes', []), function (array $config) {
-            $this->fakesConfig = $config;
-        });
     }
 }
