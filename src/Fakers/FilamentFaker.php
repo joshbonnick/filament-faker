@@ -13,7 +13,7 @@ use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesFakerInstances;
 use FilamentFaker\Concerns\TransformsFakes;
 
-abstract class GeneratesFakes
+abstract class FilamentFaker
 {
     use ResolvesFakerInstances;
     use InteractsWithFactories;

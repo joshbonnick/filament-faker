@@ -20,7 +20,7 @@ use FilamentFaker\Contracts\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker extends GeneratesFakes implements FakesForms
+class FormFaker extends FilamentFaker implements FakesForms
 {
     protected bool $withHidden = true;
 

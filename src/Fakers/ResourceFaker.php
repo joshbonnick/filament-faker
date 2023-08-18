@@ -9,7 +9,7 @@ use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\FakesResources;
 use FilamentFaker\Support\FormsMock;
 
-class ResourceFaker extends GeneratesFakes implements FakesResources
+class ResourceFaker extends FilamentFaker implements FakesResources
 {
     /**
      * @var class-string<FilamentResource>

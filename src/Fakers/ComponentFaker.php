@@ -30,7 +30,7 @@ use ReflectionException;
 use ReflectionProperty;
 use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents
+class ComponentFaker extends FilamentFaker implements FakesComponents
 {
     protected Field $component;
 
