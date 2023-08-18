@@ -29,7 +29,7 @@ abstract class FilamentFaker
      * Attempt to apply mutations from the parent component instance before returning
      * the components faker response.
      */
-    protected function getContentForComponent(Field $component, Component|Form $parent): mixed
+    protected function getContentForChildComponent(Field $component, Component|Form $parent): mixed
     {
         $transformed = $this->getMutationsFromParent($parent, $component);
 

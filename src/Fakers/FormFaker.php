@@ -63,7 +63,7 @@ class FormFaker extends FilamentFaker implements FakesForms
                 $component instanceof Group,
                 $component instanceof Section => $this->fakeComponents(collect($component->getChildComponents())),
 
-                $component instanceof Field => [$component->getName() => $this->getContentForComponent($component, $this->form)],
+                $component instanceof Field => [$component->getName() => $this->getContentForChildComponent($component, $this->form)],
 
                 default => throw new InvalidArgumentException(
                     sprintf('%s is not a supported component type.', $component::class)
