@@ -112,8 +112,8 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     protected function generateComponentData(): mixed
     {
-        if (Arr::has($config = $this->config(), $class = $this->component::class)) {
-            return $config[$class];
+        if ($this->componentHasOverride()) {
+            return $this->config()[$this->component::class];
         }
 
         return match ($this->component::class) {
@@ -131,6 +131,10 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
             RichEditor::class => $this->faker->html(),
             default => $this->faker->defaultCallback($this->component),
         };
+    }
+
+    protected function componentHasOverride(): bool {
+        return Arr::has($this->config(), $this->component::class);
     }
 
     protected function factoryDefinitionExists(): bool
