@@ -74,7 +74,7 @@ class ComponentDecorator
     }
 
     /**
-     * @param  class-string<Field>  $classes
+     * @param  class-string<Field>  ...$classes
      */
     public function is_a(string ...$classes): bool
     {
