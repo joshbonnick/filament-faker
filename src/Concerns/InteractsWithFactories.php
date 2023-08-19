@@ -111,6 +111,9 @@ trait InteractsWithFactories
         });
     }
 
+    /**
+     * @return array<int, string>
+     */
     protected function getOnlyFactoryAttributes(): array
     {
         return $this->onlyAttributes;
