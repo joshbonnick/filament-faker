@@ -24,7 +24,6 @@ use FilamentFaker\Contracts\Support\RealTimeFactory;
 use FilamentFaker\Support\ComponentDecorator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
-use InvalidArgumentException;
 use ReflectionException;
 
 class ComponentFaker extends FilamentFaker implements FakesComponents
@@ -113,13 +112,11 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     }
 
     /**
-     * @return class-string<Model>|string|null
-     *
-     * @throws InvalidArgumentException
+     * @return class-string<Model>|null|string
      */
     protected function resolveModel(): ?string
     {
-        return $this->component()->getModel();
+        return $this->component->getModel();
     }
 
     protected function factoryDefinitionExists(): bool

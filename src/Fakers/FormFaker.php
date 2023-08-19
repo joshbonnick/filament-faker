@@ -17,6 +17,7 @@ use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
@@ -71,6 +72,9 @@ class FormFaker extends FilamentFaker implements FakesForms
             })->toArray();
     }
 
+    /**
+     * @return class-string<Model>|null|string
+     */
     protected function resolveModel(): ?string
     {
         return $this->form->getModel();

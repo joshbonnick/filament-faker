@@ -7,6 +7,7 @@ namespace FilamentFaker\Fakers;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use Illuminate\Database\Eloquent\Model;
 
 class BlockFaker extends FilamentFaker implements FakesBlocks
 {
@@ -28,6 +29,9 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
         ];
     }
 
+    /**
+     * @return class-string<Model>|null|string
+     */
     protected function resolveModel(): ?string
     {
         return $this->setUpBlock($this->block)->getModel();

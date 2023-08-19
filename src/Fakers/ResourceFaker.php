@@ -10,6 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
+use Illuminate\Database\Eloquent\Model;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
 {
@@ -28,6 +29,9 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         $this->resource = $resource;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withForm(string|Form $form = 'form'): static
     {
         return tap($this, function () use ($form) {
@@ -44,6 +48,9 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function fake(): array
     {
         if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
@@ -51,12 +58,13 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         }
 
         if (method_exists($resource, 'mutateFake')) {
-            $mutationCallback = Closure::fromCallable([$resource, 'mutateFake']);
-        } else {
-            $mutationCallback = $this->mutateCallback;
+            return $this
+                ->getFormFaker($this->getForm())
+                ->mutateFake(Closure::fromCallable([$resource, 'mutateFake']))
+                ->fake();
         }
 
-        return $this->getFormFaker($this->getForm())->mutateFake($mutationCallback)->fake();
+        return $this->getFormFaker($this->getForm())->mutateFake($this->mutateCallback)->fake();
     }
 
     public function getForm(): Form
@@ -71,6 +79,9 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         return rescue(fn (): FilamentResource => resolve($this->resource));
     }
 
+    /**
+     * @return class-string<Model>|null|string
+     */
     protected function resolveModel(): ?string
     {
         return $this->resource::getModel();
