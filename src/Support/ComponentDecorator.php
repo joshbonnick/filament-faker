@@ -19,6 +19,7 @@ use ReflectionException;
 
 /**
  * @internal
+ *
  * @mixin Field
  */
 class ComponentDecorator
@@ -33,12 +34,12 @@ class ComponentDecorator
     ) {
     }
 
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         return $this->component->$name(...$arguments);
     }
 
-    public function __get(string $name)
+    public function __get(string $name): mixed
     {
         return $this->component->$name;
     }
