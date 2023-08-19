@@ -6,6 +6,7 @@ namespace FilamentFaker\Fakers;
 
 use Closure;
 use Filament\Forms\Form;
+use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\FakesResources;
 use FilamentFaker\Support\Livewire;
@@ -85,7 +86,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
      */
     protected function injectionParameters(): array
     {
-        if (is_null($resource = $this->resolveResource())) {
+        if (!($resource = $this->resolveResource()) instanceof Resource) {
             return [];
         }
 
