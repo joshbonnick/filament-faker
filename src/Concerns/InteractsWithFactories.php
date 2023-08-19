@@ -111,6 +111,11 @@ trait InteractsWithFactories
         });
     }
 
+    protected function getOnlyFactoryAttributes(): array
+    {
+        return $this->onlyAttributes;
+    }
+
     /**
      * @return ?Factory<Model>
      */

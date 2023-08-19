@@ -18,6 +18,8 @@ trait TransformsFakes
 {
     protected ?Closure $mutateCallback = null;
 
+    protected bool $shouldFakeUsingComponentName = true;
+
     /**
      * Faker should use the components name to retrieve a method from FakerPHP
      * to generate data?
@@ -37,6 +39,16 @@ trait TransformsFakes
         return tap($this, function () use ($callback) {
             $this->mutateCallback = $callback;
         });
+    }
+
+    protected function getShouldFakeUsingComponentName(): bool
+    {
+        return $this->shouldFakeUsingComponentName;
+    }
+
+    protected function getMutateCallback(): ?Closure
+    {
+        return $this->mutateCallback;
     }
 
     /**
