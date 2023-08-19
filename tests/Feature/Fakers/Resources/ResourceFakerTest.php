@@ -1,8 +1,8 @@
 <?php
 
-use Filament\Resources\Resource;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\TestSupport\Resources\InjectedResource;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
@@ -54,15 +54,8 @@ test('faker returns an instance of FakesResources', function () {
 });
 
 test('form fake is returned if cannot resolve the resource', function () {
-    class TestResource extends Resource
-    {
-        public function __construct(string $foo)
-        {
-        }
-    }
-
-    expect(fn () => resolve(TestResource::class))
+    expect(fn () => resolve(InjectedResource::class))
         ->toThrow(BindingResolutionException::class)
-        ->and(TestResource::fake())
+        ->and(InjectedResource::fake())
         ->toBeArray();
 });
