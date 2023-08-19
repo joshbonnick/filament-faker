@@ -71,9 +71,11 @@ trait TransformsFakes
                 callback: [$parent, 'mutateFake'],
                 parameters: [Field::class => $component, $component::class => $component]
             ) ?? $component;
-        } catch (BadMethodCallException|ReflectionException $e) {
-            return $component;
+        } catch (ReflectionException $e) {
+            throw_unless(str_contains($e->getMessage(), 'mutateFake() does not exist'), $e);
         }
+
+        return $component;
     }
 
     /**
