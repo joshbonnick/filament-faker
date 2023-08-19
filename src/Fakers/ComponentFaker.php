@@ -70,7 +70,8 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     {
         try {
             return $this->resolveOrReturn([$this->component(), 'mutateFake']);
-        } catch (BadMethodCallException|ReflectionException $e) {
+        } catch (ReflectionException $e) {
+            throw_unless(str_contains($e->getMessage(), 'mutateFake() does not exist'));
         }
 
         return null;
