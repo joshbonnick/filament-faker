@@ -25,16 +25,16 @@ class FakerFactory
 
     public function form(Form $form): FakesForms
     {
-        return $form->faker();
+        return $form->configure()->faker();
     }
 
     public function component(Field $component): FakesComponents
     {
-        return $component->faker();
+        return $component->configure()->faker();
     }
 
     public function block(Block $block): FakesBlocks
     {
-        return $block->faker();
+        return $block->configure()->faker();
     }
 }
