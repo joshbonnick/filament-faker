@@ -72,11 +72,11 @@ trait InteractsWithFactories
                     throw new InvalidArgumentException('Unable to find Model.');
                 }
 
-                if (! in_array(HasFactory::class, class_uses_recursive($model))) {
+                if (! method_exists($model, 'factory')) {
                     throw new InvalidArgumentException("Unable to find Factory for $model.");
                 }
 
-                $this->factory = $model::factory(); // @phpstan-ignore-line
+                $this->factory = $model::factory();
             }
         });
     }
