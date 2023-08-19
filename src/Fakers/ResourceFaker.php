@@ -53,25 +53,22 @@ class ResourceFaker extends FilamentFaker implements FakesResources
      */
     public function fake(): array
     {
+        $form = $this->getFormFaker($this->getForm());
+
         if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
-            return $this->getFormFaker($this->getForm())->fake();
+            return $form->fake();
         }
 
-        if (method_exists($resource, 'mutateFake')) {
-            return $this
-                ->getFormFaker($this->getForm())
-                ->mutateFake(Closure::fromCallable([$resource, 'mutateFake']))
-                ->fake();
-        }
-
-        return $this->getFormFaker($this->getForm())->mutateFake($this->mutateCallback)->fake();
+        return $form
+            ->mutateFake(method_exists($resource, 'mutateFake')
+                ? Closure::fromCallable([$resource, 'mutateFake'])
+                : $this->mutateCallback
+            )->fake();
     }
 
     public function getForm(): Form
     {
-        return is_null($this->form)
-            ? $this->withForm()->getForm()
-            : $this->form;
+        return $this->form ?? $this->withForm()->getForm();
     }
 
     protected function resolveResource(): ?FilamentResource
