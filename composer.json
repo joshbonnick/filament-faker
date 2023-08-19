@@ -3,11 +3,10 @@
     "description": "Generate fake blocks content for Filament forms, blocks and components.",
     "keywords": [
         "joshbonnick",
-        "laravel",
+        "filament",
         "filament-faker",
-        "filament-block-faker",
-        "filament-form-faker",
-        "filament-component-faker"
+        "testing",
+        "dev"
     ],
     "homepage": "https://github.com/joshbonnick/filament-faker",
     "license": "MIT",
