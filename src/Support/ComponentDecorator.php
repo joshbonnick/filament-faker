@@ -62,20 +62,23 @@ class ComponentDecorator
     {
         $state = $this->getState();
 
-        if ($this->canBeDateFormatted()) {
+        if ($this->is_a(DateTimePicker::class)) {
             return $this->formatDate($state);
         }
 
-        if ($this->component instanceof BaseFileUpload) {
+        if ($this->is_a(BaseFileUpload::class)) {
             return $state;
         }
 
         return $this->applyFormattingHooks($state);
     }
 
-    public function canBeDateFormatted(): bool
+    /**
+     * @param  class-string<Field>  $class
+     */
+    public function is_a(string $class): bool
     {
-        return is_a($this->component, DateTimePicker::class);
+        return is_a($this->component, $class);
     }
 
     public function setState(mixed $state): static
