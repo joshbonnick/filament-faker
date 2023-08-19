@@ -19,6 +19,7 @@ use ReflectionException;
 
 /**
  * @internal
+ *
  * @mixin Field
  */
 class ComponentDecorator
