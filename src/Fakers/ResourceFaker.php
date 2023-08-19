@@ -86,7 +86,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
      */
     protected function injectionParameters(): array
     {
-        if (!($resource = $this->resolveResource()) instanceof Resource) {
+        if (! ($resource = $this->resolveResource()) instanceof Resource) {
             return [];
         }
 
