@@ -102,3 +102,27 @@ it('closures added to config are dependency injected', function () {
     expect(TextInput::make('test')->fake())
         ->toEqual('::test::');
 });
+
+it('returns a hex color if getFormat doesnt exist', function () {
+    $faker = resolve(DataGenerator::class);
+    $decorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
+
+    $faker->using($decorator);
+
+    expect($faker->color())
+        ->toBeString()
+        ->toStartWith('#');
+});
+
+it('throws an exception if getSuggestions doesnt exist', function () {
+    $faker = resolve(DataGenerator::class);
+    $decorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
+
+    $faker->using($decorator);
+
+    expect(fn () => $faker->withSuggestions())
+        ->toThrow(
+            InvalidArgumentException::class,
+            'test does not have suggestions.'
+        );
+});
