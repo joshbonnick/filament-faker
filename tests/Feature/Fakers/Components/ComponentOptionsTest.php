@@ -83,3 +83,16 @@ it('returns a value if component is searchable', function () {
     expect($select->fake())
         ->toBeIn(['foo', 'bar', 'hello', 'world']);
 });
+
+
+it('throws an exception if not nullable and both options and search are empty', function(){
+    $select = Select::make('test')
+                    ->options(fn () => [])
+                    ->getSearchResultsUsing(fn()=>[])
+                    ->searchable();
+
+    expect(fn()=>$select->fake())->toThrow(
+        Exception::class,
+        'test is required and does both options and search did not return an values.'
+    );
+});
