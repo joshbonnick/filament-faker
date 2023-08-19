@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use BadMethodCallException;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
