@@ -38,7 +38,11 @@ abstract class FilamentFaker
     }
 
     /**
+     * @template TReturnType
+     *
+     * @param  TReturnType|callable(): TReturnType  $callback
      * @param  array<class-string|string, object>  $parameters
+     * @return ?TReturnType
      */
     protected function resolveOrReturn(mixed $callback, array $parameters = []): mixed
     {

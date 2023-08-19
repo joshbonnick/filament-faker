@@ -34,6 +34,9 @@ class ComponentDecorator
     ) {
     }
 
+    /**
+     * @param  array<array-key>  $arguments
+     */
     public function __call(string $name, array $arguments): mixed
     {
         return $this->component->$name(...$arguments);
