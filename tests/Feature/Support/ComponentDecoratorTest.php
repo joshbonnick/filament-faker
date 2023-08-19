@@ -34,9 +34,9 @@ it('only catches ReflectionExceptions thrown by this package.', function () {
         ->toThrow(ReflectionException::class);
 });
 
-
-test('__get function returns a property', function(){
-    class ComponentWithPublicProperty extends TextInput {
+test('__get function returns a property', function () {
+    class ComponentWithPublicProperty extends TextInput
+    {
         public string $foobar = 'foo';
     }
 
