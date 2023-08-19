@@ -44,8 +44,8 @@ abstract class FilamentFaker
     {
         if (is_callable($callback)) {
             return $this->resolveOrReturn(
-                App::call($callback, [...$this->injectionParameters(), ...$parameters]),
-                [...$this->injectionParameters(), ...$parameters]
+                callback: App::call($callback, $parameters = [...$this->injectionParameters(), ...$parameters]),
+                parameters: $parameters
             );
         }
 
