@@ -28,7 +28,3 @@ test('mutation callbacks are dependency injected', function () {
         ->toBeString()
         ->toEqual('phone_number');
 });
-
-it('returns null if options are empty', function () {
-    expect(Select::make('empty')->options([])->fake())->toBeNull();
-});

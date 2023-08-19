@@ -71,3 +71,7 @@ it('returns an array if field with options is multiselectable', function () {
         ->and($select->multiple()->fake())
         ->toBeArray();
 });
+
+it('returns null if options are empty', function () {
+    expect(Select::make('empty')->options([])->fake())->toBeNull();
+});
