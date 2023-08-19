@@ -63,4 +63,3 @@ test('exception is thrown if model does not use HasFactory', function () {
             'Unable to find Factory for '.WithoutFactory::class
         );
 });
-
