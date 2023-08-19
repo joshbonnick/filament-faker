@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts\Support;
 
-use Filament\Forms\Components\Field;
+use FilamentFaker\Support\ComponentDecorator;
 
 interface DataGenerator
 {
-    public function withOptions(Field $component): mixed;
+    public function using(ComponentDecorator $component): static;
 
-    public function defaultCallback(Field $component): string;
+    public function withOptions(): mixed;
+
+    public function defaultCallback(): string;
 
     /**
      * @return array<int, string|int|float>
      */
-    public function withSuggestions(Field $component): array;
+    public function withSuggestions(): array;
 
     public function date(): string;
 
-    public function file(Field $upload): string;
+    public function file(): string;
 
     /**
      * @return string[]
      */
-    public function keyValue(Field $component): array;
+    public function keyValue(): array;
 
-    public function color(Field $color): string;
+    public function color(): string;
 
     public function html(): string;
 

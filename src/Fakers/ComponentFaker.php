@@ -35,6 +35,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         Field $field,
     ) {
         $this->component->setUp($field);
+        $this->faker->using($this->component);
     }
 
     public function fake(): mixed
@@ -80,17 +81,17 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         return match ($this->component()::class) {
             CheckboxList::class,
             Radio::class,
-            Select::class => $this->faker->withOptions($this->component()),
+            Select::class => $this->faker->withOptions(),
             Checkbox::class,
             Toggle::class => $this->faker->checkbox(),
-            TagsInput::class => $this->faker->withSuggestions($this->component()),
+            TagsInput::class => $this->faker->withSuggestions(),
             DatePicker::class,
             DateTimePicker::class => $this->faker->date(),
-            FileUpload::class => $this->faker->file($this->component()),
-            KeyValue::class => $this->faker->keyValue($this->component()),
-            ColorPicker::class => $this->faker->color($this->component()),
+            FileUpload::class => $this->faker->file(),
+            KeyValue::class => $this->faker->keyValue(),
+            ColorPicker::class => $this->faker->color(),
             RichEditor::class => $this->faker->html(),
-            default => $this->faker->defaultCallback($this->component()),
+            default => $this->faker->defaultCallback(),
         };
     }
 

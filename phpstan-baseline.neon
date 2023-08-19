@@ -1,0 +1,26 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Support\\\\ComponentDecorator\\:\\:getAcceptedFileTypes\\(\\)\\.$#"
+			count: 1
+			path: src/ComponentDataGenerator.php
+
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Support\\\\ComponentDecorator\\:\\:getFormat\\(\\)\\.$#"
+			count: 1
+			path: src/ComponentDataGenerator.php
+
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Support\\\\ComponentDecorator\\:\\:getOptions\\(\\)\\.$#"
+			count: 2
+			path: src/ComponentDataGenerator.php
+
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Support\\\\ComponentDecorator\\:\\:getSuggestions\\(\\)\\.$#"
+			count: 1
+			path: src/ComponentDataGenerator.php
+
+		-
+			message: "#^Call to an undefined method Filament\\\\Forms\\\\Components\\\\Field\\:\\:getOptions\\(\\)\\.$#"
+			count: 1
+			path: src/Support/ComponentDecorator.php

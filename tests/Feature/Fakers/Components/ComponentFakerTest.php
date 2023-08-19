@@ -7,6 +7,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
+use FilamentFaker\Support\ComponentDecorator;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
@@ -37,8 +38,12 @@ test('default entries do not return null', function () {
 });
 
 it('handles invalid options field', function () {
-    expect(resolve(DataGenerator::class)
-        ->withOptions(TextInput::make('test')))
+    $faker = resolve(DataGenerator::class);
+    $decorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
+
+    $faker->using($decorator);
+
+    expect($faker->withOptions())
         ->toBeString();
 });
 

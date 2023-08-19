@@ -114,12 +114,27 @@ class ComponentDecorator
 
     public function hasOptions(): bool
     {
-        return method_exists($this->component, 'getOptions');
+        return $this->hasMethod('getOptions') && ! empty($this->component->getOptions());
     }
 
     public function hasOverride(): bool
     {
         return Arr::has($this->config(), $this->component::class);
+    }
+
+    public function isMultiple(): bool
+    {
+        return method_exists($this->component, 'isMultiple') && $this->component->isMultiple();
+    }
+
+    public function hasMethod(string $method): bool
+    {
+        return method_exists($this->component, $method);
+    }
+
+    public function missingMethod(string $method): bool
+    {
+        return ! $this->hasMethod($method);
     }
 
     protected function reflect(): Reflection

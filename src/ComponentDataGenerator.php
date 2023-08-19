@@ -5,39 +5,45 @@ declare(strict_types=1);
 namespace FilamentFaker;
 
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\Field;
 use FilamentFaker\Contracts\Support\DataGenerator;
+use FilamentFaker\Support\ComponentDecorator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class ComponentDataGenerator implements DataGenerator
 {
-    public function withOptions(Field $component): mixed
+    protected ComponentDecorator $component;
+
+    public function using(ComponentDecorator $component): static
     {
-        if (! method_exists($component, 'getOptions')
-            || empty($options = $component->getOptions())
-        ) {
-            return $this->defaultCallback($component);
+        return tap($this, function () use ($component): void {
+            $this->component = $component;
+        });
+    }
+
+    public function withOptions(): mixed
+    {
+        if (! $this->component->hasOptions()) {
+            return $this->defaultCallback();
         }
 
-        if ($component instanceof CheckboxList
-            || (method_exists($component, 'isMultiple') && $component->isMultiple())) {
-            return fake()->randomElements(array_keys($options));
+        if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {
+            return fake()->randomElements(array_keys($this->component->getOptions()));
         }
 
-        return fake()->randomElement(array_keys($options));
+        return fake()->randomElement(array_keys($this->component->getOptions()));
     }
 
     /**
      * @return array<int, string|int|float>
      */
-    public function withSuggestions(Field $component): array
+    public function withSuggestions(): array
     {
-        if (! method_exists($component, 'getSuggestions')) {
-            throw new InvalidArgumentException("{$component->getName()} does not have suggestions.");
+        if ($this->component->missingMethod('getSuggestions')) {
+            throw new InvalidArgumentException("{$this->component->getName()} does not have suggestions.");
         }
 
-        if (empty($suggestions = $component->getSuggestions())) {
+        if (empty($suggestions = $this->component->getSuggestions())) {
             return fake()->rgbColorAsArray();
         }
 
@@ -54,10 +60,10 @@ class ComponentDataGenerator implements DataGenerator
         return now()->toFormattedDateString();
     }
 
-    public function file(Field $upload): string
+    public function file(): string
     {
-        if (method_exists($upload, 'getAcceptedFileTypes')
-            && in_array('image/*', $upload->getAcceptedFileTypes() ?? [])) {
+        if ($this->component->hasMethod('getAcceptedFileTypes')
+            && in_array('image/*', $this->component->getAcceptedFileTypes() ?? [])) {
             return 'https://placehold.co/600x400.png';
         }
 
@@ -67,18 +73,18 @@ class ComponentDataGenerator implements DataGenerator
     /**
      * @return string[]
      */
-    public function keyValue(Field $component): array
+    public function keyValue(): array
     {
         return ['key' => 'value'];
     }
 
-    public function color(Field $color): string
+    public function color(): string
     {
-        if (! method_exists($color, 'getFormat')) {
+        if ($this->component->missingMethod('getFormat')) {
             return fake()->safeHexColor();
         }
 
-        return match ($color->getFormat()) {
+        return match ($this->component->getFormat()) {
             'hsl' => Str::wrap(fake()->hslColor(), 'hsl(', ')'),
             'rgb' => fake()->rgbCssColor(),
             'rgba' => fake()->rgbaCssColor(),
@@ -96,7 +102,7 @@ class ComponentDataGenerator implements DataGenerator
         return fake()->boolean();
     }
 
-    public function defaultCallback(Field $component): string
+    public function defaultCallback(): string
     {
         return fake()->sentence();
     }
