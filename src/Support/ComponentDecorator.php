@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FilamentFaker\Support;
 
 use Carbon\Carbon;
-use Carbon\Exceptions\InvalidFormatException;
 use DateTimeInterface;
 use Filament\Forms\Components\BaseFileUpload;
 use Filament\Forms\Components\DateTimePicker;
@@ -142,10 +141,6 @@ class ComponentDecorator
             throw new InvalidArgumentException("{$this->getName()} cannot be formatted into a date.");
         }
 
-        try {
-            return Carbon::parse($date)->format($this->component->getFormat());
-        } catch (InvalidFormatException $e) {
-            throw new InvalidArgumentException("{$this->getName()} cannot be formatted into a date.");
-        }
+        return Carbon::parse($date)->format($this->component->getFormat());
     }
 }
