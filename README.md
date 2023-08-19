@@ -1,23 +1,39 @@
 # Filament Faker
 
+## Filament Testing Utility Library
+
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/joshbonnick/filament-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-block-faker)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-faker/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/joshbonnick/filament-block-faker/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-faker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshbonnick/filament-faker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshbonnick/filament-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-block-faker)
 
-Generate fake content for Filament forms, blocks and components.
+Filament Faker is a utility library designed to streamline testing for Filament resources, forms, blocks, and 
+components. This library assists in automatically generating mock data for your tests within the Filament ecosystem.
+
+## Features and Usage Highlights
+
+* **Data Generation:** Automatically generate test data for Filament resources, forms, blocks, and components.
+* **Factory Support:** Utilize factory definitions for precise and accurate data generation.
+* **Mutations:** Modify specific component values to suit your testing scenarios.
+* **Configurable:** Control the behavior of data generation using configuration options.
+* **Seamless Integration:** Easily integrate the library into your Filament-based projects.
+
+## Contents
 
 <!-- TOC -->
-* [Filament Faker](#filament-faker)
-  * [Requirements](#requirements)
-  * [Installation](#installation)
-  * [Usage](#usage)
-    * [Usage In Tests](#usage-in-tests)
-    * [Faking Custom & Plugin Components](#faking-custom--plugin-components)
-    * [Mutating Fake Responses](#mutating-fake-responses)
-    * [Fake Using Factory Definitions](#fake-using-factory-definitions)
-  * [IDE Support](#ide-support)
-  * [Changelog](#changelog)
+* [Filament Utility Library](#filament-utility-library)
+* [Requirements](#requirements)
+* [Installation](#installation)
+* [Usage](#usage)
+  * [Usage In Tests](#usage-in-tests)
+  * [Faking Custom & Plugin Components](#faking-custom--plugin-components)
+  * [Mutating Generated Data](#mutating-generated-data)
+  * [Generate Data Using Factory Definitions](#generate-data-using-factory-definitions)
+    * [Selecting Definitions](#selecting-definitions)
+* [IDE Support](#ide-support)
+* [Changelog](#changelog)
+* [Credits](#credits)
+* [License](#license)
 <!-- TOC -->
 
 ## Requirements
@@ -48,6 +64,42 @@ Call the `fake` method on a resource to retrieve an array of fields filled with 
 
 $data = PostResource::fake();
 ```
+
+<details>
+  <summary>Generated Data Example</summary>
+
+```php
+[
+  "title" => "Hello World",
+  "slug" => "hello-world",
+  "meta-description" => "Ut voluptas molestiae sint repudiandae sint et quis.",
+  "content" => [
+    [
+      "type" => "App\Filament\Blocks\Heading",
+      "data" => [
+        "content" => "Impedit ex odio nostrum.",
+        "level" => "h5",
+      ],
+    ],
+    [
+      "type" => "App\Filament\Blocks\RichEditor",
+      "data" => [
+        "content" => "<p>Non est molestiae et quia reiciendis et iste.</p>",
+      ],
+    ],
+    [
+      "type" => "App\Filament\Blocks\Image",
+      "data" => [
+        "file" => "https://placehold.co/600x400.png",
+        "alt" => "Et nam aut nobis alias possimus voluptatem.",
+      ],
+    ],
+  ],
+  "status" => "draft",
+  "categories" => [2],
+]
+```
+</details>
 
 By default, component names are used to map to a Faker method for more accurate data. There are several ways to disable
 this behavior:
@@ -137,9 +189,9 @@ If you do not register extra components, the `default` callback will be used whi
 
 You may also override the default faker method attached to built in components by adding them to the config.
 
-### Mutating Fake Responses
+### Mutating Generated Data
 
-If you wish to fake a specific components value, you can chain `mutateFake` onto the fake builder. If this method returns
+If you need to control a specific components value, you can chain `mutateFake` onto the fake builder. If this method returns
 `null` for a component then it will be ignored and filled by other methods.
 
 ```php
@@ -159,7 +211,7 @@ $data = PostResource::faker()->mutateFake(function (Field $component): mixed {
 Alternatively you can add a `mutateFake` method to your Form, Block or Resource.
 
 The closure passed to `mutateFake` supports dependency injection, you just need to type hint `\Filament\Forms\Components\Field`
-or specific component type (e.g. `\Filament\Forms\Components\TextInput`) to get an instance of the component.
+or the specific component type (e.g. `\Filament\Forms\Components\TextInput`) to get an instance of the component.
 
 ```php
 <?php
@@ -179,13 +231,14 @@ class MutatedComponent extends TextInput
 }
 ```
 
-### Fake Using Factory Definitions
+### Generate Data Using Factory Definitions
 
-If you need increased accuracy for a specific test then you can enable the usage of Factories. The faked data will then be 
-generated used definitions from the factory provided. If no factory is provided the package will attempt to resolve one from
-the given resource, form or component.
+If you need increased accuracy for a specific test then you can enable the usage of Factories. When the use of factories 
+is enabled the generated data will be generated using definitions from the factory provided. 
 
-As this feature causes `Factory::makeOne` under the hood, I recommend only using it in tests where the accuracy of the faked 
+If no factory is provided the package will attempt to resolve one from the given resource, form, component or block.
+
+As this feature executes `Factory::makeOne` under the hood, I recommend only using it in tests where the accuracy of the faked 
 data is of significant importance.
 
 ```php
@@ -211,13 +264,15 @@ class FormatBlocksTest extends TestCase
 }
 ```
 
-If you need to specify a factory you can use you can pass a `class-string` or instance of a `Factory` to the `withFactory()` method.
-Only Resources can resolve a factory automatically, if you wish to use a factory with a Block or Component, you must provide the
-factory.
+If you need to specify a factory you can pass a `class-string` or instance of a `Factory` to the `withFactory()` method.
+
+Only `Resources` can resolve a factory automatically, if you wish to use a factory with a Block or Component, you must provide
+either the factory to `withFactory` or provide the model to the `Component`, `Form` or `Block`.
 
 #### Selecting Definitions
 
-If you want to select only a specific set of definitions from your factory you can pass an `array` as to the `withFactory()` method.
+If you want to select only a specific set of definitions from your factory you can pass an `array` as to the `withFactory()` method 
+which lists the definitions you want you use.
 
 ```php
 <?php 
@@ -227,7 +282,7 @@ $data = PostResource::faker()->withFactory(onlyAttributes: ['title', 'slug'])->f
 
 ## IDE Support
 
-As this package adds function using Laravel's `Macroable` trait your IDE will not find the methods by default. To fix this you will need
+As this package adds methods using Laravel's `Macroable` trait, your IDE will not find the methods on its own. To fix this you will need
 to use the [ide-helper package](https://github.com/barryvdh/laravel-ide-helper).
 
 ## Changelog
