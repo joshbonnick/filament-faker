@@ -71,3 +71,15 @@ it('returns an array if field with options is multiselectable', function () {
         ->and($select->multiple()->fake())
         ->toBeArray();
 });
+
+it('returns a value if component is searchable', function () {
+    $select = Select::make('test')
+        ->options(fn () => [])
+        ->getSearchResultsUsing(function (InjectableService $service) {
+            return ['foo' => '1', 'bar' => '2', 'hello' => '3', 'world' => 4];
+        })
+        ->searchable();
+
+    expect($select->fake())
+        ->toBeIn(['foo', 'bar', 'hello', 'world']);
+});
