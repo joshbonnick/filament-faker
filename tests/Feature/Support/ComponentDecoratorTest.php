@@ -33,3 +33,14 @@ it('only catches ReflectionExceptions thrown by this package.', function () {
         ->and(fn () => TextInput::make('test')->afterStateUpdated(fn () => throw new ReflectionException())->fake())
         ->toThrow(ReflectionException::class);
 });
+
+
+test('__get function returns a property', function(){
+    class ComponentWithPublicProperty extends TextInput {
+        public string $foobar = 'foo';
+    }
+
+    $decorator = tap(resolve(ComponentDecorator::class))->setUp(ComponentWithPublicProperty::make('test'));
+
+    expect($decorator->foobar)->toBeString()->toEqual('foo');
+});
