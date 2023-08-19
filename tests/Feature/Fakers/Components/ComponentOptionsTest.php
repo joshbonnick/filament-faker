@@ -30,7 +30,6 @@ it('uses an option value when options use dependency injection', function () {
         ->required();
 
     $options = resolve(InjectableService::class)->get()->pluck('title', 'id')->keys()->toArray();
-
     expect($select->fake())->toBeIn($options);
 });
 

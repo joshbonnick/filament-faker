@@ -1,5 +1,6 @@
 <?php
 
+use FilamentFaker\Contracts\FakesForms;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Resources\MultipleForms;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
@@ -23,7 +24,7 @@ it('can fake forms', function () {
         ->toStartWith('hsl(')
         ->and($fake['content'])
         ->toBeArray()
-        ->toHaveCount(2)
+        ->toHaveCount(1)
         ->and($fake['content'][0]['type'])
         ->toEqual(MockBlock::class)
         ->and($fake['foo'])
@@ -62,4 +63,9 @@ it('returns hidden fields when withHidden used', function () {
         ->toHaveKeys([
             'hidden_field',
         ]);
+});
+
+test('faker returns an instance of FakesForms', function () {
+    expect(PostResource::faker()->getForm()->faker())
+        ->toBeInstanceOf(FakesForms::class);
 });

@@ -7,7 +7,10 @@ namespace FilamentFaker\Concerns;
 use Closure;
 use Filament\Forms\Components\Field;
 
-trait InteractsWithFakeConfig
+/**
+ * @internal
+ */
+trait InteractsWithConfig
 {
     /**
      * @var array<string|class-string<Field>, Closure>
@@ -17,9 +20,9 @@ trait InteractsWithFakeConfig
     /**
      * @return array<string|class-string<Field>, Closure>
      */
-    protected function setUpConfig(): array
+    protected function config(): array
     {
-        return tap(config('filament-faker.fakes', []), function (array $config) {
+        return $this->fakesConfig ?? tap(config('filament-faker.fakes', []), function (array $config) {
             $this->fakesConfig = $config;
         });
     }

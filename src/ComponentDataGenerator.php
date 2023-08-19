@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Fakers;
+namespace FilamentFaker;
 
 use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\TagsInput;
-use FilamentFaker\Contracts\FakerProvider;
+use FilamentFaker\Contracts\DataGenerator;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 
-class DefaultFakers implements FakerProvider
+class ComponentDataGenerator implements DataGenerator
 {
     public function withOptions(Field $component): mixed
     {
@@ -34,8 +31,12 @@ class DefaultFakers implements FakerProvider
     /**
      * @return array<int, string|int|float>
      */
-    public function withSuggestions(TagsInput $component): array
+    public function withSuggestions(Field $component): array
     {
+        if (! method_exists($component, 'getSuggestions')) {
+            throw new InvalidArgumentException("{$component->getName()} does not have suggestions.");
+        }
+
         if (empty($suggestions = $component->getSuggestions())) {
             return fake()->rgbColorAsArray();
         }
@@ -53,9 +54,10 @@ class DefaultFakers implements FakerProvider
         return now()->toFormattedDateString();
     }
 
-    public function file(FileUpload $upload): string
+    public function file(Field $upload): string
     {
-        if (in_array('image/*', $upload->getAcceptedFileTypes() ?? [])) {
+        if (method_exists($upload, 'getAcceptedFileTypes')
+            && in_array('image/*', $upload->getAcceptedFileTypes() ?? [])) {
             return 'https://placehold.co/600x400.png';
         }
 
@@ -65,13 +67,17 @@ class DefaultFakers implements FakerProvider
     /**
      * @return string[]
      */
-    public function keyValue(KeyValue $component): array
+    public function keyValue(Field $component): array
     {
         return ['key' => 'value'];
     }
 
-    public function color(ColorPicker $color): string
+    public function color(Field $color): string
     {
+        if (! method_exists($color, 'getFormat')) {
+            return fake()->safeHexColor();
+        }
+
         return match ($color->getFormat()) {
             'hsl' => Str::wrap(fake()->hslColor(), 'hsl(', ')'),
             'rgb' => fake()->rgbCssColor(),

@@ -67,24 +67,6 @@ $data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake
 $data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
 ```
 
-You may also add a `shouldFakeUsingComponentName` method to your `Block` or `Component`, the method should return a `bool`
-
-```php
-<?php
-
-namespace App\Filament\Blocks;
-
-use Filament\Forms\Components\Builder\Block;
-
-class HeadingBlock extends Block
-{
-    public function shouldFakeUsingComponentName(): bool
-    {
-        return false;
-    }
-}
-```
-
 ### Usage In Tests
 
 You can use the faked data in your tests.
@@ -167,11 +149,6 @@ use Filament\Forms\Components\Field;
 use Illuminate\Support\Str;
 
 $data = PostResource::faker()->mutateFake(function (Field $component): mixed {
-    if ($component->getName() === 'is_admin'
-    && Str::endsWith($component->getRecord()->email, '@example.com')) {
-        return true;
-    }
-
     return match ($component->getName()) {
         'title' => fake()->jobTitle(),
         default => null,
@@ -179,9 +156,10 @@ $data = PostResource::faker()->mutateFake(function (Field $component): mixed {
 });
 ```
 
-Alternatively you can add a `mutateFake` method which accepts an instance of the component and returns the faked value.
+Alternatively you can add a `mutateFake` method to your Form, Block or Resource.
 
-When faking a block the `mutateFake` method is used as a priority over `Component` class fakes.
+The closure passed to `mutateFake` supports dependency injection, you just need to type hint `\Filament\Forms\Components\Field`
+or specific component type (e.g. `\Filament\Forms\Components\TextInput`) to get an instance of the component.
 
 ```php
 <?php
@@ -190,12 +168,13 @@ namespace App\Filament\Components;
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
+use App\Services\InjectableService;
 
 class MutatedComponent extends TextInput
 {
-    public function mutateFake(Field $component): string
+    public function mutateFake(Field $component, InjectableService $service): string
     {
-        return fake()->randomHtml();
+        return $service->getSomething();
     }
 }
 ```
@@ -233,6 +212,8 @@ class FormatBlocksTest extends TestCase
 ```
 
 If you need to specify a factory you can use you can pass a `class-string` or instance of a `Factory` to the `withFactory()` method.
+Only Resources can resolve a factory automatically, if you wish to use a factory with a Block or Component, you must provide the
+factory.
 
 #### Selecting Definitions
 

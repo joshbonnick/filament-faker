@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
+use BadMethodCallException;
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use UnhandledMatchError;
+use ReflectionException;
 
-trait MutatesFakes
+/**
+ * @internal
+ */
+trait TransformsFakes
 {
     protected ?Closure $mutateCallback = null;
+
+    protected bool $shouldFakeUsingComponentName = true;
 
     /**
      * Faker should use the components name to retrieve a method from FakerPHP
@@ -35,6 +41,16 @@ trait MutatesFakes
         });
     }
 
+    protected function getShouldFakeUsingComponentName(): bool
+    {
+        return $this->shouldFakeUsingComponentName;
+    }
+
+    protected function getMutateCallback(): ?Closure
+    {
+        return $this->mutateCallback;
+    }
+
     /**
      * Mutate callback has been set.
      */
@@ -50,16 +66,18 @@ trait MutatesFakes
      */
     protected function getMutationsFromParent(Component|Form $parent, Field $component): mixed
     {
-        if (method_exists($parent, 'mutateFake')) {
-            try {
-                $content = $parent->mutateFake($component);
-            } catch (UnhandledMatchError $e) {
-                return $component;
-            }
-
-            return (is_callable($content) ? $content($component) : $content) ?? $component;
+        try {
+            return $this->resolveOrReturn(
+                callback: [$parent, 'mutateFake'],
+                parameters: [Field::class => $component, $component::class => $component]
+            ) ?? $component;
+        } catch (BadMethodCallException|ReflectionException $e) {
+            return $component;
         }
-
-        return $component;
     }
+
+    /**
+     * @param  array<class-string|string, object>  $parameters
+     */
+    abstract protected function resolveOrReturn(mixed $callback, array $parameters): mixed;
 }

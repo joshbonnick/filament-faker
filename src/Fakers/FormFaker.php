@@ -16,23 +16,17 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
-use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Contracts\FakesForms;
-use FilamentFaker\Contracts\FilamentFaker;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker extends GeneratesFakes implements FakesForms, FilamentFaker
+class FormFaker extends FilamentFaker implements FakesForms
 {
-    use InteractsWithFactories;
-
     protected bool $withHidden = true;
 
     public function __construct(
         protected Form $form,
     ) {
-        parent::__construct();
     }
 
     /**
@@ -69,12 +63,17 @@ class FormFaker extends GeneratesFakes implements FakesForms, FilamentFaker
                 $component instanceof Group,
                 $component instanceof Section => $this->fakeComponents(collect($component->getChildComponents())),
 
-                $component instanceof Field => [$component->getName() => $this->getContentForComponent($component, $this->form)],
+                $component instanceof Field => [$component->getName() => $this->getContentForChildComponent($component, $this->form)],
 
                 default => throw new InvalidArgumentException(
                     sprintf('%s is not a supported component type.', $component::class)
                 ),
             })->toArray();
+    }
+
+    protected function resolveModel(): ?string
+    {
+        return $this->form->getModel();
     }
 
     /**
@@ -86,5 +85,13 @@ class FormFaker extends GeneratesFakes implements FakesForms, FilamentFaker
             ->filter(fn (Component $block) => $block instanceof Block)
             ->map(fn (Block $block) => $this->getBlockFaker($block)->fake())
             ->toArray();
+    }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    protected function injectionParameters(): array
+    {
+        return [Form::class => $this->form, $this->form::class => $this->form];
     }
 }

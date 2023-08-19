@@ -6,11 +6,13 @@ namespace FilamentFaker\Concerns;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 
+/**
+ * @internal
+ */
 trait InteractsWithFactories
 {
     /**
@@ -31,6 +33,13 @@ trait InteractsWithFactories
     protected array $onlyAttributes = [];
 
     /**
+     * @return class-string<Model>|string|null
+     *
+     * @throws InvalidArgumentException
+     */
+    abstract protected function resolveModel(): ?string;
+
+    /**
      * Generate fake data using model factories.
      *
      * @param  array<int, string>  $onlyAttributes
@@ -47,20 +56,26 @@ trait InteractsWithFactories
                 return;
             }
 
+            if (is_null($factory) && ! (isset($this->resource) || isset($this->form))) {
+                throw new InvalidArgumentException('You must provide a factory.');
+            }
+
             try {
-                if (! is_null($factory)) {
-                    $this->factory = resolve($factory);
+                if (is_null($factory)) {
+                    throw new BindingResolutionException();
                 }
+
+                $this->factory = resolve($factory);
             } catch (BindingResolutionException $e) {
                 if (is_null($model = $this->resolveModel())) {
-                    throw new InvalidArgumentException("Unable to find Model for {$this->component->getName()}");
+                    throw new InvalidArgumentException('Unable to find Model.');
                 }
 
-                if (! in_array(HasFactory::class, class_uses_recursive($model))) {
-                    throw new InvalidArgumentException("Unable to find Factory for $model");
+                if (! method_exists($model, 'factory')) {
+                    throw new InvalidArgumentException("Unable to find Factory for $model.");
                 }
 
-                $this->factory = $model::factory(); // @phpstan-ignore-line
+                $this->factory = $model::factory();
             }
         });
     }
@@ -68,22 +83,6 @@ trait InteractsWithFactories
     protected function usesFactory(): bool
     {
         return ! is_null($this->factory);
-    }
-
-    /**
-     * @return class-string<Model>|string|null
-     *
-     * @throws InvalidArgumentException
-     */
-    protected function resolveModel(): ?string
-    {
-        return match (true) {
-            isset($this->component) => $this->component->getModel(),
-            isset($this->form) => $this->form->getModel(),
-            isset($this->block) => $this->block->getModel(),
-            isset($this->resource) => $this->resource::getModel(),
-            default => throw new InvalidArgumentException('Unable to find resolve Model.')
-        };
     }
 
     /**
@@ -110,6 +109,14 @@ trait InteractsWithFactories
         return tap($attributes, function (array $attributes) {
             $this->modelAttributes = $attributes;
         });
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    protected function getOnlyFactoryAttributes(): array
+    {
+        return $this->onlyAttributes;
     }
 
     /**

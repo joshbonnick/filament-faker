@@ -1,5 +1,6 @@
 <?php
 
+use FilamentFaker\Contracts\FakesResources;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
@@ -22,7 +23,7 @@ it('can fake resources', function () {
         ->toStartWith('hsl(')
         ->and($fake['content'])
         ->toBeArray()
-        ->toHaveCount(2)
+        ->toHaveCount(1)
         ->and($fake['content'][0]['type'])
         ->toEqual(MockBlock::class)
         ->and($fake['foo'])
@@ -43,4 +44,9 @@ it('accepts an instance of a form', function () {
             'grid_foo', 'grid_foobar', 'grid_bar', 'section_foo',
             'section_content',
         ]);
+});
+
+test('faker returns an instance of FakesResources', function () {
+    expect(PostResource::faker())
+        ->toBeInstanceOf(FakesResources::class);
 });
