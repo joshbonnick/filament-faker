@@ -6,25 +6,25 @@ use FilamentFaker\Support\ComponentDecorator;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 beforeEach(function () {
-    $this->component = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $this->componentDecorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
 });
 
 it('returns an instance of component', function () {
-    expect($this->component->component())->toBeInstanceOf(Field::class);
+    expect($this->componentDecorator->getField())->toBeInstanceOf(Field::class);
 });
 
 it('can format components', function () {
-    $this->component->component()->afterStateHydrated(function (?string $state, InjectableService $service) {
+    $this->componentDecorator->afterStateHydrated(function (?string $state, InjectableService $service) {
         return '::test-two::';
     });
 
-    expect($this->component->format())->toEqual('::test-two::');
+    expect($this->componentDecorator->format())->toEqual('::test-two::');
 
-    $this->component->component()->afterStateUpdated(function (?string $state, string $old = null) {
+    $this->componentDecorator->afterStateUpdated(function (?string $state, string $old = null) {
         return '::test::';
     });
 
-    expect($this->component->format())->toEqual('::test::');
+    expect($this->componentDecorator->format())->toEqual('::test::');
 });
 
 it('only catches ReflectionExceptions thrown by this package.', function () {

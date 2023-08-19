@@ -19,6 +19,7 @@ use ReflectionException;
 
 /**
  * @internal
+ * @mixin Field
  */
 class ComponentDecorator
 {
@@ -32,6 +33,16 @@ class ComponentDecorator
     ) {
     }
 
+    public function __call(string $name, array $arguments)
+    {
+        return $this->component->$name(...$arguments);
+    }
+
+    public function __get(string $name)
+    {
+        return $this->component->$name;
+    }
+
     public function setUp(Field $component): Field
     {
         return tap($this->setUpComponent($component), function (Field $component) {
@@ -39,14 +50,14 @@ class ComponentDecorator
         });
     }
 
-    public function component(): Field
+    public function getField(): Field
     {
         return $this->component;
     }
 
     public function format(): mixed
     {
-        $state = $this->component->getState();
+        $state = $this->getState();
 
         if ($this->canBeDateFormatted()) {
             return $this->formatDate($state);
@@ -67,14 +78,14 @@ class ComponentDecorator
     public function setState(mixed $state): static
     {
         return tap($this, function () use ($state) {
-            $this->component->state(fn (Set $set) => $set($this->component->getName(), $state));
+            $this->state(fn (Set $set) => $set($this->getName(), $state));
         });
     }
 
-    public function afterStateHydrated(mixed $state): mixed
+    public function getAfterStateHydrated(mixed $state): mixed
     {
         try {
-            return $this->component->evaluate($this->reflect()->property('afterStateHydrated'))
+            return $this->evaluate($this->reflect()->property('afterStateHydrated'))
                    ?? $state;
         } catch (ReflectionException $e) {
             throw_unless(str_contains($e->getMessage(), 'afterStateHydrated does not exist'), $e);
@@ -83,10 +94,10 @@ class ComponentDecorator
         return null;
     }
 
-    public function afterStateUpdated(mixed $state): mixed
+    public function getAfterStateUpdated(mixed $state): mixed
     {
         try {
-            return $this->component->evaluate($this->reflect()->property('afterStateUpdated'), ['old' => $state])
+            return $this->evaluate($this->reflect()->property('afterStateUpdated'), ['old' => $state])
                    ?? $state;
         } catch (ReflectionException $e) {
             throw_unless(str_contains($e->getMessage(), 'afterStateUpdated does not exist'), $e);
@@ -112,7 +123,7 @@ class ComponentDecorator
 
     protected function applyFormattingHooks(mixed $state): mixed
     {
-        $newState = $this->afterStateUpdated($this->afterStateHydrated($state));
+        $newState = $this->getAfterStateUpdated($this->getAfterStateHydrated($state));
 
         if ($newState instanceof Field) {
             return $newState->getState();
@@ -124,13 +135,13 @@ class ComponentDecorator
     protected function formatDate(DateTimeInterface|string $date): string
     {
         if (! method_exists($this->component, 'getFormat')) {
-            throw new InvalidArgumentException("{$this->component->getName()} cannot be formatted into a date.");
+            throw new InvalidArgumentException("{$this->getName()} cannot be formatted into a date.");
         }
 
         try {
             return Carbon::parse($date)->format($this->component->getFormat());
         } catch (InvalidFormatException $e) {
-            throw new InvalidArgumentException("{$this->component->getName()} cannot be formatted into a date.");
+            throw new InvalidArgumentException("{$this->getName()} cannot be formatted into a date.");
         }
     }
 }

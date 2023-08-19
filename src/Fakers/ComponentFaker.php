@@ -49,11 +49,11 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         if ($this->factoryDefinitionExists()) {
-            return $this->getModelAttributes()[$this->component()->getName()];
+            return $this->getModelAttributes()[$this->component->getName()];
         }
 
         if ($this->getShouldFakeUsingComponentName()) {
-            $data = $this->realTimeFactory->fakeFromName($this->component()->getName());
+            $data = $this->realTimeFactory->fakeFromName($this->component->getName());
         }
 
         return $this->component
@@ -97,7 +97,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     protected function component(): Field
     {
-        return $this->component->component();
+        return $this->component->getField();
     }
 
     /**
