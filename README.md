@@ -122,16 +122,6 @@ class FormatBlocksTest extends TestCase
         $blocks = [
             HeadingBlock::fake(),
         ];
-        
-        // $blocks = [
-        //    [
-        //        'type' => 'App\Filament\Blocks\HeadingBlock'
-        //        'data' => [
-        //             'level'   => 1,
-        //             'content' => 'Maecenas id ipsum interdum, porta diam in, molestie est.',
-        //        ],
-        //    ],
-        // ];
 
         $service = app()->make(ContentFormatter::class);
         $content = $service->format($blocks);
