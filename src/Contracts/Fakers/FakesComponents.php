@@ -2,25 +2,21 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Contracts;
+namespace FilamentFaker\Contracts\Fakers;
 
 use Closure;
+use Filament\Forms\Components\Field;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
-interface FakesForms
+interface FakesComponents
 {
     /**
-     * Generates mock data array for an entire Filament form.
-     *
-     * @return array<string, mixed>
+     * Generates mock data for a Filament component.
      */
-    public function fake(): array;
+    public function fake(): mixed;
 
-    /**
-     * Disable or enable the use of hidden fields in the generated data.
-     */
-    public function withoutHidden(bool $withoutHidden = false): static;
+    public function setUpComponent(Field $component): Field;
 
     /**
      * Generate fake data using model factories.

@@ -6,7 +6,7 @@ namespace FilamentFaker;
 
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Field;
-use FilamentFaker\Contracts\DataGenerator;
+use FilamentFaker\Contracts\Support\DataGenerator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 

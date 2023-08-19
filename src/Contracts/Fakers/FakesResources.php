@@ -2,21 +2,35 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Contracts;
+namespace FilamentFaker\Contracts\Fakers;
 
 use Closure;
-use Filament\Forms\Components\Field;
+use Filament\Forms\Form;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
-interface FakesComponents
+interface FakesResources
 {
     /**
-     * Generates mock data for a Filament component.
+     * Specify which form to fake, if there is only one form on the page then
+     * you should use the default parameter.
+     *
+     * If you have renamed the static 'form' method, that should be reflected
+     * here.
      */
-    public function fake(): mixed;
+    public function withForm(Form|string $form = 'form'): static;
 
-    public function setUpComponent(Field $component): Field;
+    /**
+     * Generates mock data array for an entire Filament form attached to a resource.
+     *
+     * @return array<string, mixed>
+     */
+    public function fake(): array;
+
+    /**
+     * Returns an instance of the Form that will be used to generate mock data.
+     */
+    public function getForm(): Form;
 
     /**
      * Generate fake data using model factories.

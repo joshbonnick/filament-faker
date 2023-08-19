@@ -8,7 +8,7 @@ use Closure;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
-use FilamentFaker\Contracts\FakesResources;
+use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
 
 class ResourceFaker extends FilamentFaker implements FakesResources

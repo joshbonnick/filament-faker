@@ -16,7 +16,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
-use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 

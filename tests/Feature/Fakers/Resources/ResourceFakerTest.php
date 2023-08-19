@@ -1,6 +1,6 @@
 <?php
 
-use FilamentFaker\Contracts\FakesResources;
+use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 

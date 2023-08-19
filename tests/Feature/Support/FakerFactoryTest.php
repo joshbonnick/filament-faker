@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Contracts\RealTimeFactory;
+use FilamentFaker\Contracts\Support\RealTimeFactory;
 
 it('does not execute excluded methods listed in config file', function () {
     $factory = resolve(RealTimeFactory::class);

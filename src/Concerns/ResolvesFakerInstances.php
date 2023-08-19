@@ -8,9 +8,9 @@ use Closure;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use FilamentFaker\Contracts\FakesBlocks;
-use FilamentFaker\Contracts\FakesComponents;
-use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
