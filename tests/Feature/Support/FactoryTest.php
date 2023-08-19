@@ -4,8 +4,8 @@ use Filament\Forms\Components\TextInput;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 test('configure is applied before data is generated', function () {
-    class ConfiguredComponent extends TextInput {
-
+    class ConfiguredComponent extends TextInput
+    {
     }
 
     ConfiguredComponent::configureUsing(function (TextInput $component) {
