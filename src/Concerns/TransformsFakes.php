@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
-use BadMethodCallException;
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
