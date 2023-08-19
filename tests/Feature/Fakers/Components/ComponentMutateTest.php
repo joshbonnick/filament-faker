@@ -1,7 +1,6 @@
 <?php
 
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
