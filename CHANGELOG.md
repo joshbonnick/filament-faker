@@ -6,27 +6,27 @@ All notable changes to `filament-faker` will be documented in this file.
 
 ### What's Changed
 
-[1.x] Add dev and testing keywords to composer.json
-[1.x] Require illuminate/support:^10.0 as dependency
-[1.x] Refactor tests directory structure
-[1.x] Abstraction of model resolves in WithFactory trait
-[1.x] Mark traits as internal
-[1.x] Add abstract functions to traits
-[1.x] Fix factory resolving from Block
-[1.x] Extract FakeFromComponentName to RealTimeFactory class
-[1.x] Add ComponentDecorator
-[1.x] Support dependency injection on Closures
-[1.x] Refactoring
-[1.x] Refactor default faker callbacks
-[1.x] Improve README documentation
-[1.x] Add doc blocks with descriptions of methods
-[1.x] Improve test coverage
-[1.x] Return an array if options component is multiselect
-[1.x] Add Eloquent Factory support
-[1.x] Fix DatePicker component fake
-[1.x] Support date formatting on DateTimePicker and DatePicker
-[1.x] Add chained mutations
-[1.x] Support mutateFake method added using macro
+- [1.x] Add dev and testing keywords to composer.json
+- [1.x] Require illuminate/support:^10.0 as dependency
+- [1.x] Refactor tests directory structure
+- [1.x] Abstraction of model resolves in WithFactory trait
+- [1.x] Mark traits as internal
+- [1.x] Add abstract functions to traits
+- [1.x] Fix factory resolving from Block
+- [1.x] Extract FakeFromComponentName to RealTimeFactory class
+- [1.x] Add ComponentDecorator
+- [1.x] Support dependency injection on Closures
+- [1.x] Refactoring
+- [1.x] Refactor default faker callbacks
+- [1.x] Improve README documentation
+- [1.x] Add doc blocks with descriptions of methods
+- [1.x] Improve test coverage
+- [1.x] Return an array if options component is multiselect
+- [1.x] Add Eloquent Factory support
+- [1.x] Fix DatePicker component fake
+- [1.x] Support date formatting on DateTimePicker and DatePicker
+- [1.x] Add chained mutations
+- [1.x] Support mutateFake method added using macro
 
 **Full Changelog**: https://github.com/joshbonnick/filament-faker/compare/v0.0.1...v0.0.2
 
