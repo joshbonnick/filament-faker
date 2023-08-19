@@ -1,6 +1,7 @@
 <?php
 
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
@@ -26,4 +27,8 @@ test('mutation callbacks are dependency injected', function () {
     expect($component->fake())
         ->toBeString()
         ->toEqual('phone_number');
+});
+
+it('returns null if options are empty', function () {
+    expect(Select::make('empty')->options([])->fake())->toBeNull();
 });
