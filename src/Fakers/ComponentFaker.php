@@ -42,11 +42,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     public function fake(): mixed
     {
         if (is_callable($this->mutateCallback)) {
-            try {
-                return $this->resolveOrReturn($this->mutateCallback);
-            } catch (BadMethodCallException $e) {
-
-            }
+            return $this->resolveOrReturn($this->mutateCallback);
         }
 
         if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
