@@ -91,6 +91,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
 
     /**
      * @return array<class-string|string, object>
+     *
      * @codeCoverageIgnore
      */
     protected function injectionParameters(): array
