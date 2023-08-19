@@ -5,6 +5,7 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Support\ComponentDecorator;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
+use FilamentFaker\Support\Reflection;
 
 beforeEach(function () {
     $this->componentDecorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
@@ -33,6 +34,38 @@ it('only catches ReflectionExceptions thrown by this package.', function () {
         ->toThrow(ReflectionException::class)
         ->and(fn () => TextInput::make('test')->afterStateUpdated(fn () => throw new ReflectionException())->fake())
         ->toThrow(ReflectionException::class);
+});
+
+it('afterStateHydrated hook return null if method does not exist', function () {
+    $mock = mock(Reflection::class);
+
+    $mock->shouldReceive('reflect')
+         ->andReturnSelf();
+    $mock->shouldReceive('property')
+         ->andThrow(ReflectionException::class, "afterStateHydrated does not exist");
+
+    app()->instance(Reflection::class, $mock);
+
+    $componentDecorator = tap(app(ComponentDecorator::class))->setUp(TextInput::make('test'));
+
+    expect($componentDecorator->getAfterStateHydrated('test'))
+        ->toBeNull();
+});
+
+it('afterStateUpdated hook return null if method does not exist', function () {
+    $mock = mock(Reflection::class);
+
+    $mock->shouldReceive('reflect')
+         ->andReturnSelf();
+    $mock->shouldReceive('property')
+         ->andThrow(ReflectionException::class, "afterStateUpdated does not exist");
+
+    app()->instance(Reflection::class, $mock);
+
+    $componentDecorator = tap(app(ComponentDecorator::class))->setUp(TextInput::make('test'));
+
+    expect($componentDecorator->getAfterStateUpdated('test'))
+        ->toBeNull();
 });
 
 test('__get function returns a property', function () {
