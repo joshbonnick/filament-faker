@@ -73,7 +73,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
 
     protected function resolveResource(): ?FilamentResource
     {
-        return rescue(fn (): FilamentResource => resolve($this->resource));
+        return rescue(fn (): FilamentResource => app($this->resource));
     }
 
     /**

@@ -65,7 +65,7 @@ trait InteractsWithFactories
                     throw new BindingResolutionException();
                 }
 
-                $this->factory = resolve($factory);
+                $this->factory = app($factory);
             } catch (BindingResolutionException $e) {
                 if (is_null($model = $this->resolveModel())) {
                     throw new InvalidArgumentException('Unable to find Model.');
