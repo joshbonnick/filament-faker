@@ -101,24 +101,6 @@ $data = PostResource::fake();
 ```
 </details>
 
-By default, component names are used to map to a Faker method for more accurate data. There are several ways to disable
-this behavior:
-
-Set `use_component_names_for_fake` to `false` in `config/filament-faker.php` which will disable the behavior for
-the entire package as default.
-
-You can chain `shouldFakeUsingComponentName` on the Faker API to disable the feature per test.
-
-```php
-<?php
-
-$data = PostResource::faker()->shouldFakeUsingComponentName(false)->fake();
-// or
-$data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake();
-// or
-$data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
-```
-
 ### Usage In Tests
 
 You can use the faked data in your tests.
@@ -229,6 +211,26 @@ class MutatedComponent extends TextInput
         return $service->getSomething();
     }
 }
+```
+
+### Disabling Generations From Component Names
+
+By default, component names are used to map to a Faker method for more accurate data. There are several ways to disable
+this behavior:
+
+Set `use_component_names_for_fake` to `false` in `config/filament-faker.php` which will disable the behavior for
+the entire package as default.
+
+You can chain `shouldFakeUsingComponentName` on the Faker API to disable the feature per test.
+
+```php
+<?php
+
+$data = PostResource::faker()->shouldFakeUsingComponentName(false)->fake();
+// or
+$data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake();
+// or
+$data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
 ```
 
 ### Generate Data Using Factory Definitions
