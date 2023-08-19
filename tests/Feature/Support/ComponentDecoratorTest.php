@@ -1,6 +1,7 @@
 <?php
 
 use Filament\Forms\Components\Field;
+use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Support\ComponentDecorator;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
@@ -43,4 +44,11 @@ test('__get function returns a property', function () {
     $decorator = tap(resolve(ComponentDecorator::class))->setUp(ComponentWithPublicProperty::make('test'));
 
     expect($decorator->foobar)->toBeString()->toEqual('foo');
+});
+
+test('is_a method with array and string', function () {
+    expect($this->componentDecorator->is_a(Field::class))
+        ->toBeTrue()
+        ->and($this->componentDecorator->is_a(TextInput::class, RichEditor::class))
+        ->toBeTrue();
 });

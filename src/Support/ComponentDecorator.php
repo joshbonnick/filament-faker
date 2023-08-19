@@ -74,11 +74,17 @@ class ComponentDecorator
     }
 
     /**
-     * @param  class-string<Field>  $class
+     * @param  class-string<Field>[]  $classes
      */
-    public function is_a(string $class): bool
+    public function is_a(string ...$classes): bool
     {
-        return is_a($this->component, $class);
+        foreach ($classes as $class) {
+            if (is_a($this->component, $class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function setState(mixed $state): static
