@@ -26,3 +26,10 @@ it('can format components', function () {
 
     expect($this->component->format())->toEqual('::test::');
 });
+
+it('only catches ReflectionExceptions thrown by this package.', function () {
+    expect(fn () => TextInput::make('test')->afterStateHydrated(fn () => throw new ReflectionException())->fake())
+        ->toThrow(ReflectionException::class)
+        ->and(fn () => TextInput::make('test')->afterStateUpdated(fn () => throw new ReflectionException())->fake())
+        ->toThrow(ReflectionException::class);
+});

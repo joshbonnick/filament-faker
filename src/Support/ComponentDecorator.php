@@ -16,7 +16,6 @@ use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
-use ReflectionProperty;
 
 /**
  * @internal
@@ -27,6 +26,11 @@ class ComponentDecorator
     use InteractsWithFilamentContainer;
 
     public Field $component;
+
+    public function __construct(
+        protected Reflection $reflection
+    ) {
+    }
 
     public function setUp(Field $component): Field
     {
@@ -70,27 +74,25 @@ class ComponentDecorator
     public function afterStateHydrated(mixed $state): mixed
     {
         try {
-            $afterStateHydrated = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))
-                ->setAccessible(true);
-
-            return $this->component->evaluate($afterStateHydrated->getValue($this->component))
+            return $this->component->evaluate($this->reflect()->property('afterStateHydrated'))
                    ?? $state;
         } catch (ReflectionException $e) {
-            return null;
+            throw_unless(str_contains($e->getMessage(), 'afterStateHydrated does not exist'), $e);
         }
+
+        return null;
     }
 
     public function afterStateUpdated(mixed $state): mixed
     {
         try {
-            $afterStateUpdated = tap(new ReflectionProperty($this->component, 'afterStateUpdated'))
-                ->setAccessible(true);
-
-            return $this->component->evaluate($afterStateUpdated->getValue($this->component), ['old' => $state])
+            return $this->component->evaluate($this->reflect()->property('afterStateUpdated'), ['old' => $state])
                    ?? $state;
         } catch (ReflectionException $e) {
-            return null;
+            throw_unless(str_contains($e->getMessage(), 'afterStateUpdated does not exist'), $e);
         }
+
+        return null;
     }
 
     public function hasOptions(): bool
@@ -101,6 +103,11 @@ class ComponentDecorator
     public function hasOverride(): bool
     {
         return Arr::has($this->config(), $this->component::class);
+    }
+
+    protected function reflect(): Reflection
+    {
+        return $this->reflection->reflect($this->component);
     }
 
     protected function applyFormattingHooks(mixed $state): mixed
