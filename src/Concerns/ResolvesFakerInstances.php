@@ -11,6 +11,7 @@ use Filament\Forms\Form;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Support\FakerFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,17 +22,17 @@ trait ResolvesFakerInstances
 {
     protected function getFormFaker(Form $form): FakesForms
     {
-        return tap($form->faker(), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
+        return tap(FakerFactory::from($this)->form($form), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function getComponentFaker(Field $component): FakesComponents
     {
-        return tap($component->faker(), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
+        return tap(FakerFactory::from($this)->component($component), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function getBlockFaker(Block $block): FakesBlocks
     {
-        return tap($block->faker(), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
+        return tap(FakerFactory::from($this)->block($block), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
     }
 
     /**
