@@ -9,6 +9,7 @@ use FilamentFaker\Contracts\DataGenerator;
 use FilamentFaker\Contracts\FakesComponents;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
+use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
@@ -84,4 +85,15 @@ it('supports closures in config overrides', function () {
         ->toEqual('::test::')
         ->and(RichEditor::make('test')->fake())
         ->toEqual('::test-two::');
+});
+
+it('closures added to config are dependency injected', function () {
+    config()->set('filament-faker.fakes', [
+        TextInput::class => function (InjectableService $service) {
+            return '::test::';
+        },
+    ]);
+
+    expect(TextInput::make('test')->fake())
+        ->toEqual('::test::');
 });

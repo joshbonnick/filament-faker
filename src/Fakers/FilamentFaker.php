@@ -12,6 +12,7 @@ use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesFakerInstances;
 use FilamentFaker\Concerns\TransformsFakes;
+use Illuminate\Support\Facades\App;
 
 abstract class FilamentFaker
 {
@@ -35,4 +36,24 @@ abstract class FilamentFaker
 
         return $transformed;
     }
+
+    /**
+     * @param  array<class-string|string, object>  $parameters
+     */
+    protected function resolveOrReturn(mixed $callback, array $parameters = []): mixed
+    {
+        if (is_callable($callback)) {
+            return $this->resolveOrReturn(
+                App::call($callback, [...$this->injectionParameters(), ...$parameters]),
+                [...$this->injectionParameters(), ...$parameters]
+            );
+        }
+
+        return $callback;
+    }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    abstract protected function injectionParameters(): array;
 }

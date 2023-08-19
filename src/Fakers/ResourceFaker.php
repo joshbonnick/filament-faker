@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Closure;
 use Filament\Forms\Form;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\FakesResources;
@@ -37,18 +38,24 @@ class ResourceFaker extends FilamentFaker implements FakesResources
 
             $this->form = rescue(
                 callback: fn () => $this->resource::$form($this->baseForm()),
-                rescue: fn () => resolve($this->resource)->{$form}($this->baseForm())
+                rescue: fn () => $this->resolveResource()?->{$form}($this->baseForm())
             );
-
-            if (isset($this->resource::$model)) {
-                $this->form?->model($this->resource::model);
-            }
         });
     }
 
     public function fake(): array
     {
-        return $this->getFormFaker($this->getForm())->fake();
+        if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
+            return $this->getFormFaker($this->getForm())->fake();
+        }
+
+        if (method_exists($resource, 'mutateFake')) {
+            $mutationCallback = Closure::fromCallable([$resource, 'mutateFake']);
+        } else {
+            $mutationCallback = $this->mutateCallback;
+        }
+
+        return $this->getFormFaker($this->getForm())->mutateFake($mutationCallback)->fake();
     }
 
     public function getForm(): Form
@@ -56,6 +63,11 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         return is_null($this->form)
             ? $this->withForm()->getForm()
             : $this->form;
+    }
+
+    protected function resolveResource(): ?FilamentResource
+    {
+        return rescue(fn (): FilamentResource => resolve($this->resource));
     }
 
     protected function resolveModel(): ?string
@@ -66,5 +78,17 @@ class ResourceFaker extends FilamentFaker implements FakesResources
     protected function baseForm(): Form
     {
         return Form::make(Livewire::make());
+    }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    protected function injectionParameters(): array
+    {
+        if (is_null($resource = $this->resolveResource())) {
+            return [];
+        }
+
+        return [FilamentResource::class => $resource, $resource::class => $resource];
     }
 }

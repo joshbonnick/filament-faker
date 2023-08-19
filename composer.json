@@ -43,9 +43,6 @@
         "phpstan/phpstan-phpunit": "^1.0"
     },
     "autoload": {
-        "files": [
-            "src/Support/helpers.php"
-        ],
         "psr-4": {
             "FilamentFaker\\": "src/"
         }

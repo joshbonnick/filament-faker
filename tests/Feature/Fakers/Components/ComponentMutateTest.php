@@ -3,6 +3,7 @@
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
+use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 test('mutateFake can be chained onto components', function () {
     expect(TextInput::make('test')->faker()->mutateFake(fn (TextInput $input) => '::test::')->fake())
@@ -17,28 +18,12 @@ test('mutate fake method is a priority over faker method', function () {
         ->toEqual('::phone::');
 });
 
-test('mutateFake macros are used', function () {
-    TextInput::macro('mutateFake', fn () => '::test::');
-
-    expect(TextInput::make('test')->fake())
-        ->toEqual('::test::');
-
-    TextInput::flushMacros();
-});
-
-test('mutateFake closure macros are used', function () {
-    TextInput::macro('mutateFake', function () {
-        return function (Field $component) {
-            if ($component->getName() === 'test') {
-                return '::test::';
-            }
-
-            return null;
-        };
+test('mutation callbacks are dependency injected', function () {
+    $component = TextInput::make('phone_number')->faker()->mutateFake(function (InjectableService $service, Field $field) {
+        return $field->getName();
     });
 
-    expect(TextInput::make('test')->fake())
-        ->toEqual('::test::');
-
-    TextInput::flushMacros();
+    expect($component->fake())
+        ->toBeString()
+        ->toEqual('phone_number');
 });

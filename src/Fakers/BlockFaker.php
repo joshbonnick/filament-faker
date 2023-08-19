@@ -32,4 +32,15 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
     {
         return $this->setUpBlock($this->block)->getModel();
     }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    protected function injectionParameters(): array
+    {
+        return [
+            Block::class => $this->block,
+            $this->block::class => $this->block,
+        ];
+    }
 }

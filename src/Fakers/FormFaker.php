@@ -86,4 +86,12 @@ class FormFaker extends FilamentFaker implements FakesForms
             ->map(fn (Block $block) => $this->getBlockFaker($block)->fake())
             ->toArray();
     }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    protected function injectionParameters(): array
+    {
+        return [Form::class => $this->form, $this->form::class => $this->form];
+    }
 }

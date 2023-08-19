@@ -9,8 +9,7 @@ use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-
-use function FilamentFaker\callOrReturn;
+use ReflectionException;
 
 /**
  * @internal
@@ -52,15 +51,21 @@ trait TransformsFakes
      * Get mutation methods from given components parent.
      *
      * Returns the component if no mutate methods exist.
-     *
-     * @return string|float|bool|array<int|string, mixed>|Field
      */
-    protected function getMutationsFromParent(Component|Form $parent, Field $component): string|float|bool|array|Field
+    protected function getMutationsFromParent(Component|Form $parent, Field $component): mixed
     {
         try {
-            return callOrReturn($parent->mutateFake($component), $component) ?? $component; // @phpstan-ignore-line
-        } catch (BadMethodCallException $e) {
+            return $this->resolveOrReturn(
+                callback: [$parent, 'mutateFake'],
+                parameters: [Field::class => $component, $component::class => $component]
+            ) ?? $component;
+        } catch (BadMethodCallException|ReflectionException $e) {
             return $component;
         }
     }
+
+    /**
+     * @param  array<class-string|string, object>  $parameters
+     */
+    abstract protected function resolveOrReturn(mixed $callback, array $parameters): mixed;
 }

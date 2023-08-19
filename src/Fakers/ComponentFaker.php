@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace FilamentFaker\Fakers;
 
 use BadMethodCallException;
-use Closure;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
@@ -26,8 +26,7 @@ use FilamentFaker\Support\ComponentDecorator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
-
-use function FilamentFaker\callOrReturn;
+use ReflectionException;
 
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
@@ -42,8 +41,12 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     public function fake(): mixed
     {
-        if ($this->mutateCallback instanceof Closure) {
-            return ($this->mutateCallback)($this->component());
+        if (is_callable($this->mutateCallback)) {
+            try {
+                return $this->resolveOrReturn($this->mutateCallback);
+            } catch (BadMethodCallException $e) {
+
+            }
         }
 
         if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
@@ -59,15 +62,15 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         return $this->component
-            ->setState($data ?? callOrReturn($this->generateComponentData(), $this->component()))
+            ->setState($data ?? $this->resolveOrReturn($this->generateComponentData()))
             ->format();
     }
 
     protected function attemptToCallMutationMacro(): mixed
     {
         try {
-            return callOrReturn($this->component()->mutateFake($this->component()), $this->component()); // @phpstan-ignore-line
-        } catch (BadMethodCallException $e) {
+            return $this->resolveOrReturn([$this->component(), 'mutateFake']);
+        } catch (BadMethodCallException|ReflectionException $e) {
         }
 
         return null;
@@ -76,7 +79,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     protected function generateComponentData(): mixed
     {
         if ($this->component->hasOverride()) {
-            return callOrReturn($this->config()[$this->component()::class], $this->component());
+            return $this->resolveOrReturn($this->config()[$this->component()::class]);
         }
 
         return match ($this->component()::class) {
@@ -99,6 +102,18 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     protected function component(): Field
     {
         return $this->component->component();
+    }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    protected function injectionParameters(): array
+    {
+        return [
+            Field::class => $this->component(),
+            Component::class => $this->component(),
+            $this->component()::class => $this->component(),
+        ];
     }
 
     /**
