@@ -12,7 +12,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method FilamentFaker\\\\Contracts\\\\Decorators\\\\ComponentDecorator\\:\\:getOptions\\(\\)\\.$#"
-			count: 3
+			count: 1
 			path: src/ComponentDataGenerator.php
 
 		-
