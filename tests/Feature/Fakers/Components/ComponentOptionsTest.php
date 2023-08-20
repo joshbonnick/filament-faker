@@ -74,11 +74,11 @@ it('returns an array if field with options is multiselectable', function () {
 
 it('returns a value if component is searchable', function () {
     $select = Select::make('test')
-                    ->options(fn () => [])
-                    ->getSearchResultsUsing(function (InjectableService $service) {
-                        return ['foo' => '1', 'bar' => '2', 'hello' => '3', 'world' => 4];
-                    })
-                    ->searchable();
+        ->options(fn () => [])
+        ->getSearchResultsUsing(function (InjectableService $service) {
+            return ['foo' => '1', 'bar' => '2', 'hello' => '3', 'world' => 4];
+        })
+        ->searchable();
 
     expect($select->fake())
         ->toBeIn(['foo', 'bar', 'hello', 'world']);
@@ -86,9 +86,9 @@ it('returns a value if component is searchable', function () {
 
 it('throws an exception if not nullable and both options and search are empty', function () {
     $select = Select::make('test')
-                    ->options(fn () => [])
-                    ->getSearchResultsUsing(fn () => [])
-                    ->searchable();
+        ->options(fn () => [])
+        ->getSearchResultsUsing(fn () => [])
+        ->searchable();
 
     expect(fn () => $select->fake())->toThrow(
         Exception::class,
