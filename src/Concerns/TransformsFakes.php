@@ -45,24 +45,6 @@ trait TransformsFakes
         });
     }
 
-    protected function getShouldFakeUsingComponentName(): bool
-    {
-        return $this->shouldFakeUsingComponentName;
-    }
-
-    protected function getMutateCallback(): ?Closure
-    {
-        return $this->mutateCallback;
-    }
-
-    /**
-     * Mutate callback has been set.
-     */
-    protected function hasMutations(): bool
-    {
-        return ! is_null($this->mutateCallback);
-    }
-
     /**
      * Get mutation methods from given components parent.
      *
@@ -87,14 +69,14 @@ trait TransformsFakes
      */
     protected function applyFakerMutations(FakesBlocks|FakesComponents|FakesForms $faker): void
     {
-        $faker->shouldFakeUsingComponentName($this->getShouldFakeUsingComponentName());
+        $faker->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
 
         if ($this->usesFactory()) {
             $faker->withFactory($this->getFactory(), $this->getOnlyFactoryAttributes());
         }
 
-        if ($this->hasMutations()) {
-            $faker->mutateFake($this->getMutateCallback());
+        if (filled($this->mutateCallback)) {
+            $faker->mutateFake($this->mutateCallback);
         }
     }
 
