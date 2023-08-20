@@ -57,7 +57,7 @@ trait InteractsWithFactories
             }
 
             if (is_null($factory) && ! (isset($this->resource) || isset($this->form))) {
-                throw new InvalidArgumentException('You must provide a factory.');
+                throw new InvalidArgumentException('You must provide a Factory.');
             }
 
             try {
