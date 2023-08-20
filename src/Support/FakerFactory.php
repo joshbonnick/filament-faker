@@ -10,17 +10,18 @@ use Filament\Forms\Form;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 use FilamentFaker\Fakers\FilamentFaker;
 
-class FakerFactory
+class FakerFactory implements FilamentFakerFactory
 {
-    public function __construct(protected FilamentFaker $from)
-    {
-    }
+    protected FilamentFaker $parentFaker;
 
-    public static function from(FilamentFaker $from): FakerFactory
+    public function from(FilamentFaker $parent): FakerFactory
     {
-        return new FakerFactory($from);
+        return tap($this, function () use ($parent) {
+            $this->parentFaker = $parent;
+        });
     }
 
     public function form(Form $form): FakesForms

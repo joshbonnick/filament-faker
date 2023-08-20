@@ -14,6 +14,7 @@ use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Contracts\Support\DataGenerator;
+use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
 use FilamentFaker\Contracts\Support\Reflectable;
 use FilamentFaker\Decorators\Component;
@@ -22,6 +23,7 @@ use FilamentFaker\Fakers\ComponentFaker;
 use FilamentFaker\Fakers\FormFaker;
 use FilamentFaker\Fakers\ResourceFaker;
 use FilamentFaker\Support\Faker;
+use FilamentFaker\Support\FakerFactory;
 use FilamentFaker\Support\Reflection;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -48,6 +50,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
             $this->app->bind(RealTimeFactory::class, Faker::class);
             $this->app->bind(Reflectable::class, Reflection::class);
             $this->app->bind(ComponentDecorator::class, Component::class);
+            $this->app->bind(FilamentFakerFactory::class, FakerFactory::class);
 
             $this->app->bind(FakesBlocks::class, BlockFaker::class);
             $this->app->bind(FakesComponents::class, ComponentFaker::class);
