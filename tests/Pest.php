@@ -21,5 +21,5 @@ function mockComponentDecorator(MockInterface $mock = null)
 
 function mockForm(): Form
 {
-    return ProductResource::faker()->getForm()->schema();
+    return ProductResource::faker()->getForm();
 }
