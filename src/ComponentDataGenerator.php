@@ -4,18 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker;
 
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
@@ -45,18 +34,18 @@ class ComponentDataGenerator implements DataGenerator
     public function generate(): mixed
     {
         return match ($this->component->getField()::class) {
-            CheckboxList::class,
-            Radio::class,
-            Select::class => $this->withOptions(),
-            Checkbox::class,
-            Toggle::class => $this->checkbox(),
-            TagsInput::class => $this->withSuggestions(),
-            DatePicker::class,
-            DateTimePicker::class => $this->date(),
-            FileUpload::class => $this->file(),
-            KeyValue::class => $this->keyValue(),
-            ColorPicker::class => $this->color(),
-            RichEditor::class => $this->html(),
+            Components\CheckboxList::class,
+            Components\Radio::class,
+            Components\Select::class => $this->withOptions(),
+            Components\Checkbox::class,
+            Components\Toggle::class => $this->checkbox(),
+            Components\TagsInput::class => $this->withSuggestions(),
+            Components\DatePicker::class,
+            Components\DateTimePicker::class => $this->date(),
+            Components\FileUpload::class => $this->file(),
+            Components\KeyValue::class => $this->keyValue(),
+            Components\ColorPicker::class => $this->color(),
+            Components\RichEditor::class => $this->html(),
             default => $this->defaultCallback(),
         };
     }
@@ -71,7 +60,7 @@ class ComponentDataGenerator implements DataGenerator
         }
 
         if (! empty($options = array_keys($this->component->getOptions()))) {
-            if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {
+            if ($this->component->is_a(Components\CheckboxList::class) || $this->component->isMultiple()) {
                 return fake()->randomElements($options);
             }
 
