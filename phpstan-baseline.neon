@@ -39,3 +39,8 @@ parameters:
 			message: "#^Call to an undefined method FilamentFaker\\\\Decorators\\\\Component\\:\\:state\\(\\)\\.$#"
 			count: 1
 			path: src/Decorators/Component.php
+
+		-
+			message: "#^Call to an undefined method Filament\\\\Forms\\\\Components\\\\Field\\:\\:getSearchResults\\(\\)\\.$#"
+			count: 1
+			path: src/Decorators/Component.php

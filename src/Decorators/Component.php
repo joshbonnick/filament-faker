@@ -116,6 +116,22 @@ class Component implements ComponentDecorator
         return $this->hasMethod('getOptions');
     }
 
+    public function getSearch(): ?array
+    {
+        if (! $this->isSearchable()) {
+            throw new InvalidArgumentException("{$this->component->getName()} is not searchable.");
+        }
+
+        return $this->component->getSearchResults('');
+    }
+
+    public function isSearchable(): bool
+    {
+        return method_exists($this->component, 'isSearchable')
+               && $this->component->isSearchable()
+               && method_exists($this->component, 'getSearchResults');
+    }
+
     public function hasOverride(): bool
     {
         return Arr::has($this->config(), $this->component::class);

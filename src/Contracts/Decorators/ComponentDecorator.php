@@ -39,6 +39,13 @@ interface ComponentDecorator
 
     public function hasOptions(): bool;
 
+    /**
+     * @return mixed[]
+     */
+    public function getSearch(): ?array;
+
+    public function isSearchable(): bool;
+
     public function hasOverride(): bool;
 
     public function isMultiple(): bool;
