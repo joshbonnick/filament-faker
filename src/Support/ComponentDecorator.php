@@ -12,6 +12,7 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\InteractsWithConfig;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\Support\Reflectable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
@@ -27,11 +28,6 @@ class ComponentDecorator
     use InteractsWithFilamentContainer;
 
     public Field $component;
-
-    public function __construct(
-        protected Reflection $reflection
-    ) {
-    }
 
     /**
      * @param  array<array-key>  $arguments
@@ -141,9 +137,9 @@ class ComponentDecorator
         return ! $this->hasMethod($method);
     }
 
-    protected function reflect(): Reflection
+    protected function reflect(): Reflectable
     {
-        return $this->reflection->reflect($this->component);
+        return app(Reflectable::class)->reflect($this->component);
     }
 
     protected function applyFormattingHooks(mixed $state): mixed

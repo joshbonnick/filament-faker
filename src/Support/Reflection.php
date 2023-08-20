@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Support;
 
+use FilamentFaker\Contracts\Support\Reflectable;
 use ReflectionException;
 use ReflectionProperty;
 
 /**
  * @internal
  */
-class Reflection
+class Reflection implements Reflectable
 {
     protected object $object;
 
