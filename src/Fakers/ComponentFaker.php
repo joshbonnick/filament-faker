@@ -44,9 +44,9 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
             $data = $this->realTimeFactory->fakeFromName($this->component->getName());
         }
 
-        return $this->component
-            ->setState($data ?? $this->resolveOrReturn($this->generateComponentData()))
-            ->format();
+        $this->component->setState($data ?? $this->resolveOrReturn($this->generateComponentData()));
+
+        return $this->component->format();
     }
 
     protected function attemptToCallMutationMacro(): mixed
