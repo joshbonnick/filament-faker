@@ -97,8 +97,7 @@ class ComponentDecorator
     public function getAfterStateHydrated(mixed $state): mixed
     {
         try {
-            return $this->evaluate($this->reflect()->property('afterStateHydrated'))
-                   ?? $state;
+            return $this->evaluate($this->reflect()->property('afterStateHydrated')) ?? $state;
         } catch (ReflectionException $e) {
             throw_unless(str_contains($e->getMessage(), 'afterStateHydrated does not exist'), $e);
         }
@@ -109,8 +108,7 @@ class ComponentDecorator
     public function getAfterStateUpdated(mixed $state): mixed
     {
         try {
-            return $this->evaluate($this->reflect()->property('afterStateUpdated'), ['old' => $state])
-                   ?? $state;
+            return $this->evaluate($this->reflect()->property('afterStateUpdated'), ['old' => $state]) ?? $state;
         } catch (ReflectionException $e) {
             throw_unless(str_contains($e->getMessage(), 'afterStateUpdated does not exist'), $e);
         }
