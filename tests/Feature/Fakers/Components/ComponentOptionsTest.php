@@ -11,6 +11,7 @@ it('uses an option value when options are a query', function () {
     $posts = Post::factory()->count(2)->create();
 
     $select = Select::make('parent_id')
+        ->model(Post::factory()->create(['parent_id' => $posts->value('id')]))
         ->relationship('parent', 'title')
         ->label('Primary Category')
         ->searchable()
@@ -24,6 +25,7 @@ it('uses an option value when options use dependency injection', function () {
     Post::factory()->count(2)->create();
 
     $select = Select::make('parent_id')
+        ->model(Post::factory()->create(['parent_id' => Post::value('id')]))
         ->relationship('parent', 'title')
         ->label('Primary Category')
         ->searchable()
@@ -76,13 +78,11 @@ it('returns an array if field with options is multiselectable', function () {
 it('returns a value if component is searchable', function () {
     $select = Select::make('test')
         ->options(fn () => [])
-        ->getSearchResultsUsing(function (InjectableService $service) {
-            return ['foo' => '1', 'bar' => '2', 'hello' => '3', 'world' => 4];
-        })
+        ->getSearchResultsUsing(fn (InjectableService $service) => $service->search())
         ->searchable();
 
     expect($select->fake())
-        ->toBeIn(['foo', 'bar', 'hello', 'world']);
+        ->toBeIn(array_keys(app(InjectableService::class)->search()));
 });
 
 it('throws an exception if not nullable and both options and search are empty', function () {
@@ -91,9 +91,24 @@ it('throws an exception if not nullable and both options and search are empty', 
         ->getSearchResultsUsing(fn () => [])
         ->searchable();
 
+    expect(fn () => $select->fake())->not->toThrow(InvalidComponentException::class);
+
+    $select = $select->required();
+
     expect(fn () => $select->fake())->toThrow(
         InvalidComponentException::class,
-        'test is required and does both options and search did not return an values.'
+        'test is required and does both options and search did not return any values.'
+    );
+});
+
+it('throws an exception if options are empty, field is required and is not searchable', function () {
+    $select = Select::make('test')
+        ->options(fn () => [])
+        ->required();
+
+    expect(fn () => $select->fake())->toThrow(
+        InvalidComponentException::class,
+        'test is required and options did not return any values.'
     );
 });
 

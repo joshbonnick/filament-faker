@@ -3,6 +3,8 @@
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 it('can disable the usage of faking by component name by chaining', function () {
+    mockComponentDecorator();
+
     $data = PostResource::faker()->shouldFakeUsingComponentName(false)->fake();
 
     expect($data['safe_email'])

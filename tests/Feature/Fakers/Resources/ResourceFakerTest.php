@@ -6,6 +6,10 @@ use FilamentFaker\Tests\TestSupport\Resources\InjectedResource;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
+beforeEach(function () {
+    mockComponentDecorator();
+});
+
 it('can fake resources', function () {
     expect($fake = PostResource::faker()->fake())
         ->toBeArray()

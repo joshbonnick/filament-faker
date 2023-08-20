@@ -77,7 +77,7 @@ class FormFaker extends FilamentFaker implements FakesForms
     /**
      * {@inheritDoc}
      */
-    protected function resolveModel(): string
+    public function resolveModel(): string
     {
         return $this->form->getModel()
                ?? throw new InvalidArgumentException('Unable to find Model for form.');

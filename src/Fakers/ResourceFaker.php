@@ -78,7 +78,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
     /**
      * {@inheritDoc}
      */
-    protected function resolveModel(): string
+    public function resolveModel(): string
     {
         return $this->resource::getModel();
     }

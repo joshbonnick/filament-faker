@@ -5,6 +5,10 @@ use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Resources\MultipleForms;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
+beforeEach(function () {
+    mockComponentDecorator();
+});
+
 it('can fake forms', function () {
     expect($fake = PostResource::fake())
         ->toBeArray()

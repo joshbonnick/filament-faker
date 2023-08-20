@@ -17,6 +17,6 @@ class InjectableService
 
     public function search(): array
     {
-        return ['foo', 'bar', 'baz', 'hello', 'world'];
+        return ['foo' => 'bar', 'baz' => 'hello', 'world' => 'foobar'];
     }
 }

@@ -6,6 +6,10 @@ use FilamentFaker\Tests\TestSupport\Models\Post;
 use FilamentFaker\Tests\TestSupport\Models\WithoutFactory;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
+beforeEach(function () {
+    mockComponentDecorator();
+});
+
 it('can use factory definitions', function () {
     $form = PostResource::faker()->getForm();
     $factory = resolve(TestFactory::class);

@@ -40,9 +40,9 @@ interface ComponentDecorator
     public function hasOptions(): bool;
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
-    public function getSearch(): ?array;
+    public function getSearch(string $query = ''): array;
 
     public function isSearchable(): bool;
 

@@ -106,7 +106,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     /**
      * {@inheritDoc}
      */
-    protected function resolveModel(): string
+    public function resolveModel(): string
     {
         return $this->component->getModel()
                ?? throw new InvalidArgumentException("Unable to find Model for [{$this->component->getName()}] component.");

@@ -19,6 +19,7 @@ use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
+use FilamentFaker\Exceptions\InvalidComponentException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -63,8 +64,26 @@ class ComponentDataGenerator implements DataGenerator
             return $this->defaultCallback();
         }
 
-        if (empty($this->component->getOptions())) {
-            return null;
+        if (empty($this->component->getOptions()) && ! $this->component->isSearchable()) {
+            throw_if(
+                $this->component->isRequired(),
+                new InvalidComponentException("{$this->component->getName()} is required and options did not return any values.")
+            );
+        }
+
+        if ($this->component->isSearchable()) {
+            $searchResults = $this->component->getSearch();
+
+            if (empty($searchResults)) {
+                throw_if(
+                    $this->component->isRequired(),
+                    new InvalidComponentException("{$this->component->getName()} is required and does both options and search did not return any values.")
+                );
+            } else {
+                return $this->component->isMultiple()
+                    ? fake()->randomElements($searchResults)
+                    : fake()->randomElement($searchResults);
+            }
         }
 
         if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {

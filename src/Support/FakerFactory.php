@@ -26,16 +26,28 @@ class FakerFactory implements FilamentFakerFactory
 
     public function form(Form $form): FakesForms
     {
-        return $form->configure()->faker();
+        return $this->configure($form)->faker();
     }
 
     public function component(Field $component): FakesComponents
     {
-        return $component->configure()->faker();
+        return $this->configure($component)->faker();
     }
 
     public function block(Block $block): FakesBlocks
     {
-        return $block->configure()->faker();
+        return $this->configure($block)->faker();
+    }
+
+    /**
+     * @template TReturnValue
+     *
+     * @params TReturnValue $component
+     *
+     * @return TReturnValue
+     */
+    protected function configure($component)
+    {
+        return $component->configure()->model(rescue(fn (): string => $this->parentFaker->resolveModel()));
     }
 }
