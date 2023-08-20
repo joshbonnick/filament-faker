@@ -5,7 +5,6 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
-use FilamentFaker\Decorators\Component;
 use FilamentFaker\Support\Reflection;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
@@ -86,8 +85,8 @@ test('is_a method with array and string', function () {
         ->toBeTrue();
 });
 
-it('returns a searchable option', function(){
-    $searchCallback = function(InjectableService $service){
+it('returns a searchable option', function () {
+    $searchCallback = function (InjectableService $service) {
         return $service->search();
     };
 
