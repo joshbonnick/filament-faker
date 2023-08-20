@@ -42,8 +42,7 @@ class FakerFactory implements FilamentFakerFactory
     /**
      * @template TReturnValue
      *
-     * @params TReturnValue $component
-     *
+     * @param  TReturnValue  $component
      * @return TReturnValue
      */
     protected function configure($component)
