@@ -3,6 +3,7 @@
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use FilamentFaker\Exceptions\InvalidComponentException;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
@@ -91,7 +92,7 @@ it('throws an exception if not nullable and both options and search are empty', 
         ->searchable();
 
     expect(fn () => $select->fake())->toThrow(
-        Exception::class,
+        InvalidComponentException::class,
         'test is required and does both options and search did not return an values.'
     );
 });
