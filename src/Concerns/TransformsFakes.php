@@ -8,6 +8,9 @@ use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Fakers\FakesForms;
 use ReflectionException;
 
 /**
@@ -75,6 +78,22 @@ trait TransformsFakes
         }
 
         return $component;
+    }
+
+    /**
+     * Apply mutations applied to this instance to the new FilamentFaker instance.
+     */
+    protected function applyFakerMutations(FakesBlocks|FakesComponents|FakesForms $faker): void
+    {
+        $faker->shouldFakeUsingComponentName($this->getShouldFakeUsingComponentName());
+
+        if ($this->usesFactory()) {
+            $faker->withFactory($this->getFactory(), $this->getOnlyFactoryAttributes());
+        }
+
+        if ($this->hasMutations()) {
+            $faker->mutateFake($this->getMutateCallback());
+        }
     }
 
     /**
