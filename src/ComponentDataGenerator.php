@@ -39,6 +39,9 @@ class ComponentDataGenerator implements DataGenerator
         return app(RealTimeFactory::class);
     }
 
+    /**
+     * @throws InvalidComponentException
+     */
     public function generate(): mixed
     {
         return match ($this->component->getField()::class) {
@@ -58,6 +61,9 @@ class ComponentDataGenerator implements DataGenerator
         };
     }
 
+    /**
+     * @throws InvalidComponentException
+     */
     protected function withOptions(): mixed
     {
         if (! $this->component->hasOptions()) {
