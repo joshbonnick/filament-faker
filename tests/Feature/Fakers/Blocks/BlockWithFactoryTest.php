@@ -31,7 +31,7 @@ it('will return only keys added to onlyAttributes', function () {
 
 it('throws an exception if factory is not provided', function () {
     expect(fn () => MockBlock::faker()->withFactory()->fake())
-        ->toThrow(InvalidArgumentException::class, 'You must provide a factory.');
+        ->toThrow(InvalidArgumentException::class, 'You must provide a Factory.');
 });
 
 test('exception is thrown if cannot resolve model', function () {
