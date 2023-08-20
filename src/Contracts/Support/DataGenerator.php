@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts\Support;
 
-use FilamentFaker\Decorators\ComponentDecorator;
+use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 
 interface DataGenerator
 {

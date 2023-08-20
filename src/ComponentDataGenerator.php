@@ -16,14 +16,15 @@ use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
+use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
-use FilamentFaker\Decorators\ComponentDecorator;
+use FilamentFaker\Decorators\Component;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class ComponentDataGenerator implements DataGenerator
 {
-    protected ComponentDecorator $component;
+    protected Component $component;
 
     public function uses(ComponentDecorator $component): static
     {

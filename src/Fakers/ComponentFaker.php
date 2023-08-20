@@ -6,10 +6,10 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
+use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
-use FilamentFaker\Decorators\ComponentDecorator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use ReflectionException;

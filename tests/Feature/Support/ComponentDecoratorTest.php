@@ -3,12 +3,12 @@
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Decorators\ComponentDecorator;
+use FilamentFaker\Decorators\Component;
 use FilamentFaker\Support\Reflection;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 beforeEach(function () {
-    $this->componentDecorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $this->componentDecorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
 });
 
 it('returns an instance of component', function () {
@@ -46,7 +46,7 @@ it('afterStateHydrated hook return null if method does not exist', function () {
 
     app()->instance(Reflection::class, $mock);
 
-    $componentDecorator = tap(app(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $componentDecorator = tap(app(Component::class))->setUp(TextInput::make('test'));
 
     expect($componentDecorator->getAfterStateHydrated('test'))
         ->toBeNull();
@@ -62,7 +62,7 @@ it('afterStateUpdated hook return null if method does not exist', function () {
 
     app()->instance(Reflection::class, $mock);
 
-    $componentDecorator = tap(app(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $componentDecorator = tap(app(Component::class))->setUp(TextInput::make('test'));
 
     expect($componentDecorator->getAfterStateUpdated('test'))
         ->toBeNull();
@@ -72,7 +72,7 @@ test('__get function returns a property', function () {
     $mock = mock(TextInput::class)->makePartial();
     $mock->shouldReceive('make')->andReturnSelf()->set('foobar', 'foo');
 
-    $decorator = tap(resolve(ComponentDecorator::class))->setUp($mock::make('test'));
+    $decorator = tap(resolve(Component::class))->setUp($mock::make('test'));
 
     expect($decorator->foobar)->toBeString()->toEqual('foo');
 });

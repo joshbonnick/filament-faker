@@ -12,6 +12,7 @@ use Filament\Forms\Components\Field;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\InteractsWithConfig;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\Reflectable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
@@ -22,7 +23,7 @@ use ReflectionException;
  *
  * @mixin Field
  */
-class ComponentDecorator
+class Component implements ComponentDecorator
 {
     use InteractsWithConfig;
     use InteractsWithFilamentContainer;
@@ -30,7 +31,7 @@ class ComponentDecorator
     public Field $component;
 
     /**
-     * @param  array<array-key>  $arguments
+     * {@inheritDoc}
      */
     public function __call(string $name, array $arguments): mixed
     {
