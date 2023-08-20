@@ -4,151 +4,129 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use BadMethodCallException;
-use Carbon\Carbon;
-use Closure;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Set;
-use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Contracts\FakerProvider;
-use FilamentFaker\Contracts\FakesComponents;
-use FilamentFaker\Contracts\FilamentFaker;
+use FilamentFaker\Concerns\InteractsWithConfig;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\Decorators\ComponentDecorator;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Support\DataGenerator;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
-use ReflectionProperty;
-use Throwable;
 
-class ComponentFaker extends GeneratesFakes implements FakesComponents, FilamentFaker
+class ComponentFaker extends FilamentFaker implements FakesComponents
 {
-    protected Field $component;
+    use InteractsWithConfig;
+    use InteractsWithFilamentContainer;
 
     public function __construct(
-        protected readonly FakerProvider $faker,
-        Field $component,
+        protected readonly DataGenerator $generator,
+        protected readonly ComponentDecorator $component,
+        Field $field,
     ) {
-        parent::__construct();
-
-        $this->component = $this->setUpComponent($component);
+        $this->component->setUp($field);
+        $this->generator->uses($this->component);
     }
 
     public function fake(): mixed
     {
-        return $this->fakeComponentContent();
+        $data = $this->resolveOrReturn($this->generate());
+
+        $this->component->setState($data);
+
+        return $this->component->format();
     }
 
-    protected function fakeComponentContent(): mixed
+    /**
+     * Strategy for data generation while prioritizing mutation
+     * options before resorting to a backup generator.
+     */
+    protected function generate(): mixed
     {
-        if ($this->mutateCallback instanceof Closure) {
-            return ($this->mutateCallback)($this->component);
+        if (is_callable($this->mutateCallback)) {
+            $data = $this->resolveOrReturn($this->mutateCallback);
+
+            if (filled($data)) {
+                return $data;
+            }
         }
 
-        if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
+        if (! is_null($mutateCallbackResponse = $this->callComponentMutation())) {
             return $mutateCallbackResponse;
         }
 
-        if (Arr::has($model = $this->getModelAttributes(), $componentName = $this->component->getName())) {
-            return $model[$componentName];
+        if ($this->factoryDefinitionExists()) {
+            return $this->getFactoryDefinition(key: $this->component->getName());
         }
 
-        if ($this->getShouldFakeUsingComponentName($this->component)
-            && ! method_exists($this->component, 'getOptions')
-        ) {
-            $content = $this->fakeUsingComponentName($this->component);
+        if ($this->getShouldFakeUsingComponentName()) {
+            $data = $this->generator->realTime()->generate($this->component());
+
+            if (filled($data)) {
+                return $data;
+            }
         }
 
-        $content ??= ($faked = $this->getFake()) instanceof Closure
-            ? $faked($this->component)
-            : $faked;
+        if ($this->component->hasOverride()) {
+            return $this->resolveOrReturn($this->config()[$this->component()::class]);
+        }
 
-        return $this->format($content);
+        return $this->generator->generate();
     }
 
-    protected function format(mixed $fakedContent): mixed
+    protected function callComponentMutation(): mixed
     {
         try {
-            if (is_a($this->component, DateTimePicker::class)) {
-                return $this->formatDate($fakedContent);
-            }
-
-            $afterStateHydrated = tap(new ReflectionProperty($this->component, 'afterStateHydrated'))->setAccessible(true);
-
-            $this->component->state(fn (Set $set) => $set($this->component->getName(), $fakedContent));
-
-            if (is_null($callback = $afterStateHydrated->getValue($this->component))) {
-                return $fakedContent;
-            }
-
-            if ($callback instanceof Closure) {
-                return $callback($this->component, $fakedContent)?->getState() ?? $fakedContent;
-            }
+            return $this->resolveOrReturn([$this->component(), 'mutateFake']);
         } catch (ReflectionException $e) {
-            report($e);
-        } catch (Throwable $e) {
-        }
-
-        return $fakedContent;
-    }
-
-    protected function formatDate(string $fakedContent): string
-    {
-        if (! is_a($this->component, DateTimePicker::class)) {
-            throw new InvalidArgumentException("{$this->component->getName()} cannot be formatted into a date.");
-        }
-
-        return Carbon::parse($fakedContent)->format($this->component->getFormat());
-    }
-
-    protected function attemptToCallMutationMacro(): mixed
-    {
-        try {
-            $mutateCallback = $this->component->mutateFake($this->component); // @phpstan-ignore-line
-
-            if ($mutateCallback instanceof Closure) {
-                return $mutateCallback($this->component);
-            }
-
-            if (! is_null($mutateCallback)) {
-                return $mutateCallback;
-            }
-        } catch (BadMethodCallException $e) {
+            throw_unless(str_contains($e->getMessage(), 'mutateFake() does not exist'));
         }
 
         return null;
     }
 
-    protected function getFake(): mixed
+    protected function component(): Field
     {
-        if (Arr::has($this->fakesConfig, $this->component::class)) {
-            return $this->fakesConfig[$this->component::class];
+        return $this->component->getField();
+    }
+
+    /**
+     * @return array<class-string|string, object>
+     */
+    protected function injectionParameters(): array
+    {
+        return [
+            Field::class => $this->component(),
+            Component::class => $this->component(),
+            $this->component()::class => $this->component(),
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resolveModel(): string
+    {
+        return $this->component->getModel()
+               ?? throw new InvalidArgumentException("Unable to find Model for [{$this->component->getName()}] component.");
+    }
+
+    protected function factoryDefinitionExists(): bool
+    {
+        return Arr::has($this->getModelAttributes(), $this->component()->getName());
+    }
+
+    /**
+     * Resolve whether Faker should be using the components name for generating data.
+     */
+    protected function getShouldFakeUsingComponentName(): bool
+    {
+        if ($this->shouldFakeUsingComponentName === false) {
+            return false;
         }
 
-        return match ($this->component::class) {
-            CheckboxList::class,
-            Radio::class,
-            Select::class => $this->faker->withOptions($this->component),
-            Checkbox::class,
-            Toggle::class => $this->faker->checkbox(),
-            TagsInput::class => $this->faker->withSuggestions($this->component),
-            DatePicker::class,
-            DateTimePicker::class => $this->faker->date(),
-            FileUpload::class => $this->faker->file($this->component),
-            KeyValue::class => $this->faker->keyValue($this->component),
-            ColorPicker::class => $this->faker->color($this->component),
-            RichEditor::class => $this->faker->html(),
-            default => $this->faker->defaultCallback($this->component),
-        };
+        return config('filament-faker.fake_using_component_name', true)
+            && ! $this->component->hasOptions();
     }
 }

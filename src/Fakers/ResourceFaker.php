@@ -4,35 +4,33 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Closure;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use FilamentFaker\Concerns\GeneratesFakes;
-use FilamentFaker\Concerns\InteractsWithFactories;
-use FilamentFaker\Contracts\FakesResources;
-use FilamentFaker\Contracts\FilamentFaker;
-use FilamentFaker\Support\FormsMock;
+use Filament\Resources\Resource as FilamentResource;
+use FilamentFaker\Contracts\Fakers\FakesResources;
+use FilamentFaker\Support\Livewire;
 
-class ResourceFaker extends GeneratesFakes implements FakesResources, FilamentFaker
+class ResourceFaker extends FilamentFaker implements FakesResources
 {
-    use InteractsWithFactories;
-
     /**
-     * @var class-string<resource>
+     * @var class-string<FilamentResource>
      */
     protected readonly string $resource;
 
     protected ?Form $form = null;
 
     /**
-     * @param  class-string<resource>  $resource
+     * @param  class-string<FilamentResource>  $resource
      */
     public function __construct(string $resource)
     {
-        parent::__construct();
-
         $this->resource = $resource;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withForm(string|Form $form = 'form'): static
     {
         return tap($this, function () use ($form) {
@@ -44,25 +42,63 @@ class ResourceFaker extends GeneratesFakes implements FakesResources, FilamentFa
 
             $this->form = rescue(
                 callback: fn () => $this->resource::$form($this->baseForm()),
-                rescue: fn () => resolve($this->resource)->{$form}($this->baseForm())
+                rescue: fn () => $this->resolveResource()?->{$form}($this->baseForm())
             );
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function fake(): array
     {
-        return $this->getFormFaker($this->getForm())->fake();
+        $form = $this->getFormFaker($this->getForm());
+
+        if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
+            return $form->fake();
+        }
+
+        return $form
+            ->mutateFake(method_exists($resource, 'mutateFake')
+                ? Closure::fromCallable([$resource, 'mutateFake'])
+                : $this->mutateCallback
+            )->fake();
     }
 
     public function getForm(): Form
     {
-        return is_null($this->form)
-            ? $this->withForm()->getForm()
-            : $this->form;
+        return $this->form ?? $this->withForm()->getForm();
+    }
+
+    protected function resolveResource(): ?FilamentResource
+    {
+        return rescue(fn (): FilamentResource => app($this->resource));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resolveModel(): string
+    {
+        return $this->resource::getModel();
     }
 
     protected function baseForm(): Form
     {
-        return Form::make(FormsMock::make());
+        return Form::make(Livewire::make());
+    }
+
+    /**
+     * @return array<class-string|string, object>
+     *
+     * @codeCoverageIgnore
+     */
+    protected function injectionParameters(): array
+    {
+        if (! ($resource = $this->resolveResource()) instanceof Resource) {
+            return [];
+        }
+
+        return [FilamentResource::class => $resource, $resource::class => $resource];
     }
 }

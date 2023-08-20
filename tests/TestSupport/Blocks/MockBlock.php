@@ -4,14 +4,17 @@ namespace FilamentFaker\Tests\TestSupport\Blocks;
 
 use Closure;
 use Filament\Forms\Components;
+use Filament\Forms\Components\Builder\Block;
+use Filament\Forms\Components\Field;
 
-class MockBlock extends Components\Builder\Block
+class MockBlock extends Block
 {
-    public function mutateFake(Components\Field $component): ?Closure
+    public function mutateFake(Field $component): ?Closure
     {
         return match ($component->getName()) {
             'phone_number' => fn () => '::phone::',
             'email_field' => fn () => 'dev@example.com',
+            default => null,
         };
     }
 
@@ -45,6 +48,7 @@ class MockBlock extends Components\Builder\Block
                 Components\TextInput::make('email_field'),
                 Components\TextInput::make('safe_email'),
                 Components\TextInput::make('phone_number'),
+                Components\TextInput::make('title'),
                 Components\Select::make('company')->options([
                     'foo' => 'bar',
                     'bar' => 'foo',

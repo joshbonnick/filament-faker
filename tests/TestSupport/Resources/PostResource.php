@@ -15,7 +15,6 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlockWithoutFakingFromNames;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 
 class PostResource extends Resource
@@ -48,7 +47,6 @@ class PostResource extends Resource
 
             Builder::make('content')->blocks([
                 MockBlock::make(),
-                MockBlockWithoutFakingFromNames::make(),
             ]),
 
             Section::make()->schema([
