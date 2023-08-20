@@ -4,104 +4,91 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use BadMethodCallException;
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Component;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
-use FilamentFaker\Contracts\DataGenerator;
-use FilamentFaker\Contracts\FakesComponents;
-use FilamentFaker\Contracts\RealTimeFactory;
-use FilamentFaker\Support\ComponentDecorator;
-use Illuminate\Database\Eloquent\Model;
+use FilamentFaker\Concerns\InteractsWithConfig;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\Decorators\ComponentDecorator;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Support\DataGenerator;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
 
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
+    use InteractsWithConfig;
+    use InteractsWithFilamentContainer;
+
     public function __construct(
-        protected readonly DataGenerator $faker,
-        protected readonly RealTimeFactory $realTimeFactory,
+        protected readonly DataGenerator $generator,
         protected readonly ComponentDecorator $component,
         Field $field,
     ) {
         $this->component->setUp($field);
+        $this->generator->uses($this->component);
     }
 
     public function fake(): mixed
     {
-        if (is_callable($this->mutateCallback)) {
-            try {
-                return $this->resolveOrReturn($this->mutateCallback);
-            } catch (BadMethodCallException $e) {
+        $data = $this->resolveOrReturn($this->generate());
 
+        $this->component->setState($data);
+
+        return $this->component->format();
+    }
+
+    /**
+     * Strategy for data generation while prioritizing mutation
+     * options before resorting to a backup generator.
+     */
+    protected function generate(): mixed
+    {
+        if (is_callable($this->mutateCallback)) {
+            $data = $this->resolveOrReturn($this->mutateCallback);
+
+            if (filled($data)) {
+                return $data;
             }
         }
 
-        if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
+        if (! is_null($mutateCallbackResponse = $this->callComponentMutation())) {
             return $mutateCallbackResponse;
         }
 
         if ($this->factoryDefinitionExists()) {
-            return $this->getModelAttributes()[$this->component()->getName()];
+            return $this->getFactoryDefinition(key: $this->component->getName());
         }
 
         if ($this->getShouldFakeUsingComponentName()) {
-            $data = $this->realTimeFactory->fakeFromName($this->component()->getName());
+            $data = $this->generator->realTime()->generate($this->component());
+
+            if (filled($data)) {
+                return $data;
+            }
         }
 
-        return $this->component
-            ->setState($data ?? $this->resolveOrReturn($this->generateComponentData()))
-            ->format();
+        if ($this->component->hasOverride()) {
+            return $this->resolveOrReturn($this->config()[$this->component()::class]);
+        }
+
+        return $this->generator->generate();
     }
 
-    protected function attemptToCallMutationMacro(): mixed
+    protected function callComponentMutation(): mixed
     {
         try {
             return $this->resolveOrReturn([$this->component(), 'mutateFake']);
-        } catch (BadMethodCallException|ReflectionException $e) {
+        } catch (ReflectionException $e) {
+            throw_unless(str_contains($e->getMessage(), 'mutateFake() does not exist'));
         }
 
         return null;
     }
 
-    protected function generateComponentData(): mixed
-    {
-        if ($this->component->hasOverride()) {
-            return $this->resolveOrReturn($this->config()[$this->component()::class]);
-        }
-
-        return match ($this->component()::class) {
-            CheckboxList::class,
-            Radio::class,
-            Select::class => $this->faker->withOptions($this->component()),
-            Checkbox::class,
-            Toggle::class => $this->faker->checkbox(),
-            TagsInput::class => $this->faker->withSuggestions($this->component()),
-            DatePicker::class,
-            DateTimePicker::class => $this->faker->date(),
-            FileUpload::class => $this->faker->file($this->component()),
-            KeyValue::class => $this->faker->keyValue($this->component()),
-            ColorPicker::class => $this->faker->color($this->component()),
-            RichEditor::class => $this->faker->html(),
-            default => $this->faker->defaultCallback($this->component()),
-        };
-    }
-
     protected function component(): Field
     {
-        return $this->component->component();
+        return $this->component->getField();
     }
 
     /**
@@ -117,13 +104,12 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     }
 
     /**
-     * @return class-string<Model>|string|null
-     *
-     * @throws InvalidArgumentException
+     * {@inheritDoc}
      */
-    protected function resolveModel(): ?string
+    protected function resolveModel(): string
     {
-        return $this->component()->getModel();
+        return $this->component->getModel()
+               ?? throw new InvalidArgumentException("Unable to find Model for [{$this->component->getName()}] component.");
     }
 
     protected function factoryDefinitionExists(): bool

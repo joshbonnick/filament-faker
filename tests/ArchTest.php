@@ -10,7 +10,6 @@ test('config file entries for fakes are all callable', function () {
 
 it('uses strict types')
     ->expect('FilamentFaker')
-    ->classes()
     ->toUseStrictTypes();
 
 test('only interfaces are in contracts directory')

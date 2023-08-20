@@ -5,7 +5,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Support\ComponentDecorator;
+use FilamentFaker\Decorators\Component;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 it('respects formatStateUsing', function () {
@@ -47,7 +47,7 @@ it('returns a formatted date', function () {
 });
 
 it('throws an exception if attempt to formatDate on none date component', function () {
-    $component = resolve(ComponentDecorator::class);
+    $component = resolve(Component::class);
     $component->setUp(TextInput::make('test'));
 
     /** @var ReflectionMethod $reflectionMethod */

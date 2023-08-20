@@ -16,12 +16,15 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
-use FilamentFaker\Contracts\FakesForms;
+use FilamentFaker\Concerns\HasChildComponents;
+use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
 class FormFaker extends FilamentFaker implements FakesForms
 {
+    use HasChildComponents;
+
     protected bool $withHidden = true;
 
     public function __construct(
@@ -71,9 +74,13 @@ class FormFaker extends FilamentFaker implements FakesForms
             })->toArray();
     }
 
-    protected function resolveModel(): ?string
+    /**
+     * {@inheritDoc}
+     */
+    protected function resolveModel(): string
     {
-        return $this->form->getModel();
+        return $this->form->getModel()
+               ?? throw new InvalidArgumentException('Unable to find Model for form.');
     }
 
     /**

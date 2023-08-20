@@ -11,9 +11,9 @@ use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 
 class MutatedResource extends Resource
 {
-    public function mutateFake(Field $component): string
+    public function mutateFake(Field $component): ?string
     {
-        return '::mutated-in-resource::';
+        return $component->getName() === 'safe_email' ? '::mutated-in-resource::' : null;
     }
 
     public static function form(Form $form): Form

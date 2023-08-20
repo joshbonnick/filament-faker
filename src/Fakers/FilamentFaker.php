@@ -4,56 +4,40 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use Filament\Forms\Components\Component;
+use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use FilamentFaker\Concerns\InteractsWithConfig;
 use FilamentFaker\Concerns\InteractsWithFactories;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
-use FilamentFaker\Concerns\ResolvesFakerInstances;
+use FilamentFaker\Concerns\ResolvesClosures;
 use FilamentFaker\Concerns\TransformsFakes;
-use Illuminate\Support\Facades\App;
+use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 
 abstract class FilamentFaker
 {
-    use InteractsWithFilamentContainer;
     use InteractsWithFactories;
-    use InteractsWithConfig;
-    use ResolvesFakerInstances;
     use TransformsFakes;
+    use ResolvesClosures;
 
-    /**
-     * Attempt to apply mutations from the parent component instance before returning
-     * the components faker response.
-     */
-    protected function getContentForChildComponent(Field $component, Component|Form $parent): mixed
+    protected function getFormFaker(Form $form): FakesForms
     {
-        $transformed = $this->getMutationsFromParent($parent, $component);
-
-        if ($transformed instanceof Field) {
-            return $this->getComponentFaker($transformed)->fake();
-        }
-
-        return $transformed;
+        return tap($this->fakerFactory()->form($form), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
     }
 
-    /**
-     * @param  array<class-string|string, object>  $parameters
-     */
-    protected function resolveOrReturn(mixed $callback, array $parameters = []): mixed
+    protected function getComponentFaker(Field $component): FakesComponents
     {
-        if (is_callable($callback)) {
-            return $this->resolveOrReturn(
-                callback: App::call($callback, $parameters = [...$this->injectionParameters(), ...$parameters]),
-                parameters: $parameters
-            );
-        }
-
-        return $callback;
+        return tap($this->fakerFactory()->component($component), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
     }
 
-    /**
-     * @return array<class-string|string, object>
-     */
-    abstract protected function injectionParameters(): array;
+    protected function getBlockFaker(Block $block): FakesBlocks
+    {
+        return tap($this->fakerFactory()->block($block), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
+    }
+
+    protected function fakerFactory(): FilamentFakerFactory
+    {
+        return app(FilamentFakerFactory::class)->from(parent: $this);
+    }
 }
