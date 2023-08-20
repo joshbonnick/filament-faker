@@ -61,22 +61,23 @@ trait InteractsWithFactories
             }
 
             try {
-                if (is_null($factory)) {
-                    throw new BindingResolutionException();
-                }
+                if (filled($factory)) {
+                    $this->factory = app($factory);
 
-                $this->factory = app($factory);
+                    return;
+                }
             } catch (BindingResolutionException $e) {
-                if (is_null($model = $this->resolveModel())) {
-                    throw new InvalidArgumentException('Unable to find Model.');
-                }
-
-                if (! method_exists($model, 'factory')) {
-                    throw new InvalidArgumentException("Unable to find Factory for $model.");
-                }
-
-                $this->factory = $model::factory();
             }
+
+            if (is_null($model = $this->resolveModel())) {
+                throw new InvalidArgumentException('Unable to find Model.');
+            }
+
+            if (! method_exists($model, 'factory')) {
+                throw new InvalidArgumentException("Unable to find Factory for $model.");
+            }
+
+            $this->factory = $model::factory();
         });
     }
 
