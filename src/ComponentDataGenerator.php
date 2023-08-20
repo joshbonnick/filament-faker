@@ -63,6 +63,10 @@ class ComponentDataGenerator implements DataGenerator
             return $this->defaultCallback();
         }
 
+        if (empty($this->component->getOptions())) {
+            return null;
+        }
+
         if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {
             return fake()->randomElements(array_keys($this->component->getOptions()));
         }

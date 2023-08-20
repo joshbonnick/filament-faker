@@ -113,7 +113,7 @@ class Component implements ComponentDecorator
 
     public function hasOptions(): bool
     {
-        return $this->hasMethod('getOptions') && ! empty($this->component->getOptions());
+        return $this->hasMethod('getOptions');
     }
 
     public function hasOverride(): bool
