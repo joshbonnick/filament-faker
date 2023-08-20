@@ -18,7 +18,6 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\HasChildComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
@@ -76,11 +75,12 @@ class FormFaker extends FilamentFaker implements FakesForms
     }
 
     /**
-     * @return class-string<Model>|null|string
+     * {@inheritDoc}
      */
-    protected function resolveModel(): ?string
+    protected function resolveModel(): string
     {
-        return $this->form->getModel();
+        return $this->form->getModel()
+               ?? throw new InvalidArgumentException('Unable to find Model for form.');
     }
 
     /**

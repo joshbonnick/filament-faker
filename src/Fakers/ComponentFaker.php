@@ -11,8 +11,8 @@ use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
+use InvalidArgumentException;
 use ReflectionException;
 
 class ComponentFaker extends FilamentFaker implements FakesComponents
@@ -104,11 +104,12 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
     }
 
     /**
-     * @return class-string<Model>|null|string
+     * {@inheritDoc}
      */
-    protected function resolveModel(): ?string
+    protected function resolveModel(): string
     {
-        return $this->component->getModel();
+        return $this->component->getModel()
+               ?? throw new InvalidArgumentException("Unable to find Model for [{$this->component->getName()}] component.");
     }
 
     protected function factoryDefinitionExists(): bool

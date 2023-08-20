@@ -9,7 +9,7 @@ use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\HasChildComponents;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
-use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
 class BlockFaker extends FilamentFaker implements FakesBlocks
 {
@@ -35,11 +35,12 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
     }
 
     /**
-     * @return class-string<Model>|null|string
+     * {@inheritDoc}
      */
-    protected function resolveModel(): ?string
+    protected function resolveModel(): string
     {
-        return $this->setUpBlock($this->block)->getModel();
+        return $this->setUpBlock($this->block)->getModel()
+               ?? throw new InvalidArgumentException("Unable to find Model for [{$this->block->getName()}] block.");
     }
 
     /**

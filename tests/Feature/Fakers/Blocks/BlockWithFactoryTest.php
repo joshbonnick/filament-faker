@@ -36,5 +36,5 @@ it('throws an exception if factory is not provided', function () {
 
 test('exception is thrown if cannot resolve model', function () {
     expect(fn () => MockBlock::faker()->withFactory('foo')->fake())
-        ->toThrow(InvalidArgumentException::class, 'Unable to find Model.');
+        ->toThrow(InvalidArgumentException::class, 'Unable to find Model for [faked] block.');
 });

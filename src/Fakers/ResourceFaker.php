@@ -10,7 +10,7 @@ use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
-use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
 {
@@ -77,11 +77,12 @@ class ResourceFaker extends FilamentFaker implements FakesResources
     }
 
     /**
-     * @return class-string<Model>|null|string
+     * {@inheritDoc}
      */
-    protected function resolveModel(): ?string
+    protected function resolveModel(): string
     {
-        return $this->resource::getModel();
+        return $this->resource::getModel()
+            ?? throw new InvalidArgumentException("Unable to find Model for [{$this->resource}].");
     }
 
     protected function baseForm(): Form

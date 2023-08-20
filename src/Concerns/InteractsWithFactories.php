@@ -37,7 +37,7 @@ trait InteractsWithFactories
      *
      * @throws InvalidArgumentException
      */
-    abstract protected function resolveModel(): ?string;
+    abstract protected function resolveModel(): string;
 
     /**
      * Generate fake data using model factories.
@@ -69,9 +69,7 @@ trait InteractsWithFactories
             } catch (BindingResolutionException $e) {
             }
 
-            if (is_null($model = $this->resolveModel())) {
-                throw new InvalidArgumentException('Unable to find Model.');
-            }
+            $model = $this->resolveModel();
 
             if (! method_exists($model, 'factory')) {
                 throw new InvalidArgumentException("Unable to find Factory for $model.");
