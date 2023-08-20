@@ -19,7 +19,7 @@ use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
-use FilamentFaker\Exceptions\InvalidComponentException;
+use FilamentFaker\Exceptions\InvalidComponentOptionsException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -40,7 +40,7 @@ class ComponentDataGenerator implements DataGenerator
     }
 
     /**
-     * @throws InvalidComponentException
+     * @throws InvalidComponentOptionsException
      */
     public function generate(): mixed
     {
@@ -62,7 +62,7 @@ class ComponentDataGenerator implements DataGenerator
     }
 
     /**
-     * @throws InvalidComponentException
+     * @throws InvalidComponentOptionsException
      */
     protected function withOptions(): mixed
     {
@@ -81,7 +81,7 @@ class ComponentDataGenerator implements DataGenerator
         if (! $this->component->isSearchable()) {
             throw_if(
                 $this->component->isRequired(),
-                InvalidComponentException::class,
+                InvalidComponentOptionsException::class,
                 $this->component->getField(),
                 100
             );
@@ -92,7 +92,7 @@ class ComponentDataGenerator implements DataGenerator
         if (empty($searchResults = $this->component->getSearch())) {
             throw_if(
                 $this->component->isRequired(),
-                InvalidComponentException::class,
+                InvalidComponentOptionsException::class,
                 $this->component->getField(),
                 101
             );

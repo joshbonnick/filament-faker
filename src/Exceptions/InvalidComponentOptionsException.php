@@ -10,7 +10,7 @@ use Spatie\Ignition\Contracts\BaseSolution;
 use Spatie\Ignition\Contracts\ProvidesSolution;
 use Spatie\Ignition\Contracts\Solution;
 
-class InvalidComponentException extends Exception implements ProvidesSolution
+class InvalidComponentOptionsException extends Exception implements ProvidesSolution
 {
     /**
      * @var array<int, string>
@@ -33,5 +33,15 @@ class InvalidComponentException extends Exception implements ProvidesSolution
     public function getSolution(): Solution
     {
         return BaseSolution::create('');
+    }
+
+    /**
+     * Get the exception's context information.
+     *
+     * @return array<string, Field>
+     */
+    public function context(): array
+    {
+        return ['component' => $this->component];
     }
 }
