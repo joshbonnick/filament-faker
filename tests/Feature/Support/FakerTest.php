@@ -12,6 +12,6 @@ it('does not execute excluded methods listed in config file', function () {
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/')
         ->and(TextInput::make('email')->fake())
         ->toMatch('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/')
-        ->and($factory->fakeFromName('safeEmail'))
+        ->and($factory->fromName('safeEmail'))
         ->toBeNull();
 });

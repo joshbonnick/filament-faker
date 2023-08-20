@@ -6,5 +6,5 @@ namespace FilamentFaker\Contracts\Support;
 
 interface RealTimeFactory
 {
-    public function fakeFromName(string $name): mixed;
+    public function fromName(string $name): mixed;
 }

@@ -10,7 +10,7 @@ use InvalidArgumentException;
 
 class Faker implements RealTimeFactory
 {
-    public function fakeFromName(string $name): mixed
+    public function fromName(string $name): mixed
     {
         if ($this->isDisabledFakerMethod($name = Str::camel($name))) {
             return null;
