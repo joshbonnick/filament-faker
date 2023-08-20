@@ -18,7 +18,7 @@ it('uses an option value when options are a query', function () {
         ->options(fn () => Post::query()->select(['id', 'title'])->get()->pluck('title', 'id'))
         ->required();
 
-    expect($select->fake())->toBeIn($posts->pluck('id')->toArray());
+    expect($select->fake())->toBeIn(Post::query()->select(['id', 'title'])->get()->pluck('title', 'id')->keys());
 });
 
 it('uses an option value when options use dependency injection', function () {
