@@ -94,5 +94,5 @@ it('returns a searchable option', function () {
     /** @var ComponentDecorator $decorator */
     $decorator = tap(resolve(ComponentDecorator::class))->setUp($select);
 
-    expect($decorator->getSearch())->toBeIn($searchCallback());
+    expect($decorator->getSearch())->toEqual(app()->call($searchCallback));
 });
