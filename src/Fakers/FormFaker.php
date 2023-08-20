@@ -16,6 +16,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
+use FilamentFaker\Concerns\CanSpecifyFields;
 use FilamentFaker\Concerns\HasChildComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Support\Collection;
@@ -24,6 +25,7 @@ use InvalidArgumentException;
 class FormFaker extends FilamentFaker implements FakesForms
 {
     use HasChildComponents;
+    use CanSpecifyFields;
 
     protected bool $withHidden = true;
 
@@ -53,7 +55,8 @@ class FormFaker extends FilamentFaker implements FakesForms
      */
     protected function fakeComponents(Collection $components): array
     {
-        return $components
+        return $this
+            ->filterComponents($components)
             ->reject(fn (Component $component) => $component instanceof Placeholder)
             ->mapWithKeys(fn (Component $component) => match (true) {
                 $component instanceof Builder => [$component->getName() => $this->getContentForBuilder($component)],
@@ -81,6 +84,25 @@ class FormFaker extends FilamentFaker implements FakesForms
     {
         return $this->form->getModel()
                ?? throw new InvalidArgumentException('Unable to find Model for form.');
+    }
+
+    /**
+     * @template TReturnType of Component
+     *
+     * @param  Collection<int, TReturnType>  $components
+     * @return Collection<int, TReturnType>
+     */
+    protected function filterComponents(Collection $components): Collection
+    {
+        return $components->filter(function (Component $component): bool {
+            if (! method_exists($component, 'getName')
+                || empty($onlyFields = $this->getOnlyFields())
+            ) {
+                return true;
+            }
+
+            return in_array($component->getName(), $onlyFields);
+        });
     }
 
     /**
