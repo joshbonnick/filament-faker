@@ -21,6 +21,26 @@ parameters:
 			path: src/ComponentDataGenerator.php
 
 		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Decorators\\\\Component\\:\\:evaluate\\(\\)\\.$#"
+			count: 2
+			path: src/Decorators/Component.php
+
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Decorators\\\\Component\\:\\:getName\\(\\)\\.$#"
+			count: 2
+			path: src/Decorators/Component.php
+
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Decorators\\\\Component\\:\\:getState\\(\\)\\.$#"
+			count: 1
+			path: src/Decorators/Component.php
+
+		-
+			message: "#^Call to an undefined method FilamentFaker\\\\Decorators\\\\Component\\:\\:state\\(\\)\\.$#"
+			count: 1
+			path: src/Decorators/Component.php
+
+		-
 			message: "#^Call to an undefined method Filament\\\\Forms\\\\Components\\\\Field\\:\\:getOptions\\(\\)\\.$#"
 			count: 1
 			path: src/Decorators/Component.php

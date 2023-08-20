@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FilamentFaker\Contracts\Decorators;
 
 use Filament\Forms\Components\Field;

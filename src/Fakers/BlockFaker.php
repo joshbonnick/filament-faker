@@ -6,11 +6,16 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
+use FilamentFaker\Concerns\HasChildComponents;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use Illuminate\Database\Eloquent\Model;
 
 class BlockFaker extends FilamentFaker implements FakesBlocks
 {
+    use HasChildComponents;
+    use InteractsWithFilamentContainer;
+
     public function __construct(protected Block $block)
     {
     }

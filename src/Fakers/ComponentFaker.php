@@ -6,6 +6,8 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
+use FilamentFaker\Concerns\InteractsWithConfig;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
@@ -15,6 +17,9 @@ use ReflectionException;
 
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
+    use InteractsWithConfig;
+    use InteractsWithFilamentContainer;
+
     public function __construct(
         protected readonly DataGenerator $generator,
         protected readonly ComponentDecorator $component,
