@@ -14,12 +14,12 @@ use FilamentFaker\Support\Livewire;
  */
 trait InteractsWithFilamentContainer
 {
-    public function setUpComponent(Field $component): Field
+    protected function setUpComponent(Field $component): Field
     {
         return tap($component)->container($this->container());
     }
 
-    public function setUpBlock(Block $block): Block
+    protected function setUpBlock(Block $block): Block
     {
         return tap($block)->container($this->container());
     }
