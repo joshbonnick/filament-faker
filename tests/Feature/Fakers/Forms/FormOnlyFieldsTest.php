@@ -10,5 +10,10 @@ it('returns only fields in only fields array', function () {
     ]);
 
     $fake = $form->faker()->onlyFields('foo', 'bar')->fake();
-    expect(array_keys($fake))->toEqual(['foo', 'bar']);
+    expect(array_keys($fake))
+        ->toEqual(['foo', 'bar'])
+        ->and($fake['foo'])
+        ->toBeString()
+        ->and($fake['bar'])
+        ->toBeString();
 });
