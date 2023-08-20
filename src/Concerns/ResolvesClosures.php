@@ -19,7 +19,7 @@ trait ResolvesClosures
     {
         if (is_callable($callback)) {
             return $this->resolveOrReturn(
-                callback: App::call($callback, $parameters = [...$this->injectionParameters(), ...$parameters]),
+                callback: App::call($callback, $parameters = $this->injectionParameters() +$parameters),
                 parameters: $parameters
             );
         }
