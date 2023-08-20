@@ -125,7 +125,7 @@ class Component implements ComponentDecorator
             throw new InvalidArgumentException("{$this->component->getName()} is not searchable.");
         }
 
-        return array_keys($this->component->getSearchResults($query));
+        return $this->component->getSearchResults($query);
     }
 
     public function isSearchable(): bool

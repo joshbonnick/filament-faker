@@ -77,7 +77,7 @@ class ComponentDataGenerator implements DataGenerator
             return null;
         }
 
-        if (empty($searchResults = $this->component->getSearch())) {
+        if (empty($searchResults = array_keys($this->component->getSearch()))) {
             throw_if(
                 $this->component->isRequired(),
                 InvalidComponentOptionsException::class,
