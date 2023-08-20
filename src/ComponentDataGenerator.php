@@ -82,7 +82,8 @@ class ComponentDataGenerator implements DataGenerator
             throw_if(
                 $this->component->isRequired(),
                 InvalidComponentException::class,
-                "{$this->component->getName()} is required. Options array is empty."
+                $this->component->getField(),
+                100
             );
 
             return null;
@@ -92,7 +93,8 @@ class ComponentDataGenerator implements DataGenerator
             throw_if(
                 $this->component->isRequired(),
                 InvalidComponentException::class,
-                "{$this->component->getName()} is required. Options and search array is empty."
+                $this->component->getField(),
+                101
             );
 
             return null;

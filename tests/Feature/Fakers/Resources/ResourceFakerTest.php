@@ -1,5 +1,8 @@
 <?php
 
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Resources\InjectedResource;
@@ -39,16 +42,16 @@ it('can fake resources', function () {
 });
 
 it('accepts an instance of a form', function () {
-    $form = PostResource::faker()->getForm();
+    $form = PostResource::faker()->getForm()->schema([
+        TextInput::make('foo'),
+        RichEditor::make('bar'),
+        ColorPicker::make('baz'),
+    ]);
 
     expect(PostResource::faker()->withForm($form)->fake())
         ->toBeArray()
         ->toHaveKeys([
-            'title', 'company', 'brand_color', 'content', 'foo', 'bar',
-            'wiz_foo', 'wiz_bar', 'tab_foo', 'tab_foobar', 'tab_bar',
-            'fieldset_foo', 'fieldset_foobar', 'fieldset_bar',
-            'grid_foo', 'grid_foobar', 'grid_bar', 'section_foo',
-            'section_content',
+            'foo', 'bar', 'baz',
         ]);
 });
 
