@@ -17,7 +17,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Support\DataGenerator;
-use FilamentFaker\Support\ComponentDecorator;
+use FilamentFaker\Decorators\ComponentDecorator;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Support;
+namespace FilamentFaker\Decorators;
 
 use Carbon\Carbon;
 use DateTimeInterface;

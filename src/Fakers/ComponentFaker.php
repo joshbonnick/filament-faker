@@ -9,7 +9,7 @@ use Filament\Forms\Components\Field;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
-use FilamentFaker\Support\ComponentDecorator;
+use FilamentFaker\Decorators\ComponentDecorator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use ReflectionException;

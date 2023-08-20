@@ -3,7 +3,7 @@
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Support\ComponentDecorator;
+use FilamentFaker\Decorators\ComponentDecorator;
 use FilamentFaker\Support\Reflection;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
