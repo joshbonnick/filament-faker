@@ -64,33 +64,37 @@ class ComponentDataGenerator implements DataGenerator
             return $this->defaultCallback();
         }
 
-        if (empty($this->component->getOptions()) && ! $this->component->isSearchable()) {
+        if (! empty($options = array_keys($this->component->getOptions()))) {
+            if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {
+                return fake()->randomElements($options);
+            }
+
+            return fake()->randomElement($options);
+        }
+
+        if (! $this->component->isSearchable()) {
             throw_if(
                 $this->component->isRequired(),
-                new InvalidComponentException("{$this->component->getName()} is required and options did not return any values.")
+                InvalidComponentException::class,
+                "{$this->component->getName()} is required. Options array is empty."
             );
+
+            return null;
         }
 
-        if ($this->component->isSearchable()) {
-            $searchResults = $this->component->getSearch();
+        if (empty($searchResults = $this->component->getSearch())) {
+            throw_if(
+                $this->component->isRequired(),
+                InvalidComponentException::class,
+                "{$this->component->getName()} is required. Options and search array is empty."
+            );
 
-            if (empty($searchResults)) {
-                throw_if(
-                    $this->component->isRequired(),
-                    new InvalidComponentException("{$this->component->getName()} is required and does both options and search did not return any values.")
-                );
-            } else {
-                return $this->component->isMultiple()
-                    ? fake()->randomElements($searchResults)
-                    : fake()->randomElement($searchResults);
-            }
+            return null;
         }
 
-        if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {
-            return fake()->randomElements(array_keys($this->component->getOptions()));
-        }
-
-        return fake()->randomElement(array_keys($this->component->getOptions()));
+        return $this->component->isMultiple()
+            ? fake()->randomElements($searchResults)
+            : fake()->randomElement($searchResults);
     }
 
     /**

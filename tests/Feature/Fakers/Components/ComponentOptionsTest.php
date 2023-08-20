@@ -97,7 +97,7 @@ it('throws an exception if not nullable and both options and search are empty', 
 
     expect(fn () => $select->fake())->toThrow(
         InvalidComponentException::class,
-        'test is required and does both options and search did not return any values.'
+        'test is required. Options and search array is empty.'
     );
 });
 
@@ -108,7 +108,7 @@ it('throws an exception if options are empty, field is required and is not searc
 
     expect(fn () => $select->fake())->toThrow(
         InvalidComponentException::class,
-        'test is required and options did not return any values.'
+        'test is required. Options array is empty.'
     );
 });
 
