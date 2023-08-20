@@ -37,7 +37,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         if ($this->factoryDefinitionExists()) {
-            return $this->getModelAttributes()[$this->component->getName()];
+            return $this->getFactoryDefinition(key: $this->component->getName());
         }
 
         if ($this->getShouldFakeUsingComponentName()) {

@@ -80,6 +80,11 @@ trait InteractsWithFactories
         });
     }
 
+    protected function getFactoryDefinition(string $key): mixed
+    {
+        return $this->modelAttributes[$key];
+    }
+
     protected function usesFactory(): bool
     {
         return ! is_null($this->factory);
