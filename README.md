@@ -171,14 +171,17 @@ If you need to control a specific components value, you can chain `mutateFake` o
 
 use Filament\Forms\Components\Field;
 use Illuminate\Support\Str;
+use App\Services\InjectableService;
 
-$data = PostResource::faker()->mutateFake(function (Field $component): mixed {
+$data = PostResource::faker()->mutateFake(function (Field $component, InjectableService $service): mixed {
     return match ($component->getName()) {
         'title' => fake()->jobTitle(),
         default => null,
     };
 });
 ```
+
+#### Mutate Method As Method
 
 Alternatively you can add a `mutateFake` method to your Form, Block or Resource.
 
@@ -267,9 +270,15 @@ If you want to select only a specific set of definitions from your factory you c
 which lists the definitions you want you use.
 
 ```php
-<?php 
-
 $data = PostResource::faker()->withFactory(onlyAttributes: ['title', 'slug'])->fake();
+```
+
+### Generate Data for Specific Fields
+
+If you only need a specific field or fields, you can specify them with the `onlyFields` method on Resource and Form fakers.
+
+```php
+$data = PostResource::faker()->onlyFields('title', 'slug', 'published_at')->fake();
 ```
 
 ## IDE Support
