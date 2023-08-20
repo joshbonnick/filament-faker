@@ -19,7 +19,7 @@ class InvalidComponentOptionsException extends Exception
 
     public function __construct(
         protected readonly Field $component,
-        int $code = 0
+        int $code
     ) {
         parent::__construct(
             message: str_replace(':component', $this->component->getName(), self::ERROR_MSG[$code]),
