@@ -14,7 +14,7 @@ class Reflection
 {
     protected object $object;
 
-    public function reflect(object $object): self
+    public function reflect(object $object): static
     {
         return tap($this, fn () => $this->object = $object);
     }
