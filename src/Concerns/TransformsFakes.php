@@ -11,6 +11,8 @@ use Filament\Forms\Form;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use ReflectionException;
 
 /**
@@ -95,6 +97,15 @@ trait TransformsFakes
             $faker->mutateFake($this->getMutateCallback());
         }
     }
+
+    abstract protected function usesFactory(): bool;
+
+    /**
+     * @return ?Factory<Model>
+     */
+    abstract protected function getFactory(): ?Factory;
+
+    abstract protected function getOnlyFactoryAttributes(): array;
 
     /**
      * @param  array<class-string|string, object>  $parameters
