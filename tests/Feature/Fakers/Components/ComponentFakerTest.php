@@ -16,7 +16,7 @@ use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
-    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('generateComponentData'))->setAccessible(true);
+    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('generate'))->setAccessible(true);
 
     expect($getCallbackMethod->invoke($faker, $component))->toBeString();
 });
@@ -26,7 +26,7 @@ test('default entries do not return null', function () {
 
     $faker = TextInput::make('test')->faker();
 
-    $method = tap(new ReflectionMethod($faker, 'generateComponentData'))->setAccessible(true);
+    $method = tap(new ReflectionMethod($faker, 'generate'))->setAccessible(true);
 
     foreach ($mockBlock->getChildComponents() as $component) {
         $callback = $method->invoke($faker, $component);

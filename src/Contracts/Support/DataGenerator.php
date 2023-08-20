@@ -11,4 +11,6 @@ interface DataGenerator
     public function uses(ComponentDecorator $component): static;
 
     public function generate(): mixed;
+
+    public function realTime(): RealTimeFactory;
 }

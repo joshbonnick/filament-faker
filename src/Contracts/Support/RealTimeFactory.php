@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts\Support;
 
+use Filament\Forms\Components\Field;
+
 interface RealTimeFactory
 {
-    public function fromName(string $name): mixed;
+    public function generate(Field $component): mixed;
 }

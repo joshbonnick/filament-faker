@@ -9,7 +9,6 @@ use Filament\Forms\Components\Field;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
-use FilamentFaker\Contracts\Support\RealTimeFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use ReflectionException;
@@ -18,7 +17,6 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 {
     public function __construct(
         protected readonly DataGenerator $generator,
-        protected readonly RealTimeFactory $realTimeFactory,
         protected readonly ComponentDecorator $component,
         Field $field,
     ) {
@@ -28,11 +26,28 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     public function fake(): mixed
     {
+        $data = $this->resolveOrReturn($this->generate());
+
+        $this->component->setState($data);
+
+        return $this->component->format();
+    }
+
+    /**
+     * Strategy for data generation while prioritizing mutation
+     * options before resorting to a backup generator.
+     */
+    protected function generate(): mixed
+    {
         if (is_callable($this->mutateCallback)) {
-            return $this->resolveOrReturn($this->mutateCallback);
+            $data = $this->resolveOrReturn($this->mutateCallback);
+
+            if (filled($data)) {
+                return $data;
+            }
         }
 
-        if (! is_null($mutateCallbackResponse = $this->attemptToCallMutationMacro())) {
+        if (! is_null($mutateCallbackResponse = $this->callComponentMutation())) {
             return $mutateCallbackResponse;
         }
 
@@ -41,15 +56,21 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         if ($this->getShouldFakeUsingComponentName()) {
-            $data = $this->realTimeFactory->fromName($this->component->getName());
+            $data = $this->generator->realTime()->generate($this->component());
+
+            if (filled($data)) {
+                return $data;
+            }
         }
 
-        $this->component->setState($data ?? $this->resolveOrReturn($this->generateComponentData()));
+        if ($this->component->hasOverride()) {
+            return $this->resolveOrReturn($this->config()[$this->component()::class]);
+        }
 
-        return $this->component->format();
+        return $this->generator->generate();
     }
 
-    protected function attemptToCallMutationMacro(): mixed
+    protected function callComponentMutation(): mixed
     {
         try {
             return $this->resolveOrReturn([$this->component(), 'mutateFake']);
@@ -58,15 +79,6 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         }
 
         return null;
-    }
-
-    protected function generateComponentData(): mixed
-    {
-        if ($this->component->hasOverride()) {
-            return $this->resolveOrReturn($this->config()[$this->component()::class]);
-        }
-
-        return $this->generator->generate();
     }
 
     protected function component(): Field

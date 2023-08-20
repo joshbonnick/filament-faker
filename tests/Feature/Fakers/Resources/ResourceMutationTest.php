@@ -5,7 +5,10 @@ use FilamentFaker\Tests\TestSupport\Resources\MutatedResource;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
 test('mutateFake can be chained', function () {
-    $data = PostResource::faker()->mutateFake(fn (Field $component) => '::test::')->fake();
+    $data = PostResource::faker()
+        ->mutateFake(
+            fn (Field $component) => $component->getName() === 'safe_email' ? '::test::' : null)
+        ->fake();
 
     expect($data['safe_email'])->toEqual('::test::');
 });

@@ -18,6 +18,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
+use FilamentFaker\Contracts\Support\RealTimeFactory;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -30,6 +31,11 @@ class ComponentDataGenerator implements DataGenerator
         return tap($this, function () use ($component): void {
             $this->component = $component;
         });
+    }
+
+    public function realTime(): RealTimeFactory
+    {
+        return app(RealTimeFactory::class);
     }
 
     public function generate(): mixed

@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Support;
 
+use Filament\Forms\Components\Field;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class Faker implements RealTimeFactory
 {
-    public function fromName(string $name): mixed
+    public function generate(Field $component): mixed
     {
-        if ($this->isDisabledFakerMethod($name = Str::camel($name))) {
+        if ($this->isDisabledFakerMethod($name = Str::camel($component->getName()))) {
             return null;
         }
 
