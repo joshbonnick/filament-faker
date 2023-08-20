@@ -2,8 +2,10 @@
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
@@ -41,10 +43,9 @@ it('handles invalid options field', function () {
     $faker = resolve(DataGenerator::class);
     $decorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
 
-    $faker->using($decorator);
+    $faker->uses($decorator);
 
-    expect($faker->withOptions())
-        ->toBeString();
+    expect($faker->generate())->toBeString();
 });
 
 it('returns a date from date components', function () {
@@ -104,23 +105,31 @@ it('closures added to config are dependency injected', function () {
 });
 
 it('returns a hex color if getFormat doesnt exist', function () {
+    $mock = mock(ComponentDecorator::class)->makePartial();
+    $mock->shouldReceive('getField')->andReturn(ColorPicker::make('mock'));
+    app()->instance(ComponentDecorator::class, $mock);
+
     $faker = resolve(DataGenerator::class);
     $decorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
 
-    $faker->using($decorator);
+    $faker->uses($decorator);
 
-    expect($faker->color())
+    expect($faker->generate())
         ->toBeString()
         ->toStartWith('#');
 });
 
 it('throws an exception if getSuggestions doesnt exist', function () {
+    $mock = mock(ComponentDecorator::class)->makePartial();
+    $mock->shouldReceive('getField')->andReturn(TagsInput::make('mock'));
+    app()->instance(ComponentDecorator::class, $mock);
+
     $faker = resolve(DataGenerator::class);
     $decorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
 
-    $faker->using($decorator);
+    $faker->uses($decorator);
 
-    expect(fn () => $faker->withSuggestions())
+    expect(fn () => $faker->generate())
         ->toThrow(
             InvalidArgumentException::class,
             'test does not have suggestions.'

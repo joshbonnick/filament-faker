@@ -4,20 +4,8 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\Component;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
@@ -29,13 +17,13 @@ use ReflectionException;
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
     public function __construct(
-        protected readonly DataGenerator $faker,
+        protected readonly DataGenerator $generator,
         protected readonly RealTimeFactory $realTimeFactory,
         protected readonly ComponentDecorator $component,
         Field $field,
     ) {
         $this->component->setUp($field);
-        $this->faker->using($this->component);
+        $this->generator->uses($this->component);
     }
 
     public function fake(): mixed
@@ -78,21 +66,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
             return $this->resolveOrReturn($this->config()[$this->component()::class]);
         }
 
-        return match ($this->component()::class) {
-            CheckboxList::class,
-            Radio::class,
-            Select::class => $this->faker->withOptions(),
-            Checkbox::class,
-            Toggle::class => $this->faker->checkbox(),
-            TagsInput::class => $this->faker->withSuggestions(),
-            DatePicker::class,
-            DateTimePicker::class => $this->faker->date(),
-            FileUpload::class => $this->faker->file(),
-            KeyValue::class => $this->faker->keyValue(),
-            ColorPicker::class => $this->faker->color(),
-            RichEditor::class => $this->faker->html(),
-            default => $this->faker->defaultCallback(),
-        };
+        return $this->generator->generate();
     }
 
     protected function component(): Field

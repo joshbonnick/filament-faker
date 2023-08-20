@@ -4,7 +4,18 @@ declare(strict_types=1);
 
 namespace FilamentFaker;
 
+use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\ColorPicker;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\KeyValue;
+use Filament\Forms\Components\Radio;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Support\ComponentDecorator;
 use Illuminate\Support\Str;
@@ -14,14 +25,33 @@ class ComponentDataGenerator implements DataGenerator
 {
     protected ComponentDecorator $component;
 
-    public function using(ComponentDecorator $component): static
+    public function uses(ComponentDecorator $component): static
     {
         return tap($this, function () use ($component): void {
             $this->component = $component;
         });
     }
 
-    public function withOptions(): mixed
+    public function generate(): mixed
+    {
+        return match ($this->component->getField()::class) {
+            CheckboxList::class,
+            Radio::class,
+            Select::class => $this->withOptions(),
+            Checkbox::class,
+            Toggle::class => $this->checkbox(),
+            TagsInput::class => $this->withSuggestions(),
+            DatePicker::class,
+            DateTimePicker::class => $this->date(),
+            FileUpload::class => $this->file(),
+            KeyValue::class => $this->keyValue(),
+            ColorPicker::class => $this->color(),
+            RichEditor::class => $this->html(),
+            default => $this->defaultCallback(),
+        };
+    }
+
+    protected function withOptions(): mixed
     {
         if (! $this->component->hasOptions()) {
             return $this->defaultCallback();
@@ -37,7 +67,7 @@ class ComponentDataGenerator implements DataGenerator
     /**
      * @return array<int, string|int|float>
      */
-    public function withSuggestions(): array
+    protected function withSuggestions(): array
     {
         if ($this->component->missingMethod('getSuggestions')) {
             throw new InvalidArgumentException("{$this->component->getName()} does not have suggestions.");
@@ -55,12 +85,12 @@ class ComponentDataGenerator implements DataGenerator
         );
     }
 
-    public function date(): string
+    protected function date(): string
     {
         return now()->toFormattedDateString();
     }
 
-    public function file(): string
+    protected function file(): string
     {
         if ($this->component->hasMethod('getAcceptedFileTypes')
             && in_array('image/*', $this->component->getAcceptedFileTypes() ?? [])) {
@@ -73,12 +103,12 @@ class ComponentDataGenerator implements DataGenerator
     /**
      * @return string[]
      */
-    public function keyValue(): array
+    protected function keyValue(): array
     {
         return ['key' => 'value'];
     }
 
-    public function color(): string
+    protected function color(): string
     {
         if ($this->component->missingMethod('getFormat')) {
             return fake()->safeHexColor();
@@ -92,17 +122,17 @@ class ComponentDataGenerator implements DataGenerator
         };
     }
 
-    public function html(): string
+    protected function html(): string
     {
         return Str::wrap(fake()->sentence(), '<p>', '</p>');
     }
 
-    public function checkbox(): bool
+    protected function checkbox(): bool
     {
         return fake()->boolean();
     }
 
-    public function defaultCallback(): string
+    protected function defaultCallback(): string
     {
         return fake()->sentence();
     }
