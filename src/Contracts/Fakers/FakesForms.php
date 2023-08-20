@@ -41,4 +41,11 @@ interface FakesForms
      * output of mock data.
      */
     public function mutateFake(Closure $callback = null): static;
+
+    /**
+     * Specify which fields to generate data for.
+     *
+     * @param  string[]  ...$fields
+     */
+    public function onlyFields(string ...$fields): static;
 }

@@ -78,6 +78,10 @@ trait TransformsFakes
         if (filled($this->mutateCallback)) {
             $faker->mutateFake($this->mutateCallback);
         }
+
+        if (method_exists($this, 'getOnlyFields') && $faker instanceof FakesForms) {
+            $faker->onlyFields(...$this->getOnlyFields());
+        }
     }
 
     abstract protected function usesFactory(): bool;
