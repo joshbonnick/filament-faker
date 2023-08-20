@@ -2,18 +2,21 @@
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Contracts\DataGenerator;
-use FilamentFaker\Contracts\FakesComponents;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Support\DataGenerator;
+use FilamentFaker\Decorators\Component;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();
-    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('generateComponentData'))->setAccessible(true);
+    $getCallbackMethod = tap((new ReflectionClass($faker))->getMethod('generate'))->setAccessible(true);
 
     expect($getCallbackMethod->invoke($faker, $component))->toBeString();
 });
@@ -23,7 +26,7 @@ test('default entries do not return null', function () {
 
     $faker = TextInput::make('test')->faker();
 
-    $method = tap(new ReflectionMethod($faker, 'generateComponentData'))->setAccessible(true);
+    $method = tap(new ReflectionMethod($faker, 'generate'))->setAccessible(true);
 
     foreach ($mockBlock->getChildComponents() as $component) {
         $callback = $method->invoke($faker, $component);
@@ -37,9 +40,12 @@ test('default entries do not return null', function () {
 });
 
 it('handles invalid options field', function () {
-    expect(resolve(DataGenerator::class)
-        ->withOptions(TextInput::make('test')))
-        ->toBeString();
+    $faker = resolve(DataGenerator::class);
+    $decorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
+
+    $faker->uses($decorator);
+
+    expect($faker->generate())->toBeString();
 });
 
 it('returns a date from date components', function () {
@@ -96,4 +102,36 @@ it('closures added to config are dependency injected', function () {
 
     expect(TextInput::make('test')->fake())
         ->toEqual('::test::');
+});
+
+it('returns a hex color if getFormat doesnt exist', function () {
+    $mock = mock(Component::class)->makePartial();
+    $mock->shouldReceive('getField')->andReturn(ColorPicker::make('mock'));
+    app()->instance(Component::class, $mock);
+
+    $faker = resolve(DataGenerator::class);
+    $decorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
+
+    $faker->uses($decorator);
+
+    expect($faker->generate())
+        ->toBeString()
+        ->toStartWith('#');
+});
+
+it('throws an exception if getSuggestions doesnt exist', function () {
+    $mock = mock(Component::class)->makePartial();
+    $mock->shouldReceive('getField')->andReturn(TagsInput::make('mock'));
+    app()->instance(Component::class, $mock);
+
+    $faker = resolve(DataGenerator::class);
+    $decorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
+
+    $faker->uses($decorator);
+
+    expect(fn () => $faker->generate())
+        ->toThrow(
+            InvalidArgumentException::class,
+            'test does not have suggestions.'
+        );
 });

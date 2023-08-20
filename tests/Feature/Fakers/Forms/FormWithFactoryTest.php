@@ -53,7 +53,7 @@ test('factory can be retrieved if binding resolution is thrown', function () {
 
 test('exception is thrown if cannot resolve model', function () {
     expect(fn () => PostResource::faker()->getForm()->faker()->withFactory()->fake())
-        ->toThrow(InvalidArgumentException::class, 'Unable to find Model.');
+        ->toThrow(InvalidArgumentException::class, 'Unable to find Model for form.');
 });
 
 test('exception is thrown if model does not use HasFactory', function () {

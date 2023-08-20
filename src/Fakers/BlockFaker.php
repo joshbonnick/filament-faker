@@ -6,10 +6,16 @@ namespace FilamentFaker\Fakers;
 
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
-use FilamentFaker\Contracts\FakesBlocks;
+use FilamentFaker\Concerns\HasChildComponents;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use InvalidArgumentException;
 
 class BlockFaker extends FilamentFaker implements FakesBlocks
 {
+    use HasChildComponents;
+    use InteractsWithFilamentContainer;
+
     public function __construct(protected Block $block)
     {
     }
@@ -28,9 +34,13 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
         ];
     }
 
-    protected function resolveModel(): ?string
+    /**
+     * {@inheritDoc}
+     */
+    protected function resolveModel(): string
     {
-        return $this->setUpBlock($this->block)->getModel();
+        return $this->setUpBlock($this->block)->getModel()
+               ?? throw new InvalidArgumentException("Unable to find Model for [{$this->block->getName()}] block.");
     }
 
     /**

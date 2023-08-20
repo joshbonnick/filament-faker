@@ -3,7 +3,7 @@
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\Builder\Block;
-use FilamentFaker\Contracts\FakesBlocks;
+use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 
 it('can generate fake blocks content', function () {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Contracts;
+namespace FilamentFaker\Contracts\Fakers;
 
 use Closure;
 use Illuminate\Database\Eloquent\Factories\Factory;

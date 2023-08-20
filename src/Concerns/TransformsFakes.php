@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
-use BadMethodCallException;
 use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Fakers\FakesForms;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use ReflectionException;
 
 /**
@@ -41,24 +45,6 @@ trait TransformsFakes
         });
     }
 
-    protected function getShouldFakeUsingComponentName(): bool
-    {
-        return $this->shouldFakeUsingComponentName;
-    }
-
-    protected function getMutateCallback(): ?Closure
-    {
-        return $this->mutateCallback;
-    }
-
-    /**
-     * Mutate callback has been set.
-     */
-    protected function hasMutations(): bool
-    {
-        return ! is_null($this->mutateCallback);
-    }
-
     /**
      * Get mutation methods from given components parent.
      *
@@ -71,10 +57,37 @@ trait TransformsFakes
                 callback: [$parent, 'mutateFake'],
                 parameters: [Field::class => $component, $component::class => $component]
             ) ?? $component;
-        } catch (BadMethodCallException|ReflectionException $e) {
-            return $component;
+        } catch (ReflectionException $e) {
+            throw_unless(str_contains($e->getMessage(), 'mutateFake() does not exist'), $e);
+        }
+
+        return $component;
+    }
+
+    /**
+     * Apply mutations applied to this instance to the new FilamentFaker instance.
+     */
+    protected function applyFakerMutations(FakesBlocks|FakesComponents|FakesForms $faker): void
+    {
+        $faker->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
+
+        if ($this->usesFactory()) {
+            $faker->withFactory($this->getFactory(), $this->getOnlyFactoryAttributes());
+        }
+
+        if (filled($this->mutateCallback)) {
+            $faker->mutateFake($this->mutateCallback);
         }
     }
+
+    abstract protected function usesFactory(): bool;
+
+    /**
+     * @return ?Factory<Model>
+     */
+    abstract protected function getFactory(): ?Factory;
+
+    abstract protected function getOnlyFactoryAttributes(): array;
 
     /**
      * @param  array<class-string|string, object>  $parameters

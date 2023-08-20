@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace FilamentFaker\Contracts;
+namespace FilamentFaker\Contracts\Fakers;
 
 use Closure;
-use Filament\Forms\Components\Field;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,8 +14,6 @@ interface FakesComponents
      * Generates mock data for a Filament component.
      */
     public function fake(): mixed;
-
-    public function setUpComponent(Field $component): Field;
 
     /**
      * Generate fake data using model factories.

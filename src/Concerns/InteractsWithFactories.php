@@ -33,11 +33,11 @@ trait InteractsWithFactories
     protected array $onlyAttributes = [];
 
     /**
-     * @return class-string<Model>|string|null
+     * @return class-string<Model>|string
      *
      * @throws InvalidArgumentException
      */
-    abstract protected function resolveModel(): ?string;
+    abstract protected function resolveModel(): string;
 
     /**
      * Generate fake data using model factories.
@@ -57,27 +57,31 @@ trait InteractsWithFactories
             }
 
             if (is_null($factory) && ! (isset($this->resource) || isset($this->form))) {
-                throw new InvalidArgumentException('You must provide a factory.');
+                throw new InvalidArgumentException('You must provide a Factory.');
             }
 
             try {
-                if (is_null($factory)) {
-                    throw new BindingResolutionException();
-                }
+                if (filled($factory)) {
+                    $this->factory = app($factory);
 
-                $this->factory = resolve($factory);
+                    return;
+                }
             } catch (BindingResolutionException $e) {
-                if (is_null($model = $this->resolveModel())) {
-                    throw new InvalidArgumentException('Unable to find Model.');
-                }
-
-                if (! method_exists($model, 'factory')) {
-                    throw new InvalidArgumentException("Unable to find Factory for $model.");
-                }
-
-                $this->factory = $model::factory();
             }
+
+            $model = $this->resolveModel();
+
+            if (! method_exists($model, 'factory')) {
+                throw new InvalidArgumentException("Unable to find Factory for $model.");
+            }
+
+            $this->factory = $model::factory();
         });
+    }
+
+    protected function getFactoryDefinition(string $key): mixed
+    {
+        return $this->modelAttributes[$key];
     }
 
     protected function usesFactory(): bool

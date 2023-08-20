@@ -8,7 +8,7 @@ use Closure;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
-use FilamentFaker\Contracts\FakesResources;
+use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
@@ -28,6 +28,9 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         $this->resource = $resource;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function withForm(string|Form $form = 'form'): static
     {
         return tap($this, function () use ($form) {
@@ -44,34 +47,38 @@ class ResourceFaker extends FilamentFaker implements FakesResources
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function fake(): array
     {
+        $form = $this->getFormFaker($this->getForm());
+
         if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
-            return $this->getFormFaker($this->getForm())->fake();
+            return $form->fake();
         }
 
-        if (method_exists($resource, 'mutateFake')) {
-            $mutationCallback = Closure::fromCallable([$resource, 'mutateFake']);
-        } else {
-            $mutationCallback = $this->mutateCallback;
-        }
-
-        return $this->getFormFaker($this->getForm())->mutateFake($mutationCallback)->fake();
+        return $form
+            ->mutateFake(method_exists($resource, 'mutateFake')
+                ? Closure::fromCallable([$resource, 'mutateFake'])
+                : $this->mutateCallback
+            )->fake();
     }
 
     public function getForm(): Form
     {
-        return is_null($this->form)
-            ? $this->withForm()->getForm()
-            : $this->form;
+        return $this->form ?? $this->withForm()->getForm();
     }
 
     protected function resolveResource(): ?FilamentResource
     {
-        return rescue(fn (): FilamentResource => resolve($this->resource));
+        return rescue(fn (): FilamentResource => app($this->resource));
     }
 
-    protected function resolveModel(): ?string
+    /**
+     * {@inheritDoc}
+     */
+    protected function resolveModel(): string
     {
         return $this->resource::getModel();
     }
@@ -83,6 +90,8 @@ class ResourceFaker extends FilamentFaker implements FakesResources
 
     /**
      * @return array<class-string|string, object>
+     *
+     * @codeCoverageIgnore
      */
     protected function injectionParameters(): array
     {
