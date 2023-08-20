@@ -20,8 +20,6 @@ use ReflectionException;
 
 /**
  * @internal
- *
- * @mixin Field
  */
 class Component implements ComponentDecorator
 {

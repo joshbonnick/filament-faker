@@ -18,13 +18,12 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Toggle;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
-use FilamentFaker\Decorators\Component;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
 class ComponentDataGenerator implements DataGenerator
 {
-    protected Component $component;
+    protected ComponentDecorator $component;
 
     public function uses(ComponentDecorator $component): static
     {
