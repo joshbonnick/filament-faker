@@ -4,6 +4,10 @@ use Filament\Forms\Components\Field;
 use FilamentFaker\Tests\TestSupport\Resources\MutatedResource;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
 
+beforeEach(function () {
+    mockComponentDecorator();
+});
+
 test('mutateFake can be chained', function () {
     $data = PostResource::faker()
         ->mutateFake(

@@ -37,7 +37,7 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
     /**
      * {@inheritDoc}
      */
-    protected function resolveModel(): string
+    public function resolveModel(): string
     {
         return $this->setUpBlock($this->block)->getModel()
                ?? throw new InvalidArgumentException("Unable to find Model for [{$this->block->getName()}] block.");

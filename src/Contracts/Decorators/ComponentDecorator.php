@@ -39,6 +39,13 @@ interface ComponentDecorator
 
     public function hasOptions(): bool;
 
+    /**
+     * @return array<mixed>
+     */
+    public function getSearch(string $query = ''): array;
+
+    public function isSearchable(): bool;
+
     public function hasOverride(): bool;
 
     public function isMultiple(): bool;

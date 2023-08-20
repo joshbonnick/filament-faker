@@ -1,9 +1,14 @@
 <?php
 
+use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 use FilamentFaker\Tests\TestSupport\Resources\MultipleForms;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+
+beforeEach(function () {
+    mockComponentDecorator();
+});
 
 it('can fake forms', function () {
     expect($fake = PostResource::fake())
@@ -52,7 +57,9 @@ it('can fake multiple forms using resource faker', function () {
 });
 
 it('returns hidden fields when withHidden used', function () {
-    $form = PostResource::faker()->getForm();
+    $form = PostResource::faker()->getForm()->schema([
+        TextInput::make('hidden_field')->hidden(),
+    ]);
 
     expect($form->faker()->withoutHidden()->fake())
         ->not

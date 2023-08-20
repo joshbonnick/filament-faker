@@ -14,4 +14,9 @@ class InjectableService
     {
         return Post::query()->select(['id', 'title'])->get();
     }
+
+    public function search(): array
+    {
+        return ['foo' => 'bar', 'baz' => 'hello', 'world' => 'foobar'];
+    }
 }

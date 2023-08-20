@@ -4,21 +4,11 @@ declare(strict_types=1);
 
 namespace FilamentFaker;
 
-use Filament\Forms\Components\Checkbox;
-use Filament\Forms\Components\CheckboxList;
-use Filament\Forms\Components\ColorPicker;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\KeyValue;
-use Filament\Forms\Components\Radio;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TagsInput;
-use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Contracts\Support\RealTimeFactory;
+use FilamentFaker\Exceptions\InvalidComponentOptionsException;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 
@@ -38,40 +28,68 @@ class ComponentDataGenerator implements DataGenerator
         return app(RealTimeFactory::class);
     }
 
+    /**
+     * @throws InvalidComponentOptionsException
+     */
     public function generate(): mixed
     {
         return match ($this->component->getField()::class) {
-            CheckboxList::class,
-            Radio::class,
-            Select::class => $this->withOptions(),
-            Checkbox::class,
-            Toggle::class => $this->checkbox(),
-            TagsInput::class => $this->withSuggestions(),
-            DatePicker::class,
-            DateTimePicker::class => $this->date(),
-            FileUpload::class => $this->file(),
-            KeyValue::class => $this->keyValue(),
-            ColorPicker::class => $this->color(),
-            RichEditor::class => $this->html(),
+            Components\CheckboxList::class,
+            Components\Radio::class,
+            Components\Select::class => $this->withOptions(),
+            Components\Checkbox::class,
+            Components\Toggle::class => $this->checkbox(),
+            Components\TagsInput::class => $this->withSuggestions(),
+            Components\DatePicker::class,
+            Components\DateTimePicker::class => $this->date(),
+            Components\FileUpload::class => $this->file(),
+            Components\KeyValue::class => $this->keyValue(),
+            Components\ColorPicker::class => $this->color(),
+            Components\RichEditor::class => $this->html(),
             default => $this->defaultCallback(),
         };
     }
 
+    /**
+     * @throws InvalidComponentOptionsException
+     */
     protected function withOptions(): mixed
     {
         if (! $this->component->hasOptions()) {
             return $this->defaultCallback();
         }
 
-        if (empty($this->component->getOptions())) {
+        if (! empty($options = array_keys($this->component->getOptions()))) {
+            if ($this->component->is_a(Components\CheckboxList::class) || $this->component->isMultiple()) {
+                return fake()->randomElements($options);
+            }
+
+            return fake()->randomElement($options);
+        }
+
+        if (! $this->component->isSearchable()) {
+            throw_if(
+                $this->component->isRequired(),
+                InvalidComponentOptionsException::class,
+                "{$this->component->getName()} is required. Options array is empty."
+            );
+
             return null;
         }
 
-        if ($this->component->is_a(CheckboxList::class) || $this->component->isMultiple()) {
-            return fake()->randomElements(array_keys($this->component->getOptions()));
+        if (empty($searchResults = array_keys($this->component->getSearch()))) {
+            throw_if(
+                $this->component->isRequired(),
+                InvalidComponentOptionsException::class,
+                "{$this->component->getName()} is required. Options and search array is empty."
+            );
+
+            return null;
         }
 
-        return fake()->randomElement(array_keys($this->component->getOptions()));
+        return $this->component->isMultiple()
+            ? fake()->randomElements($searchResults)
+            : fake()->randomElement($searchResults);
     }
 
     /**

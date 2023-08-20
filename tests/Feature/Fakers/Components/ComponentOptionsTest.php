@@ -3,6 +3,7 @@
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use FilamentFaker\Exceptions\InvalidComponentOptionsException;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
@@ -10,19 +11,21 @@ it('uses an option value when options are a query', function () {
     $posts = Post::factory()->count(2)->create();
 
     $select = Select::make('parent_id')
+        ->model(Post::factory()->create(['parent_id' => $posts->value('id')]))
         ->relationship('parent', 'title')
         ->label('Primary Category')
         ->searchable()
         ->options(fn () => Post::query()->select(['id', 'title'])->get()->pluck('title', 'id'))
         ->required();
 
-    expect($select->fake())->toBeIn($posts->pluck('id')->toArray());
+    expect($select->fake())->toBeIn(Post::query()->select(['id', 'title'])->get()->pluck('title', 'id')->keys());
 });
 
 it('uses an option value when options use dependency injection', function () {
     Post::factory()->count(2)->create();
 
     $select = Select::make('parent_id')
+        ->model(Post::factory()->create(['parent_id' => Post::value('id')]))
         ->relationship('parent', 'title')
         ->label('Primary Category')
         ->searchable()
@@ -70,6 +73,43 @@ it('returns an array if field with options is multiselectable', function () {
         ->toBeIn(['foo', 'hello'])
         ->and($select->multiple()->fake())
         ->toBeArray();
+});
+
+it('returns a value if component is searchable', function () {
+    $select = Select::make('test')
+        ->options(fn () => [])
+        ->getSearchResultsUsing(fn (InjectableService $service) => $service->search())
+        ->searchable();
+
+    expect($select->fake())
+        ->toBeIn(array_keys(app(InjectableService::class)->search()));
+});
+
+it('throws an exception if not nullable and both options and search are empty', function () {
+    $select = Select::make('test')
+        ->options(fn () => [])
+        ->getSearchResultsUsing(fn () => [])
+        ->searchable();
+
+    expect(fn () => $select->fake())->not->toThrow(InvalidComponentOptionsException::class);
+
+    $select = $select->required();
+
+    expect(fn () => $select->fake())->toThrow(
+        InvalidComponentOptionsException::class,
+        'test is required. Options and search array is empty.'
+    );
+});
+
+it('throws an exception if options are empty, field is required and is not searchable', function () {
+    $select = Select::make('test')
+        ->options(fn () => [])
+        ->required();
+
+    expect(fn () => $select->fake())->toThrow(
+        InvalidComponentOptionsException::class,
+        'test is required. Options array is empty.'
+    );
 });
 
 it('returns null if options are empty', function () {

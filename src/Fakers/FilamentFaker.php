@@ -14,6 +14,8 @@ use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use FilamentFaker\Contracts\Support\FilamentFakerFactory;
+use Illuminate\Database\Eloquent\Model;
+use InvalidArgumentException;
 
 abstract class FilamentFaker
 {
@@ -28,7 +30,8 @@ abstract class FilamentFaker
 
     protected function getComponentFaker(Field $component): FakesComponents
     {
-        return tap($this->fakerFactory()->component($component), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
+        return tap($this->fakerFactory()->component($component),
+            fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function getBlockFaker(Block $block): FakesBlocks
@@ -40,4 +43,13 @@ abstract class FilamentFaker
     {
         return app(FilamentFakerFactory::class)->from(parent: $this);
     }
+
+    /**
+     * @return class-string<Model>|string
+     *
+     * @throws InvalidArgumentException
+     *
+     * @internal
+     */
+    abstract public function resolveModel(): string;
 }
