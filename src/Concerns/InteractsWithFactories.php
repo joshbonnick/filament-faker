@@ -33,7 +33,7 @@ trait InteractsWithFactories
     protected array $onlyAttributes = [];
 
     /**
-     * @return class-string<Model>|string|null
+     * @return class-string<Model>|string
      *
      * @throws InvalidArgumentException
      */
