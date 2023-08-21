@@ -37,14 +37,12 @@ class ComponentFaker implements FakesComponents, FilamentFaker
         ComponentContainer $container = null
     ) {
         $this->generator->uses(
-            decorator: $decorator->uses(
+            decorator: $this->component = $decorator->uses(
                 component: $field->container(
                     container: $container ?? $this->getContainer(from: $field)
                 )
             )
         );
-
-        $this->component = $decorator;
     }
 
     public function fake(): mixed
