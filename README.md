@@ -221,7 +221,7 @@ You can chain `shouldFakeUsingComponentName` on the Faker API to disable the fea
 
 $data = PostResource::faker()->shouldFakeUsingComponentName(false)->fake();
 // or
-$data = PostResource::faker()->form()->shouldFakeUsingComponentName(false)->fake();
+$data = PostResource::faker()->getForm()->shouldFakeUsingComponentName(false)->fake();
 // or
 $data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
 ```
