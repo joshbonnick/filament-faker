@@ -8,14 +8,12 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\HasChildComponents;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use InvalidArgumentException;
 
 class BlockFaker extends FilamentFaker implements FakesBlocks
 {
     use HasChildComponents;
-    use InteractsWithFilamentContainer;
 
     protected ComponentContainer $container;
 

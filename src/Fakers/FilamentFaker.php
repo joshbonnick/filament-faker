@@ -4,12 +4,11 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\InteractsWithFactories;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesClosures;
 use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
@@ -24,6 +23,7 @@ abstract class FilamentFaker
     use InteractsWithFactories;
     use TransformsFakes;
     use ResolvesClosures;
+    use InteractsWithFilamentContainer;
 
     protected function getFormFaker(Form $form): FakesForms
     {
@@ -53,6 +53,4 @@ abstract class FilamentFaker
      * @internal
      */
     abstract public function resolveModel(): string;
-
-    abstract protected function getContainer(Component $from = null): ComponentContainer;
 }

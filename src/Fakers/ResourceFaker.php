@@ -9,14 +9,12 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Concerns\CanSpecifyFields;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
 {
     use CanSpecifyFields;
-    use InteractsWithFilamentContainer;
 
     /**
      * @var class-string<FilamentResource>

@@ -19,7 +19,6 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\CanSpecifyFields;
 use FilamentFaker\Concerns\HasChildComponents;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
@@ -28,7 +27,6 @@ class FormFaker extends FilamentFaker implements FakesForms
 {
     use HasChildComponents;
     use CanSpecifyFields;
-    use InteractsWithFilamentContainer;
 
     protected bool $withHidden = true;
 
