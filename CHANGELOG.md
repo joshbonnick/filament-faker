@@ -2,6 +2,17 @@
 
 All notable changes to `filament-faker` will be documented in this file.
 
+## v0.0.3 - 2023-08-21
+
+### What's Changed
+
+- [1.x] Select return null if options are empty by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/10
+- [1.x] Components return a value from search callback if searchable by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/11
+- [1.x] Add `onlyFields` method to `Resource` and `Form` fakers by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/12
+- [1.x] Fix ComponentContainer sharing when generating Form or Resource data by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/13
+
+**Full Changelog**: https://github.com/joshbonnick/filament-faker/compare/v0.0.2...v0.0.3
+
 ## v0.0.2 - 2023-08-19
 
 ### What's Changed
