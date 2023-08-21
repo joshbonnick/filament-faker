@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\InteractsWithFactories;
@@ -30,17 +32,17 @@ abstract class FilamentFaker
 
     protected function getComponentFaker(Field $component): FakesComponents
     {
-        return tap($this->fakerFactory()->component($component, $this->container), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
+        return tap($this->fakerFactory()->component($component), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function getBlockFaker(Block $block): FakesBlocks
     {
-        return tap($this->fakerFactory()->block($block, $this->container), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
+        return tap($this->fakerFactory()->block($block), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function fakerFactory(): FilamentFakerFactory
     {
-        return app(FilamentFakerFactory::class)->from(parent: $this);
+        return app(FilamentFakerFactory::class)->from(parent: $this, container: $this->getContainer());
     }
 
     /**
@@ -51,4 +53,6 @@ abstract class FilamentFaker
      * @internal
      */
     abstract public function resolveModel(): string;
+
+    abstract protected function getContainer(Component $from = null): ComponentContainer;
 }

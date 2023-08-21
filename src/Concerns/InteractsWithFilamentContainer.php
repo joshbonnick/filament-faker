@@ -26,9 +26,17 @@ trait InteractsWithFilamentContainer
         return tap($block)->container($this->container());
     }
 
-    protected function getContainer(Component $from): ComponentContainer
+    protected function getContainer(Component $from = null): ComponentContainer
     {
+        if (isset($this->container)) {
+            return $this->container;
+        }
+
         try {
+            if (blank($from)) {
+                return $this->container();
+            }
+
             return $from->getContainer();
         } catch (Throwable $e) {
             throw_unless(str_contains($e->getMessage(), '$container'), $e);

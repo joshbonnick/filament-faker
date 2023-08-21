@@ -21,31 +21,37 @@ class FakerFactory implements FilamentFakerFactory
 
     protected FilamentFaker $parentFaker;
 
-    public function from(FilamentFaker $parent): FakerFactory
+    protected ComponentContainer $container;
+
+    public function from(FilamentFaker $parent, ComponentContainer $container): static
     {
-        return tap($this, function () use ($parent) {
+        return tap($this, function () use ($parent, $container) {
             $this->parentFaker = $parent;
+            $this->container = $container;
         });
     }
 
     public function form(Form $form): FakesForms
     {
-        return $this->configure($form)->faker();
-    }
-
-    public function component(Field $component, ComponentContainer $container): FakesComponents
-    {
-        return app(FakesComponents::class, [
-            'field' => $this->configure($component),
-            'container' => $container,
+        return app(FakesForms::class, [
+            'form' => $this->configure($form),
+            'container' => $this->container,
         ]);
     }
 
-    public function block(Block $block, ComponentContainer $container): FakesBlocks
+    public function component(Field $component): FakesComponents
+    {
+        return app(FakesComponents::class, [
+            'field' => $this->configure($component),
+            'container' => $this->container,
+        ]);
+    }
+
+    public function block(Block $block): FakesBlocks
     {
         return app(FakesBlocks::class, [
             'block' => $this->configure($block),
-            'container' => $container,
+            'container' => $this->container,
         ]);
     }
 
