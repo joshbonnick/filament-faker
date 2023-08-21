@@ -31,7 +31,7 @@ trait InteractsWithFilamentContainer
         try {
             return $from->getContainer();
         } catch (Throwable $e) {
-            throw_unless(str_contains($e->getMessage(), '$container'));
+            throw_unless(str_contains($e->getMessage(), '$container'), $e);
         }
 
         return $this->container();
