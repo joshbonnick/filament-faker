@@ -25,9 +25,7 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
         Field $field,
         ComponentContainer $container = null
     ) {
-        $field->container($container ?? $this->getContainer(from: $field));
-
-        $this->component->setUp($field);
+        $this->component->setUp(component: $field->container($container ?? $this->getContainer(from: $field)));
         $this->generator->uses($this->component);
     }
 
