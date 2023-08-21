@@ -41,9 +41,12 @@ class FakerFactory implements FilamentFakerFactory
         ]);
     }
 
-    public function block(Block $block): FakesBlocks
+    public function block(Block $block, ComponentContainer $container): FakesBlocks
     {
-        return $this->configure($block)->faker();
+        return app(FakesBlocks::class, [
+            'block' => $this->configure($block),
+            'container' => $container,
+        ]);
     }
 
     /**

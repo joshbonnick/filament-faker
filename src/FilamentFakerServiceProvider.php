@@ -101,8 +101,8 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
     protected function macroBlocks(): static
     {
         return tap($this, function () {
-            Block::macro('faker', function (string $name = 'faked'): FakesBlocks {
-                return app(FakesBlocks::class, ['block' => static::make($name)]);
+            Block::macro('faker', function (string $name = null): FakesBlocks {
+                return app(FakesBlocks::class, ['block' => static::make($name ?? static::class)]);
             });
 
             Block::macro('fake', fn (): array => static::faker()->fake());

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
-use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
@@ -29,14 +28,14 @@ abstract class FilamentFaker
         return tap($this->fakerFactory()->form($form), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
     }
 
-    protected function getComponentFaker(Field $component, ComponentContainer $container): FakesComponents
+    protected function getComponentFaker(Field $component): FakesComponents
     {
-        return tap($this->fakerFactory()->component($component, $container), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
+        return tap($this->fakerFactory()->component($component, $this->container), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function getBlockFaker(Block $block): FakesBlocks
     {
-        return tap($this->fakerFactory()->block($block), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
+        return tap($this->fakerFactory()->block($block, $this->container), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
     }
 
     protected function fakerFactory(): FilamentFakerFactory

@@ -2,7 +2,9 @@
 
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
+use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
 
@@ -71,6 +73,21 @@ it('can generate fake blocks content', function () {
         ->and($fake['data']['color_hsl'])
         ->toBeString()
         ->toStartWith('hsl(');
+});
+
+test('type is the name of the block or the class name', function () {
+    $form = mockForm()->schema([
+        Builder::make('test_builder')->blocks([
+            Builder\Block::make('some_block')
+                ->schema([
+                    TextInput::make('test_input'),
+                ]),
+        ]),
+    ]);
+
+    $data = $form->fake();
+
+    expect($data['test_builder'][0]['type'])->toEqual('some_block');
 });
 
 test('faker returns an instance of FakesBlocks', function () {

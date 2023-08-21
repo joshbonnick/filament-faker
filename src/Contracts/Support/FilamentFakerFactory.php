@@ -22,5 +22,5 @@ interface FilamentFakerFactory
 
     public function component(Field $component, ComponentContainer $container): FakesComponents;
 
-    public function block(Block $block): FakesBlocks;
+    public function block(Block $block, ComponentContainer $container): FakesBlocks;
 }
