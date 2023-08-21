@@ -8,6 +8,10 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\InteractsWithConfig;
+use FilamentFaker\Concerns\InteractsWithFactories;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Concerns\ResolvesClosures;
+use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
@@ -15,9 +19,13 @@ use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
 
-class ComponentFaker extends FilamentFaker implements FakesComponents
+class ComponentFaker implements FakesComponents
 {
+    use InteractsWithFilamentContainer;
+    use InteractsWithFactories;
     use InteractsWithConfig;
+    use TransformsFakes;
+    use ResolvesClosures;
 
     protected readonly ComponentDecorator $component;
 
