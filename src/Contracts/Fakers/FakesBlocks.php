@@ -15,4 +15,11 @@ interface FakesBlocks
      * @return array<string, mixed>
      */
     public function fake(): array;
+
+    /**
+     * Specify which fields to generate data for.
+     *
+     * @param  string[]  ...$fields
+     */
+    public function onlyFields(string ...$fields): static;
 }
