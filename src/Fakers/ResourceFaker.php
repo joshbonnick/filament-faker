@@ -10,13 +10,21 @@ use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Concerns\CanSpecifyFields;
 use FilamentFaker\Concerns\HasChildComponents;
+use FilamentFaker\Concerns\InteractsWithFactories;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Concerns\ResolvesClosures;
+use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
 
-class ResourceFaker extends FilamentFaker implements FakesResources
+class ResourceFaker implements FakesResources
 {
+    use InteractsWithFilamentContainer;
+    use InteractsWithFactories;
+    use TransformsFakes;
     use CanSpecifyFields;
     use HasChildComponents;
+    use ResolvesClosures;
 
     /**
      * @var class-string<FilamentResource>

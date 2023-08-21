@@ -19,14 +19,22 @@ use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use FilamentFaker\Concerns\CanSpecifyFields;
 use FilamentFaker\Concerns\HasChildComponents;
+use FilamentFaker\Concerns\InteractsWithFactories;
+use FilamentFaker\Concerns\InteractsWithFilamentContainer;
+use FilamentFaker\Concerns\ResolvesClosures;
+use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker extends FilamentFaker implements FakesForms
+class FormFaker implements FakesForms
 {
-    use HasChildComponents;
+    use InteractsWithFilamentContainer;
+    use InteractsWithFactories;
+    use TransformsFakes;
     use CanSpecifyFields;
+    use HasChildComponents;
+    use ResolvesClosures;
 
     protected bool $withHidden = true;
 

@@ -12,18 +12,18 @@ use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Contracts\Support\FilamentFakerFactory;
-use FilamentFaker\Fakers\FilamentFaker;
 
 class FakerFactory implements FilamentFakerFactory
 {
     use InteractsWithFilamentContainer;
 
-    protected FilamentFaker $parentFaker;
+    protected FakesBlocks|FakesResources|FakesForms $parentFaker;
 
     protected ?ComponentContainer $container = null;
 
-    public function from(FilamentFaker $parent, ComponentContainer $container): static
+    public function from(FakesBlocks|FakesResources|FakesForms $parent, ComponentContainer $container): static
     {
         return tap($this, function () use ($parent, $container) {
             [$this->parentFaker, $this->container] = [$parent, $container];
