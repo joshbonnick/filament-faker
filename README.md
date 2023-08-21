@@ -123,7 +123,7 @@ class FormatBlocksTest extends TestCase
             HeadingBlock::fake(),
         ];
 
-        $service = app()->make(ContentFormatter::class);
+        $service = app(ContentFormatter::class);
         $content = $service->format($blocks);
         // or...
         $data = PostResource::fake();
@@ -251,7 +251,7 @@ class FormatBlocksTest extends TestCase
     {
         $data = PostResource::faker()->withFactory()->fake();
 
-        $service = app()->make(ContentFormatter::class);
+        $service = app(ContentFormatter::class);
         $content = $service->format($data);
         
         // Make assertions of your formatted content...
