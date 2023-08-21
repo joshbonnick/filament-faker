@@ -26,8 +26,7 @@ class FakerFactory implements FilamentFakerFactory
     public function from(FilamentFaker $parent, ComponentContainer $container): static
     {
         return tap($this, function () use ($parent, $container) {
-            $this->parentFaker = $parent;
-            $this->container = $container;
+            [$this->parentFaker, $this->container] = [$parent, $container];
         });
     }
 
