@@ -33,7 +33,7 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
             'type' => $this->block->getName(),
             'data' => collect($this->block->getChildComponents())
                 ->filter(fn (mixed $component) => $component instanceof Field)
-                ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForChildComponent($component, $this->block, $this->container)])
+                ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForChildComponent($component, $this->block)])
                 ->toArray(),
         ];
     }

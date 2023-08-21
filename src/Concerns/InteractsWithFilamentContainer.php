@@ -28,16 +28,8 @@ trait InteractsWithFilamentContainer
 
     protected function getContainer(Component $from = null): ComponentContainer
     {
-        if (isset($this->container)) {
-            return $this->container;
-        }
-
         try {
-            if (blank($from)) {
-                return $this->container();
-            }
-
-            return $from->getContainer();
+            return $from?->getContainer() ?? $this->container ?? $this->container();
         } catch (Throwable $e) {
             throw_unless(str_contains($e->getMessage(), '$container'), $e);
         }
