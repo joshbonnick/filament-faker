@@ -34,10 +34,8 @@ trait InteractsWithFactories
 
     /**
      * @return class-string<Model>|string
-     *
-     * @throws InvalidArgumentException
      */
-    abstract protected function resolveModel(): string;
+    abstract public function resolveModel(): string;
 
     /**
      * Generate fake data using model factories.

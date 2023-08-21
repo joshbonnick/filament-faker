@@ -17,22 +17,21 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
-use FilamentFaker\Concerns\CanSpecifyFields;
 use FilamentFaker\Concerns\HasChildComponents;
 use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesClosures;
 use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use Illuminate\Support\Collection;
 use InvalidArgumentException;
 
-class FormFaker implements FakesForms
+class FormFaker implements FakesForms, FilamentFaker
 {
     use InteractsWithFilamentContainer;
     use InteractsWithFactories;
     use TransformsFakes;
-    use CanSpecifyFields;
     use HasChildComponents;
     use ResolvesClosures;
 

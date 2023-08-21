@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts\Fakers;
 
-use Closure;
 use Filament\Forms\Form;
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @mixin FilamentFaker
+ */
 interface FakesResources
 {
     /**
@@ -33,22 +33,9 @@ interface FakesResources
     public function getForm(): Form;
 
     /**
-     * Generate fake data using model factories.
+     * Specify which fields to generate data for.
      *
-     * @param  array<int, string>  $onlyAttributes
-     * @param  Factory<Model>|class-string<Factory<Model>>|null  $factory
+     * @param  string[]  ...$fields
      */
-    public function withFactory(Factory|string $factory = null, array $onlyAttributes = []): static;
-
-    /**
-     * Enable or disable attempts to use component names to retrieve methods
-     * from FakerPHP
-     */
-    public function shouldFakeUsingComponentName(bool $should = true): static;
-
-    /**
-     * Add a callback function to the Faker instance for more control over the
-     * output of mock data.
-     */
-    public function mutateFake(Closure $callback = null): static;
+    public function onlyFields(string ...$fields): static;
 }

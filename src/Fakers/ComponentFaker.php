@@ -14,12 +14,13 @@ use FilamentFaker\Concerns\ResolvesClosures;
 use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
+use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
 
-class ComponentFaker implements FakesComponents
+class ComponentFaker implements FakesComponents, FilamentFaker
 {
     use InteractsWithFilamentContainer;
     use InteractsWithFactories;

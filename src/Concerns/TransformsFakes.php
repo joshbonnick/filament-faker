@@ -9,6 +9,8 @@ use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Fakers\FakesResources;
+use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionException;
@@ -64,13 +66,8 @@ trait TransformsFakes
 
     /**
      * Apply mutations applied to this instance to the new FilamentFaker instance.
-     *
-     * @template TReturnValue
-     *
-     * @param  TReturnValue  $to
-     * @return TReturnValue
      */
-    protected function applyFakerMutations($to)
+    protected function applyFakerMutations(FilamentFaker $to): FilamentFaker
     {
         $to->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
 
@@ -82,7 +79,8 @@ trait TransformsFakes
             $to->mutateFake($this->mutateCallback);
         }
 
-        if (method_exists($this, 'getOnlyFields') && $to instanceof FakesForms) {
+        if (method_exists($this, 'getOnlyFields')
+        && ($to instanceof FakesForms || $to instanceof FakesResources)) {
             $to->onlyFields(...$this->getOnlyFields());
         }
 

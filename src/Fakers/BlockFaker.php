@@ -13,9 +13,10 @@ use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesClosures;
 use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
+use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use InvalidArgumentException;
 
-class BlockFaker implements FakesBlocks
+class BlockFaker implements FakesBlocks, FilamentFaker
 {
     use InteractsWithFilamentContainer;
     use InteractsWithFactories;

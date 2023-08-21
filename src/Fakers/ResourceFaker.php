@@ -8,21 +8,20 @@ use Closure;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
-use FilamentFaker\Concerns\CanSpecifyFields;
 use FilamentFaker\Concerns\HasChildComponents;
 use FilamentFaker\Concerns\InteractsWithFactories;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Concerns\ResolvesClosures;
 use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesResources;
+use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use FilamentFaker\Support\Livewire;
 
-class ResourceFaker implements FakesResources
+class ResourceFaker implements FakesResources, FilamentFaker
 {
     use InteractsWithFilamentContainer;
     use InteractsWithFactories;
     use TransformsFakes;
-    use CanSpecifyFields;
     use HasChildComponents;
     use ResolvesClosures;
 

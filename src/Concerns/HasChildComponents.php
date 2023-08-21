@@ -8,9 +8,7 @@ use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use FilamentFaker\Contracts\Fakers\FakesBlocks;
-use FilamentFaker\Contracts\Fakers\FakesComponents;
-use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 
 /**
@@ -18,6 +16,19 @@ use FilamentFaker\Contracts\Support\FilamentFakerFactory;
  */
 trait HasChildComponents
 {
+    /** @var string[] */
+    protected array $onlyFields = [];
+
+    /**
+     * {@inheritDoc}
+     */
+    public function onlyFields(string ...$fields): static
+    {
+        return tap($this, function () use ($fields) {
+            $this->onlyFields = $fields;
+        });
+    }
+
     /**
      * Attempt to apply mutations from the parent component instance before returning
      * the components faker response.
@@ -33,7 +44,7 @@ trait HasChildComponents
         return $transformed;
     }
 
-    protected function faker(Form|Block|Field $item): FakesForms|FakesComponents|FakesBlocks
+    protected function faker(Form|Block|Field $item): FilamentFaker
     {
         $method = match (true) {
             $item instanceof Form => 'form',
@@ -49,7 +60,15 @@ trait HasChildComponents
         return app(FilamentFakerFactory::class)->from(parent: $this, container: $this->getContainer());
     }
 
-    abstract protected function applyFakerMutations($to);
+    /**
+     * @return string[]
+     */
+    protected function getOnlyFields(): array
+    {
+        return $this->onlyFields;
+    }
+
+    abstract protected function applyFakerMutations(FilamentFaker $to): FilamentFaker;
 
     abstract protected function getMutationsFromParent(Component|Form $parent, Field $component): mixed;
 }
