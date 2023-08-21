@@ -16,10 +16,10 @@ class ComponentDataGenerator implements DataGenerator
 {
     protected ComponentDecorator $component;
 
-    public function uses(ComponentDecorator $component): static
+    public function uses(ComponentDecorator $decorator): static
     {
-        return tap($this, function () use ($component): void {
-            $this->component = $component;
+        return tap($this, function () use ($decorator): void {
+            $this->component = $decorator;
         });
     }
 

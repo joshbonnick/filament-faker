@@ -39,9 +39,9 @@ class Component implements ComponentDecorator
         return $this->component->$name;
     }
 
-    public function uses(Field $component): Field
+    public function uses(Field $component): static
     {
-        return tap($component, function (Field $component) {
+        return tap($this, function () use ($component) {
             $this->component = $component;
         });
     }

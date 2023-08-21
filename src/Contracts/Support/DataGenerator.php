@@ -8,7 +8,7 @@ use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 
 interface DataGenerator
 {
-    public function uses(ComponentDecorator $component): static;
+    public function uses(ComponentDecorator $decorator): static;
 
     public function generate(): mixed;
 

@@ -19,14 +19,21 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 {
     use InteractsWithConfig;
 
+    protected readonly ComponentDecorator $component;
+
     public function __construct(
         protected readonly DataGenerator $generator,
-        protected readonly ComponentDecorator $component,
+        ComponentDecorator $decorator,
         Field $field,
         ComponentContainer $container = null
     ) {
-        $this->component->uses(component: $field->container($container ?? $this->getContainer(from: $field)));
-        $this->generator->uses(component: $this->component);
+        $this->generator->uses(
+            decorator: $decorator->uses(
+                component: $field->container($container ?? $this->getContainer(from: $field))
+            )
+        );
+
+        $this->component = $decorator;
     }
 
     public function fake(): mixed
