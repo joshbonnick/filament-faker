@@ -41,7 +41,7 @@ test('default entries do not return null', function () {
 
 it('handles invalid options field', function () {
     $faker = resolve(DataGenerator::class);
-    $decorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
+    $decorator = tap(resolve(Component::class))->uses(TextInput::make('test'));
 
     $faker->uses($decorator);
 
@@ -110,7 +110,7 @@ it('returns a hex color if getFormat doesnt exist', function () {
     app()->instance(Component::class, $mock);
 
     $faker = resolve(DataGenerator::class);
-    $decorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
+    $decorator = tap(resolve(Component::class))->uses(TextInput::make('test'));
 
     $faker->uses($decorator);
 
@@ -125,7 +125,7 @@ it('throws an exception if getSuggestions doesnt exist', function () {
     app()->instance(Component::class, $mock);
 
     $faker = resolve(DataGenerator::class);
-    $decorator = tap(resolve(Component::class))->setUp(TextInput::make('test'));
+    $decorator = tap(resolve(Component::class))->uses(TextInput::make('test'));
 
     $faker->uses($decorator);
 

@@ -50,7 +50,7 @@ it('returns a formatted date', function () {
 
 it('throws an exception if attempt to formatDate on none date component', function () {
     $component = resolve(Component::class);
-    $component->setUp(TextInput::make('test'));
+    $component->uses(TextInput::make('test'));
 
     /** @var ReflectionMethod $reflectionMethod */
     $reflectionMethod = tap((new ReflectionMethod($component, 'formatDate')))->setAccessible(true);

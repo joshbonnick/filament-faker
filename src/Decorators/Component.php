@@ -39,7 +39,7 @@ class Component implements ComponentDecorator
         return $this->component->$name;
     }
 
-    public function setUp(Field $component): Field
+    public function uses(Field $component): Field
     {
         return tap($component, function (Field $component) {
             $this->component = $component;
