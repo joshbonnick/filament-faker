@@ -35,11 +35,9 @@ class ComponentFaker extends FilamentFaker implements FakesComponents
 
     public function fake(): mixed
     {
-        $data = $this->component->getState() ?? $this->resolveOrReturn($this->generate());
-
-        $this->component->setState($data);
-
-        return $this->component->format();
+        return $this->component
+            ->setState($this->component->getState() ?? $this->resolveOrReturn($this->generate()))
+            ->format();
     }
 
     /**
