@@ -9,12 +9,14 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Concerns\CanSpecifyFields;
+use FilamentFaker\Concerns\HasChildComponents;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Support\Livewire;
 
 class ResourceFaker extends FilamentFaker implements FakesResources
 {
     use CanSpecifyFields;
+    use HasChildComponents;
 
     /**
      * @var class-string<FilamentResource>
@@ -55,7 +57,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
      */
     public function fake(): array
     {
-        $form = $this->formFaker($this->getForm());
+        $form = $this->faker($this->getForm());
 
         if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
             return $form->fake();

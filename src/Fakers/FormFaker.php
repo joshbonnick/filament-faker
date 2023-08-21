@@ -117,7 +117,7 @@ class FormFaker extends FilamentFaker implements FakesForms
     {
         return collect($builder->getChildComponents())
             ->filter(fn (Component $block) => $block instanceof Block)
-            ->map(fn (Block $block) => $this->blockFaker($block)->fake())
+            ->map(fn (Block $block) => $this->faker($block)->fake())
             ->toArray();
     }
 
