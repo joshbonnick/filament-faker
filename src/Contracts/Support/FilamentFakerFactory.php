@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Contracts\Support;
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
@@ -19,7 +20,7 @@ interface FilamentFakerFactory
 
     public function form(Form $form): FakesForms;
 
-    public function component(Field $component): FakesComponents;
+    public function component(Field $component, ComponentContainer $container): FakesComponents;
 
     public function block(Block $block): FakesBlocks;
 }

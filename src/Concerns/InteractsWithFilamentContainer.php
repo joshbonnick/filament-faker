@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
+use Error;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
+use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Support\Livewire;
 
@@ -22,6 +24,16 @@ trait InteractsWithFilamentContainer
     protected function setUpBlock(Block $block): Block
     {
         return tap($block)->container($this->container());
+    }
+
+    protected function getContainer(Component $from): ComponentContainer
+    {
+        try {
+            return $from->getContainer();
+        } catch (Error $e) {
+        }
+
+        return $this->container();
     }
 
     protected function container(): ComponentContainer

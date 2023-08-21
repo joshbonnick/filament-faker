@@ -11,7 +11,6 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Set;
 use FilamentFaker\Concerns\InteractsWithConfig;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Support\Reflectable;
 use Illuminate\Support\Arr;
@@ -24,7 +23,6 @@ use ReflectionException;
 class Component implements ComponentDecorator
 {
     use InteractsWithConfig;
-    use InteractsWithFilamentContainer;
 
     public Field $component;
 
@@ -43,7 +41,7 @@ class Component implements ComponentDecorator
 
     public function setUp(Field $component): Field
     {
-        return tap($this->setUpComponent($component), function (Field $component) {
+        return tap($component, function (Field $component) {
             $this->component = $component;
         });
     }
