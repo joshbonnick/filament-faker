@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\InteractsWithConfig;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
@@ -18,24 +18,29 @@ use ReflectionException;
 class ComponentFaker extends FilamentFaker implements FakesComponents
 {
     use InteractsWithConfig;
-    use InteractsWithFilamentContainer;
+
+    protected readonly ComponentDecorator $component;
 
     public function __construct(
         protected readonly DataGenerator $generator,
-        protected readonly ComponentDecorator $component,
+        ComponentDecorator $decorator,
         Field $field,
+        ComponentContainer $container = null
     ) {
-        $this->component->setUp($field);
-        $this->generator->uses($this->component);
+        $this->generator->uses(
+            decorator: $decorator->uses(
+                component: $field->container($container ?? $this->getContainer(from: $field))
+            )
+        );
+
+        $this->component = $decorator;
     }
 
     public function fake(): mixed
     {
-        $data = $this->resolveOrReturn($this->generate());
-
-        $this->component->setState($data);
-
-        return $this->component->format();
+        return $this->component
+            ->setState($this->component->getState() ?? $this->resolveOrReturn($this->generate()))
+            ->format();
     }
 
     /**

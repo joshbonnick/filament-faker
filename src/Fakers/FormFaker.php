@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
@@ -29,9 +30,13 @@ class FormFaker extends FilamentFaker implements FakesForms
 
     protected bool $withHidden = true;
 
+    protected ComponentContainer $container;
+
     public function __construct(
         protected Form $form,
+        ComponentContainer $container = null,
     ) {
+        $this->container = $container ?? $this->container();
     }
 
     /**

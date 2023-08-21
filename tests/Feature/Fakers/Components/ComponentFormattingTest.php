@@ -5,8 +5,10 @@ use Carbon\Exceptions\InvalidFormatException;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Set;
 use FilamentFaker\Decorators\Component;
 use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use Illuminate\Support\Str;
 
 it('respects formatStateUsing', function () {
     $component = TextInput::make('email')
@@ -48,11 +50,28 @@ it('returns a formatted date', function () {
 
 it('throws an exception if attempt to formatDate on none date component', function () {
     $component = resolve(Component::class);
-    $component->setUp(TextInput::make('test'));
+    $component->uses(TextInput::make('test'));
 
     /** @var ReflectionMethod $reflectionMethod */
     $reflectionMethod = tap((new ReflectionMethod($component, 'formatDate')))->setAccessible(true);
 
     expect(fn () => $reflectionMethod->invoke($component, '::not-a-date::'))
         ->toThrow(InvalidArgumentException::class);
+});
+
+it('formats other fields', function () {
+    $form = mockForm()->schema([
+        TextInput::make('title')
+            ->live(onBlur: true)
+            ->afterStateUpdated(function ($state, Set $set) {
+                return $set('slug', Str::slug($state));
+            }),
+        TextInput::make('slug')
+            ->live(onBlur: true)
+            ->dehydrated(),
+    ]);
+
+    $data = $form->fake();
+
+    expect($data['slug'])->toEqual(Str::slug($data['title']));
 });

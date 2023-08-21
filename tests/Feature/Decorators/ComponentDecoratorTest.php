@@ -1,15 +1,17 @@
 <?php
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
+use FilamentFaker\Support\Livewire;
 use FilamentFaker\Support\Reflection;
 use FilamentFaker\Tests\TestSupport\Services\InjectableService;
 
 beforeEach(function () {
-    $this->componentDecorator = tap(resolve(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $this->componentDecorator = tap(resolve(ComponentDecorator::class))->uses(TextInput::make('test')->container(ComponentContainer::make(Livewire::make())));
 });
 
 it('returns an instance of component', function () {
@@ -47,7 +49,7 @@ it('afterStateHydrated hook return null if method does not exist', function () {
 
     app()->instance(Reflection::class, $mock);
 
-    $componentDecorator = tap(app(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $componentDecorator = tap(app(ComponentDecorator::class))->uses(TextInput::make('test'));
 
     expect($componentDecorator->getAfterStateHydrated('test'))
         ->toBeNull();
@@ -63,7 +65,7 @@ it('afterStateUpdated hook return null if method does not exist', function () {
 
     app()->instance(Reflection::class, $mock);
 
-    $componentDecorator = tap(app(ComponentDecorator::class))->setUp(TextInput::make('test'));
+    $componentDecorator = tap(app(ComponentDecorator::class))->uses(TextInput::make('test'));
 
     expect($componentDecorator->getAfterStateUpdated('test'))
         ->toBeNull();
@@ -73,7 +75,7 @@ test('__get function returns a property', function () {
     $mock = mock(TextInput::class)->makePartial();
     $mock->shouldReceive('make')->andReturnSelf()->set('foobar', 'foo');
 
-    $decorator = tap(resolve(ComponentDecorator::class))->setUp($mock::make('test'));
+    $decorator = tap(resolve(ComponentDecorator::class))->uses($mock::make('test'));
 
     expect($decorator->foobar)->toBeString()->toEqual('foo');
 });
@@ -90,9 +92,12 @@ it('returns a searchable option', function () {
         return $service->search();
     };
 
-    $select = Select::make('some_option')->searchable()->getSearchResultsUsing($searchCallback);
+    $select = Select::make('some_option')
+        ->searchable()
+        ->getSearchResultsUsing($searchCallback)
+        ->container(ComponentContainer::make(Livewire::make()));
     /** @var ComponentDecorator $decorator */
-    $decorator = tap(resolve(ComponentDecorator::class))->setUp($select);
+    $decorator = tap(resolve(ComponentDecorator::class))->uses($select);
 
     expect($decorator->getSearch())->toEqual(app()->call($searchCallback));
 });

@@ -20,7 +20,7 @@ interface ComponentDecorator
 
     public function __get(string $name): mixed;
 
-    public function setUp(Field $component): Field;
+    public function uses(Field $component): static;
 
     public function getField(): Field;
 

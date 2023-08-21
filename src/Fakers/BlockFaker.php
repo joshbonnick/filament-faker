@@ -4,20 +4,24 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Fakers;
 
+use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Concerns\HasChildComponents;
-use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use InvalidArgumentException;
 
 class BlockFaker extends FilamentFaker implements FakesBlocks
 {
     use HasChildComponents;
-    use InteractsWithFilamentContainer;
 
-    public function __construct(protected Block $block)
-    {
+    protected ComponentContainer $container;
+
+    public function __construct(
+        protected Block $block,
+        ComponentContainer $container = null
+    ) {
+        $this->container = $container ?? $this->container();
     }
 
     /**
@@ -26,7 +30,7 @@ class BlockFaker extends FilamentFaker implements FakesBlocks
     public function fake(): array
     {
         return [
-            'type' => $this->block::class,
+            'type' => $this->block->getName(),
             'data' => collect($this->block->getChildComponents())
                 ->filter(fn (mixed $component) => $component instanceof Field)
                 ->mapWithKeys(fn (Field $component) => [$component->getName() => $this->getContentForChildComponent($component, $this->block)])
