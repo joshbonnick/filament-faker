@@ -18,6 +18,9 @@ use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
 
+/**
+ * @internal
+ */
 abstract class FilamentFaker
 {
     use InteractsWithFactories;
@@ -25,22 +28,22 @@ abstract class FilamentFaker
     use ResolvesClosures;
     use InteractsWithFilamentContainer;
 
-    protected function getFormFaker(Form $form): FakesForms
+    protected function formFaker(Form $form): FakesForms
     {
-        return tap($this->fakerFactory()->form($form), fn (FakesForms $faker) => $this->applyFakerMutations($faker));
+        return $this->applyFakerMutations(to: $this->factory()->form($form));
     }
 
-    protected function getComponentFaker(Field $component): FakesComponents
+    protected function componentFaker(Field $component): FakesComponents
     {
-        return tap($this->fakerFactory()->component($component), fn (FakesComponents $faker) => $this->applyFakerMutations($faker));
+        return $this->applyFakerMutations(to: $this->factory()->component($component));
     }
 
-    protected function getBlockFaker(Block $block): FakesBlocks
+    protected function blockFaker(Block $block): FakesBlocks
     {
-        return tap($this->fakerFactory()->block($block), fn (FakesBlocks $faker) => $this->applyFakerMutations($faker));
+        return $this->applyFakerMutations(to: $this->factory()->block($block));
     }
 
-    protected function fakerFactory(): FilamentFakerFactory
+    protected function factory(): FilamentFakerFactory
     {
         return app(FilamentFakerFactory::class)->from(parent: $this, container: $this->getContainer());
     }

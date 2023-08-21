@@ -8,8 +8,6 @@ use Closure;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
-use FilamentFaker\Contracts\Fakers\FakesBlocks;
-use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
@@ -66,22 +64,29 @@ trait TransformsFakes
 
     /**
      * Apply mutations applied to this instance to the new FilamentFaker instance.
+     *
+     * @template TReturnValue
+     *
+     * @param  TReturnValue  $to
+     * @return TReturnValue
      */
-    protected function applyFakerMutations(FakesBlocks|FakesComponents|FakesForms $faker): void
+    protected function applyFakerMutations($to)
     {
-        $faker->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
+        $to->shouldFakeUsingComponentName($this->shouldFakeUsingComponentName);
 
         if ($this->usesFactory()) {
-            $faker->withFactory($this->getFactory(), $this->getOnlyFactoryAttributes());
+            $to->withFactory($this->getFactory(), $this->getOnlyFactoryAttributes());
         }
 
         if (filled($this->mutateCallback)) {
-            $faker->mutateFake($this->mutateCallback);
+            $to->mutateFake($this->mutateCallback);
         }
 
-        if (method_exists($this, 'getOnlyFields') && $faker instanceof FakesForms) {
-            $faker->onlyFields(...$this->getOnlyFields());
+        if (method_exists($this, 'getOnlyFields') && $to instanceof FakesForms) {
+            $to->onlyFields(...$this->getOnlyFields());
         }
+
+        return $to;
     }
 
     abstract protected function usesFactory(): bool;

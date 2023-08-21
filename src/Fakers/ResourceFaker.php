@@ -55,7 +55,7 @@ class ResourceFaker extends FilamentFaker implements FakesResources
      */
     public function fake(): array
     {
-        $form = $this->getFormFaker($this->getForm());
+        $form = $this->formFaker($this->getForm());
 
         if (! ($resource = $this->resolveResource()) instanceof FilamentResource) {
             return $form->fake();

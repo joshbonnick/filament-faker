@@ -23,13 +23,13 @@ trait HasChildComponents
         $transformed = $this->getMutationsFromParent($parent, $component);
 
         if ($transformed instanceof Field) {
-            return $this->getComponentFaker($transformed)->fake();
+            return $this->componentFaker($transformed)->fake();
         }
 
         return $transformed;
     }
 
-    abstract protected function getComponentFaker(Field $component): FakesComponents;
+    abstract protected function componentFaker(Field $component): FakesComponents;
 
     abstract protected function getMutationsFromParent(Component|Form $parent, Field $component): mixed;
 }
