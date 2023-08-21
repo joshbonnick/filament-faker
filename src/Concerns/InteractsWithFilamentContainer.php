@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace FilamentFaker\Concerns;
 
-use Error;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
 use Filament\Forms\Components\Field;
 use FilamentFaker\Support\Livewire;
+use Throwable;
 
 /**
  * @internal
@@ -30,7 +30,8 @@ trait InteractsWithFilamentContainer
     {
         try {
             return $from->getContainer();
-        } catch (Error $e) {
+        } catch (Throwable $e) {
+            throw_unless(str_contains($e->getMessage(), '$container'));
         }
 
         return $this->container();
