@@ -11,7 +11,6 @@ parameters:
     checkModelProperties: true
     ignoreErrors:
         - '#Call to an undefined method Filament\\Forms\\Components\\Builder\\Block::faker\(\)#'
-        - '#Call to an undefined method Filament\\Forms\\Components\\Field::faker\(\)#'
         - '#Call to an undefined method Filament\\Forms\\Form::faker\(\)#'
         - '#Call to an undefined method FilamentFaker\\FilamentFakerServiceProvider::faker\(\)#'
         - '#Call to an undefined static method static\(FilamentFaker\\FilamentFakerServiceProvider\)::faker\(\)#'
