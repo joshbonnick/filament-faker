@@ -74,7 +74,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             Form::macro('faker', function (): FakesForms {
                 /* @var Form $this */
-                return app(FakesForms::class, ['form' => $this]);
+                return app(FilamentFakerFactory::class)->form($this);
             });
 
             Form::macro('fake', function (): array {
