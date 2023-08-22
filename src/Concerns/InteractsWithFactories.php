@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
+use Stringable;
 
 /**
  * @internal
@@ -43,7 +44,7 @@ trait InteractsWithFactories
      * @param  array<int, string>  $onlyAttributes
      * @param  Factory<Model>|class-string<Factory<Model>>|null  $factory
      */
-    public function withFactory(Factory|string $factory = null, array $onlyAttributes = []): static
+    public function withFactory(Factory|string|Stringable $factory = null, array $onlyAttributes = []): static
     {
         return tap($this, function () use ($factory, $onlyAttributes): void {
             $this->onlyAttributes = $onlyAttributes;
@@ -60,7 +61,7 @@ trait InteractsWithFactories
 
             try {
                 if (filled($factory)) {
-                    $this->factory = app($factory);
+                    $this->factory = app((string) $factory);
 
                     return;
                 }
@@ -77,9 +78,9 @@ trait InteractsWithFactories
         });
     }
 
-    protected function getFactoryDefinition(string $key): mixed
+    protected function getFactoryDefinition(string|Stringable $key): mixed
     {
-        return $this->modelAttributes[$key];
+        return $this->modelAttributes[(string) $key];
     }
 
     protected function usesFactory(): bool

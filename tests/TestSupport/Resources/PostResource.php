@@ -51,6 +51,7 @@ class PostResource extends Resource
 
             Section::make()->schema([
                 TextInput::make('section_foo'),
+                TextInput::make('province'),
             ]),
 
             Group::make()->schema([

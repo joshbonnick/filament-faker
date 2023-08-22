@@ -16,6 +16,7 @@ use FilamentFaker\Concerns\TransformsFakes;
 use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use FilamentFaker\Support\Livewire;
+use Stringable;
 
 class ResourceFaker implements FakesResources, FilamentFaker
 {
@@ -43,7 +44,7 @@ class ResourceFaker implements FakesResources, FilamentFaker
     /**
      * {@inheritDoc}
      */
-    public function withForm(string|Form $form = 'form'): static
+    public function withForm(string|Stringable|Form $form = 'form'): static
     {
         return tap($this, function () use ($form) {
             if ($form instanceof Form) {
@@ -53,8 +54,8 @@ class ResourceFaker implements FakesResources, FilamentFaker
             }
 
             $this->form = rescue(
-                callback: fn () => $this->resource::$form($this->baseForm()),
-                rescue: fn () => $this->resolveResource()?->{$form}($this->baseForm())
+                callback: fn () => $this->resource::{ (string) $form}($this->baseForm()),
+                rescue: fn () => $this->resolveResource()?->{ (string) $form}($this->baseForm())
             );
         });
     }

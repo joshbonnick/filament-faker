@@ -16,6 +16,7 @@ use FilamentFaker\Contracts\Support\Reflectable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
+use Stringable;
 
 /**
  * @internal
@@ -34,9 +35,9 @@ class Component implements ComponentDecorator
         return $this->component->$name(...$arguments);
     }
 
-    public function __get(string $name): mixed
+    public function __get(string|Stringable $name): mixed
     {
-        return $this->component->$name;
+        return $this->component->{ (string) $name };
     }
 
     public function uses(Field $component): static
@@ -117,13 +118,13 @@ class Component implements ComponentDecorator
     /**
      * @return array<mixed>
      */
-    public function getSearch(string $query = ''): array
+    public function getSearch(string|Stringable $query = ''): array
     {
         if (! $this->isSearchable()) {
             throw new InvalidArgumentException("{$this->component->getName()} is not searchable.");
         }
 
-        return $this->component->getSearchResults($query);
+        return $this->component->getSearchResults((string) $query);
     }
 
     public function isSearchable(): bool

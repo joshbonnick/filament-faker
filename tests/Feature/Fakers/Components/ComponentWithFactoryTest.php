@@ -5,6 +5,15 @@ use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
 use FilamentFaker\Tests\TestSupport\Models\Post;
 use FilamentFaker\Tests\TestSupport\Models\WithoutFactory;
 
+test('withFactory handles Stringable', function () {
+    $component = TextInput::make('title')->model(Post::class);
+    $factory = resolve(TestFactory::class);
+
+    expect($component->faker()->withFactory(str(TestFactory::class))->fake())
+        ->toBeString()
+        ->toEqual($factory->definition()['title']);
+});
+
 it('can use factory definitions', function () {
     $component = TextInput::make('title')->model(Post::class);
     $factory = resolve(TestFactory::class);
