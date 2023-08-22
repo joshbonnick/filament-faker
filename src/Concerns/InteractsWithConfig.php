@@ -17,13 +17,12 @@ trait InteractsWithConfig
      */
     protected array $fakesConfig;
 
-    /**
-     * @return array<string|class-string<Field>, Closure>
-     */
-    protected function config(): array
+    protected function config(string $path = null): mixed
     {
-        return $this->fakesConfig ?? tap(config('filament-faker.fakes', []), function (array $config) {
+        $config = $this->fakesConfig ?? tap(config('filament-faker.fakes', []), function (array $config) {
             $this->fakesConfig = $config;
         });
+
+        return $path ? data_get($config, $path) : $config;
     }
 }

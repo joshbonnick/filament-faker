@@ -59,9 +59,7 @@ class ComponentFaker implements FakesComponents, FilamentFaker
     protected function generate(): mixed
     {
         if (is_callable($this->mutateCallback)) {
-            $data = $this->resolveOrReturn($this->mutateCallback);
-
-            if (filled($data)) {
+            if (filled($data = $this->resolveOrReturn($this->mutateCallback))) {
                 return $data;
             }
         }
@@ -75,15 +73,13 @@ class ComponentFaker implements FakesComponents, FilamentFaker
         }
 
         if ($this->getShouldFakeUsingComponentName()) {
-            $data = $this->generator->realTime()->generate($this->component());
-
-            if (filled($data)) {
+            if (filled($data = $this->generator->realTime()->generate($this->component()))) {
                 return $data;
             }
         }
 
         if ($this->component->hasOverride()) {
-            return $this->resolveOrReturn($this->config()[$this->component()::class]);
+            return $this->resolveOrReturn($this->config($this->component()::class));
         }
 
         return $this->generator->generate();
