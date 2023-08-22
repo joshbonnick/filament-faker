@@ -23,7 +23,7 @@ class FakerFactory implements FilamentFakerFactory
 
     protected FilamentFaker $parentFaker;
 
-    protected ?ComponentContainer $container = null;
+    protected ComponentContainer $container;
 
     public function from(FilamentFaker $parent, ComponentContainer $container): static
     {
