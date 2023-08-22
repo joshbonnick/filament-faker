@@ -24,11 +24,6 @@ trait InteractsWithFactories
     protected ?Model $model = null;
 
     /**
-     * @var array<string, mixed>
-     */
-    protected array $modelAttributes = [];
-
-    /**
      * @var array<int, string>
      */
     protected array $onlyAttributes = [];
@@ -80,7 +75,7 @@ trait InteractsWithFactories
 
     protected function getFactoryDefinition(string|Stringable $key): mixed
     {
-        return $this->modelAttributes[(string) $key];
+        return $this->getModelAttributes()[(string) $key];
     }
 
     protected function usesFactory(): bool
@@ -105,13 +100,9 @@ trait InteractsWithFactories
     {
         $instance = $this->getModelInstance()?->toArray() ?? [];
 
-        $attributes = empty($this->onlyAttributes)
+        return empty($this->onlyAttributes)
             ? $instance
             : Arr::only($instance, $this->onlyAttributes);
-
-        return tap($attributes, function (array $attributes) {
-            $this->modelAttributes = $attributes;
-        });
     }
 
     /**
