@@ -93,7 +93,7 @@ trait InteractsWithFactories
      */
     protected function getModelInstance(callable|array $attributes = []): ?Model
     {
-        return tap($this->getFactory()?->makeOne($attributes), function (?Model $model) {
+        return $this->model ?? tap($this->getFactory()?->makeOne($attributes), function (?Model $model) {
             $this->model = $model;
         });
     }
