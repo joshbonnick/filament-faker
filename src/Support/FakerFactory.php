@@ -8,10 +8,12 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 
@@ -57,6 +59,14 @@ class FakerFactory implements FilamentFakerFactory
         return tap(app(FakesBlocks::class), function () {
             $this->forgetContainer();
         });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resource(string|FilamentResource $resource): FakesResources
+    {
+        return app(FakesResources::class, compact('resource'));
     }
 
     /**
