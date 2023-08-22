@@ -7,7 +7,6 @@ namespace FilamentFaker\Concerns;
 use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Component;
-use Filament\Forms\Components\Field;
 use FilamentFaker\Support\Livewire;
 use Throwable;
 
@@ -16,11 +15,6 @@ use Throwable;
  */
 trait InteractsWithFilamentContainer
 {
-    protected function setUpComponent(Field $component): Field
-    {
-        return tap($component)->container($this->container());
-    }
-
     protected function setUpBlock(Block $block): Block
     {
         return tap($block)->container($this->container());
