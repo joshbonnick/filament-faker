@@ -8,10 +8,12 @@ use Filament\Forms\ComponentContainer;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Form;
+use Filament\Resources\Resource as FilamentResource;
 use FilamentFaker\Concerns\InteractsWithFilamentContainer;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Fakers\FakesForms;
+use FilamentFaker\Contracts\Fakers\FakesResources;
 use FilamentFaker\Contracts\Fakers\FilamentFaker;
 use FilamentFaker\Contracts\Support\FilamentFakerFactory;
 
@@ -21,37 +23,50 @@ class FakerFactory implements FilamentFakerFactory
 
     protected FilamentFaker $parentFaker;
 
-    protected ?ComponentContainer $container = null;
+    protected ComponentContainer $container;
 
     public function from(FilamentFaker $parent, ComponentContainer $container): static
     {
         return tap($this, function () use ($parent, $container) {
             [$this->parentFaker, $this->container] = [$parent, $container];
+
+            app()->instance(ComponentContainer::class, $this->container);
         });
     }
 
     public function form(Form $form): FakesForms
     {
-        return app(FakesForms::class, [
-            'form' => $this->configure($form),
-            'container' => $this->container,
-        ]);
+        app()->instance(Form::class, $this->configure($form));
+
+        return tap(app(FakesForms::class), function () {
+            $this->forgetContainer();
+        });
     }
 
     public function component(Field $component): FakesComponents
     {
-        return app(FakesComponents::class, [
-            'field' => $this->configure($component),
-            'container' => $this->container,
-        ]);
+        app()->instance(Field::class, $this->configure($component));
+
+        return tap(app(FakesComponents::class), function () {
+            $this->forgetContainer();
+        });
     }
 
     public function block(Block $block): FakesBlocks
     {
-        return app(FakesBlocks::class, [
-            'block' => $this->configure($block),
-            'container' => $this->container,
-        ]);
+        app()->instance(Block::class, $this->configure($block));
+
+        return tap(app(FakesBlocks::class), function () {
+            $this->forgetContainer();
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function resource(string|FilamentResource $resource): FakesResources
+    {
+        return app(FakesResources::class, compact('resource'));
     }
 
     /**
@@ -66,6 +81,15 @@ class FakerFactory implements FilamentFakerFactory
             if (method_exists($component, 'container')) {
                 $component->container($this->getContainer(from: $component));
             }
-        })->model(rescue(fn (): string => $this->parentFaker->resolveModel()));
+
+            if ($model = rescue(fn () => $this->parentFaker->resolveModel())) {
+                $component->model($model);
+            }
+        });
+    }
+
+    protected function forgetContainer(): void
+    {
+        app()->forgetInstance(ComponentContainer::class);
     }
 }

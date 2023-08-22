@@ -46,6 +46,21 @@ parameters:
 			path: src/Decorators/Component.php
 
 		-
+			message: "#^Parameter \\#1 \\$component of method FilamentFaker\\\\Support\\\\FakerFactory\\:\\:component\\(\\) expects Filament\\\\Forms\\\\Components\\\\Field, \\$this\\(FilamentFaker\\\\FilamentFakerServiceProvider\\) given\\.$#"
+			count: 1
+			path: src/FilamentFakerServiceProvider.php
+
+		-
+			message: "#^Parameter \\#1 \\$form of method FilamentFaker\\\\Support\\\\FakerFactory\\:\\:form\\(\\) expects Filament\\\\Forms\\\\Form, \\$this\\(FilamentFaker\\\\FilamentFakerServiceProvider\\) given\\.$#"
+			count: 1
+			path: src/FilamentFakerServiceProvider.php
+
+		-
+			message: "#^Parameter \\#1 \\$resource of method FilamentFaker\\\\Support\\\\FakerFactory\\:\\:resource\\(\\) expects class\\-string\\<Filament\\\\Resources\\\\Resource\\>\\|Filament\\\\Resources\\\\Resource, class\\-string\\<static\\(FilamentFaker\\\\FilamentFakerServiceProvider\\)\\> given\\.$#"
+			count: 1
+			path: src/FilamentFakerServiceProvider.php
+
+		-
 			message: "#^Dead catch \\- InvalidArgumentException is never thrown in the try block\\.$#"
 			count: 1
 			path: src/Support/Faker.php

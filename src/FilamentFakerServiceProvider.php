@@ -45,13 +45,11 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
     protected function registerServices(): static
     {
         return tap($this, function () {
-            $this->app->singleton(DataGenerator::class, ComponentDataGenerator::class);
-
+            $this->app->bind(DataGenerator::class, ComponentDataGenerator::class);
             $this->app->bind(RealTimeFactory::class, Faker::class);
             $this->app->bind(Reflectable::class, Reflection::class);
             $this->app->bind(ComponentDecorator::class, Component::class);
             $this->app->bind(FilamentFakerFactory::class, FakerFactory::class);
-
             $this->app->bind(FakesBlocks::class, BlockFaker::class);
             $this->app->bind(FakesComponents::class, ComponentFaker::class);
             $this->app->bind(FakesForms::class, FormFaker::class);
@@ -64,7 +62,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             Field::macro('faker', function (): FakesComponents {
                 /* @var Field $this */
-                return app(FakesComponents::class, ['field' => $this]);
+                return app(FilamentFakerFactory::class)->component($this);
             });
 
             Field::macro('fake', fn (): mixed => $this->faker()->fake());
@@ -76,7 +74,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             Form::macro('faker', function (): FakesForms {
                 /* @var Form $this */
-                return app(FakesForms::class, ['form' => $this]);
+                return app(FilamentFakerFactory::class)->form($this);
             });
 
             Form::macro('fake', function (): array {
@@ -89,7 +87,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
     {
         return tap($this, function () {
             Resource::macro('faker', function (): FakesResources {
-                return app(FakesResources::class, ['resource' => static::class]);
+                return app(FilamentFakerFactory::class)->resource(static::class);
             });
 
             Resource::macro('fake', function (string $form = 'form'): array {
@@ -102,7 +100,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
     {
         return tap($this, function () {
             Block::macro('faker', function (string $name = null): FakesBlocks {
-                return app(FakesBlocks::class, ['block' => static::make($name ?? static::class)]);
+                return app(FilamentFakerFactory::class)->block(static::make($name ?? static::class));
             });
 
             Block::macro('fake', fn (): array => static::faker()->fake());
