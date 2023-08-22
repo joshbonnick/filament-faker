@@ -79,7 +79,7 @@ class ComponentFaker implements FakesComponents, FilamentFaker
         }
 
         if ($this->component->hasOverride()) {
-            return $this->resolveOrReturn($this->config($this->component()::class));
+            return $this->resolveOrReturn($this->config(path: $this->component()::class));
         }
 
         return $this->generator->generate();
