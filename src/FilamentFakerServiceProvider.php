@@ -62,7 +62,7 @@ class FilamentFakerServiceProvider extends PackageServiceProvider
         return tap($this, function () {
             Field::macro('faker', function (): FakesComponents {
                 /* @var Field $this */
-                return app(FakesComponents::class, ['field' => $this]);
+                return app(FilamentFakerFactory::class)->component($this);
             });
 
             Field::macro('fake', fn (): mixed => $this->faker()->fake());

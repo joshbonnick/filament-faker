@@ -71,7 +71,11 @@ class FakerFactory implements FilamentFakerFactory
             if (method_exists($component, 'container')) {
                 $component->container($this->getContainer(from: $component));
             }
-        })->model(rescue(fn (): string => $this->parentFaker->resolveModel()));
+
+            if ($model = rescue(fn () => $this->parentFaker->resolveModel())) {
+                $component->model($model);
+            }
+        });
     }
 
     protected function forgetContainer(): void
