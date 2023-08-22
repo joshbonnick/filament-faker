@@ -118,13 +118,13 @@ class Component implements ComponentDecorator
     /**
      * @return array<mixed>
      */
-    public function getSearch(string $query = ''): array
+    public function getSearch(string|Stringable $query = ''): array
     {
         if (! $this->isSearchable()) {
             throw new InvalidArgumentException("{$this->component->getName()} is not searchable.");
         }
 
-        return $this->component->getSearchResults($query);
+        return $this->component->getSearchResults((string) $query);
     }
 
     public function isSearchable(): bool
