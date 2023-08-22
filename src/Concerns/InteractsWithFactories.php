@@ -78,9 +78,9 @@ trait InteractsWithFactories
         });
     }
 
-    protected function getFactoryDefinition(string $key): mixed
+    protected function getFactoryDefinition(string|Stringable $key): mixed
     {
-        return $this->modelAttributes[$key];
+        return $this->modelAttributes[(string) $key];
     }
 
     protected function usesFactory(): bool
