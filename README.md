@@ -7,8 +7,8 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-faker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshbonnick/filament-faker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshbonnick/filament-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-faker)
 
-Filament Faker is a utility library designed to streamline testing for Filament resources, forms, blocks, and 
-components. This library assists in automatically generating mock data for your tests within the Filament ecosystem.
+Filament Faker is a utility library designed to streamline writing testing that use Filament resources, forms, blocks, and 
+components content. This library assists in automatically generating mock data for your tests within the Filament ecosystem.
 
 ## Features and Usage Highlights
 
