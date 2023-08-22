@@ -27,31 +27,36 @@ class FakerFactory implements FilamentFakerFactory
     {
         return tap($this, function () use ($parent, $container) {
             [$this->parentFaker, $this->container] = [$parent, $container];
+
+            app()->instance(ComponentContainer::class, $this->container);
         });
     }
 
     public function form(Form $form): FakesForms
     {
-        return app(FakesForms::class, [
-            'form' => $this->configure($form),
-            'container' => $this->container,
-        ]);
+        app()->instance(Form::class, $this->configure($form));
+
+        return tap(app(FakesForms::class), function () {
+            $this->forgetContainer();
+        });
     }
 
     public function component(Field $component): FakesComponents
     {
-        return app(FakesComponents::class, [
-            'field' => $this->configure($component),
-            'container' => $this->container,
-        ]);
+        app()->instance(Field::class, $this->configure($component));
+
+        return tap(app(FakesComponents::class), function () {
+            $this->forgetContainer();
+        });
     }
 
     public function block(Block $block): FakesBlocks
     {
-        return app(FakesBlocks::class, [
-            'block' => $this->configure($block),
-            'container' => $this->container,
-        ]);
+        app()->instance(Block::class, $this->configure($block));
+
+        return tap(app(FakesBlocks::class), function () {
+            $this->forgetContainer();
+        });
     }
 
     /**
@@ -67,5 +72,10 @@ class FakerFactory implements FilamentFakerFactory
                 $component->container($this->getContainer(from: $component));
             }
         })->model(rescue(fn (): string => $this->parentFaker->resolveModel()));
+    }
+
+    protected function forgetContainer(): void
+    {
+        app()->forgetInstance(ComponentContainer::class);
     }
 }
