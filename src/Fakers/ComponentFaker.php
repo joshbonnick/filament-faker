@@ -58,13 +58,11 @@ class ComponentFaker implements FakesComponents, FilamentFaker
      */
     protected function generate(): mixed
     {
-        if (is_callable($this->mutateCallback)) {
-            if (filled($data = $this->resolveOrReturn($this->mutateCallback))) {
-                return $data;
-            }
+        if (filled($data = $this->resolveOrReturn($this->mutateCallback))) {
+            return $data;
         }
 
-        if (! is_null($mutateCallbackResponse = $this->callComponentMutation())) {
+        if (filled($mutateCallbackResponse = $this->callComponentMutation())) {
             return $mutateCallbackResponse;
         }
 
@@ -72,10 +70,8 @@ class ComponentFaker implements FakesComponents, FilamentFaker
             return $this->getFactoryDefinition(key: $this->component->getName());
         }
 
-        if ($this->getShouldFakeUsingComponentName()) {
-            if (filled($data = $this->generator->realTime()->generate($this->component()))) {
-                return $data;
-            }
+        if ($this->useRealTimeFactory() && filled($data = $this->generator->realTime()->generate($this->component()))) {
+            return $data;
         }
 
         if ($this->component->hasOverride()) {
@@ -130,7 +126,7 @@ class ComponentFaker implements FakesComponents, FilamentFaker
     /**
      * Resolve whether Faker should be using the components name for generating data.
      */
-    protected function getShouldFakeUsingComponentName(): bool
+    protected function useRealTimeFactory(): bool
     {
         if ($this->shouldFakeUsingComponentName === false) {
             return false;
