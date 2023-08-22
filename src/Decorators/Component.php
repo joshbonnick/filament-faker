@@ -16,6 +16,7 @@ use FilamentFaker\Contracts\Support\Reflectable;
 use Illuminate\Support\Arr;
 use InvalidArgumentException;
 use ReflectionException;
+use Stringable;
 
 /**
  * @internal
@@ -34,9 +35,9 @@ class Component implements ComponentDecorator
         return $this->component->$name(...$arguments);
     }
 
-    public function __get(string $name): mixed
+    public function __get(string|Stringable $name): mixed
     {
-        return $this->component->$name;
+        return $this->component->{ (string) $name };
     }
 
     public function uses(Field $component): static
