@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FilamentFaker\Contracts\Decorators;
 
 use Filament\Forms\Components\Field;
+use Stringable;
 
 /**
  * @internal
@@ -42,7 +43,7 @@ interface ComponentDecorator
     /**
      * @return array<mixed>
      */
-    public function getSearch(string $query = ''): array;
+    public function getSearch(string|Stringable $query = ''): array;
 
     public function isSearchable(): bool;
 
