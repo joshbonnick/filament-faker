@@ -8,7 +8,7 @@ use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Support\Livewire;
 use FilamentFaker\Support\Reflection;
-use FilamentFaker\Tests\TestSupport\Services\InjectableService;
+use FilamentFaker\Tests\Feature\Fixtures\InjectableService;
 
 beforeEach(function () {
     $this->componentDecorator = tap(resolve(ComponentDecorator::class))->uses(TextInput::make('test')->container(ComponentContainer::make(Livewire::make())));

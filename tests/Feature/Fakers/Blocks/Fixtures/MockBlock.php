@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Blocks;
+namespace FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures;
 
 use Closure;
 use Filament\Forms\Components;

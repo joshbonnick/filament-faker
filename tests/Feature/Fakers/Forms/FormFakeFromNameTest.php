@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
 
 it('can disable the usage of faking by component name by chaining', function () {
     $form = PostResource::faker()->getForm()->schema([

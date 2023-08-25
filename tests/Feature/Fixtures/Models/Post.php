@@ -1,8 +1,8 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Models;
+namespace FilamentFaker\Tests\Feature\Fixtures\Models;
 
-use FilamentFaker\Tests\TestSupport\Database\factories\PostFactory;
+use FilamentFaker\Tests\Feature\Fixtures\Database\factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

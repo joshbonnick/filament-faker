@@ -4,8 +4,8 @@ use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
 use FilamentFaker\Exceptions\InvalidComponentOptionsException;
-use FilamentFaker\Tests\TestSupport\Models\Post;
-use FilamentFaker\Tests\TestSupport\Services\InjectableService;
+use FilamentFaker\Tests\Feature\Fixtures\InjectableService;
+use FilamentFaker\Tests\Feature\Fixtures\Models\Post;
 
 it('uses an option value when options are a query', function () {
     $posts = Post::factory()->count(2)->create();

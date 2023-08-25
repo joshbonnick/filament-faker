@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Resources;
+namespace FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures;
 
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\ColorPicker;
@@ -14,8 +14,8 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Models\Post;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
+use FilamentFaker\Tests\Feature\Fixtures\Models\Post;
 
 class PostResource extends Resource
 {

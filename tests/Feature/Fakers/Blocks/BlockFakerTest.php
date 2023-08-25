@@ -6,7 +6,7 @@ use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesBlocks;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
 
 it('can generate fake blocks content', function () {
     expect($fake = MockBlock::fake())

@@ -1,10 +1,10 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
-use FilamentFaker\Tests\TestSupport\Models\Post;
-use FilamentFaker\Tests\TestSupport\Models\WithoutFactory;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
+use FilamentFaker\Tests\Feature\Fixtures\Database\factories\TestFactory;
+use FilamentFaker\Tests\Feature\Fixtures\Models\Post;
+use FilamentFaker\Tests\Feature\Fixtures\Models\WithoutFactory;
 
 beforeEach(function () {
     mockComponentDecorator();

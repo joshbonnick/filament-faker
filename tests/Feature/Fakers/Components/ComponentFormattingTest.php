@@ -7,7 +7,7 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Set;
 use FilamentFaker\Decorators\Component;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
 use Illuminate\Support\Str;
 
 it('respects formatStateUsing', function () {

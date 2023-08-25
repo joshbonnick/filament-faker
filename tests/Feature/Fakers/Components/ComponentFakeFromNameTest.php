@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
 
 it('can disable the usage of faking by component name by chaining', function () {
     $data = TextInput::make('safe_email')->faker()->shouldFakeUsingComponentName(false)->fake();

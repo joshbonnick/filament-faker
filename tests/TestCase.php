@@ -11,7 +11,7 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__.'/TestSupport/Database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/Feature/Fixtures/Database/migrations');
 
         $this->artisan('migrate')->run();
     }

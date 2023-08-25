@@ -1,6 +1,6 @@
 <?php
 
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
 
 it('can mutate a specific component', function () {
     expect(MockBlock::make())

@@ -1,7 +1,7 @@
 <?php
 
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Database\factories\TestFactory;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
+use FilamentFaker\Tests\Feature\Fixtures\Database\factories\TestFactory;
 
 it('can use factory definitions', function () {
     $block = MockBlock::faker()->withFactory(TestFactory::class);

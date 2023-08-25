@@ -2,7 +2,7 @@
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
 
 test('mutateFake can be chained onto forms', function () {
     $form = PostResource::faker()->getForm()->schema([

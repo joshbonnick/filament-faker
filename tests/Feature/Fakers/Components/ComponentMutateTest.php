@@ -2,8 +2,8 @@
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Components\MutatedComponent;
-use FilamentFaker\Tests\TestSupport\Services\InjectableService;
+use FilamentFaker\Tests\Feature\Fakers\Components\Fixtures\MutatedComponent;
+use FilamentFaker\Tests\Feature\Fixtures\InjectableService;
 
 test('mutateFake can be chained onto components', function () {
     expect(TextInput::make('test')->faker()->mutateFake(fn (TextInput $input) => '::test::')->fake())

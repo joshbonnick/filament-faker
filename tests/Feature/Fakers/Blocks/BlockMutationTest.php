@@ -1,7 +1,7 @@
 <?php
 
 use Filament\Forms\Components\Field;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
 
 test('mutateFake can be chained onto blocks', function () {
     $data = MockBlock::faker()->mutateFake(function (Field $component) {

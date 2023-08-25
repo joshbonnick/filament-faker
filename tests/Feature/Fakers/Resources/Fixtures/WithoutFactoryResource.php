@@ -1,20 +1,17 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Resources;
+namespace FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures;
 
 use Filament\Forms\Components\Builder;
-use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
+use FilamentFaker\Tests\Feature\Fixtures\Models\WithoutFactory;
 
-class MutatedResource extends Resource
+class WithoutFactoryResource extends Resource
 {
-    public function mutateFake(Field $component): ?string
-    {
-        return $component->getName() === 'safe_email' ? '::mutated-in-resource::' : null;
-    }
+    protected static ?string $model = WithoutFactory::class;
 
     public static function form(Form $form): Form
     {

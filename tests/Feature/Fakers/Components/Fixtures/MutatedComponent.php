@@ -1,10 +1,10 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Components;
+namespace FilamentFaker\Tests\Feature\Fakers\Components\Fixtures;
 
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\TextInput;
-use FilamentFaker\Tests\TestSupport\Services\InjectableService;
+use FilamentFaker\Tests\Feature\Fixtures\InjectableService;
 
 class MutatedComponent extends TextInput
 {

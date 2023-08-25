@@ -1,8 +1,8 @@
 <?php
 
 use Filament\Forms\Components\Field;
-use FilamentFaker\Tests\TestSupport\Resources\MutatedResource;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\MutatedResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
 
 beforeEach(function () {
     mockComponentDecorator();

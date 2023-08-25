@@ -1,8 +1,8 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Services;
+namespace FilamentFaker\Tests\Feature\Fixtures;
 
-use FilamentFaker\Tests\TestSupport\Models\Post;
+use FilamentFaker\Tests\Feature\Fixtures\Models\Post;
 use Illuminate\Database\Eloquent\Collection;
 
 class InjectableService

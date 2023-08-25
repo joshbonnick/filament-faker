@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Models;
+namespace FilamentFaker\Tests\Feature\Fixtures\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

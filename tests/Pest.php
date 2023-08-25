@@ -3,8 +3,8 @@
 use Filament\Forms\Form;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Decorators\Component;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\ProductResource;
 use FilamentFaker\Tests\TestCase;
-use FilamentFaker\Tests\TestSupport\Resources\ProductResource;
 use Mockery\MockInterface;
 
 uses(TestCase::class)->in(__DIR__);

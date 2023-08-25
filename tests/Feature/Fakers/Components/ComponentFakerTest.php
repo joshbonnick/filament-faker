@@ -10,9 +10,9 @@ use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesComponents;
 use FilamentFaker\Contracts\Support\DataGenerator;
 use FilamentFaker\Decorators\Component;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Components\MockPluginComponent;
-use FilamentFaker\Tests\TestSupport\Services\InjectableService;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Components\Fixtures\MockPluginComponent;
+use FilamentFaker\Tests\Feature\Fixtures\InjectableService;
 
 it('can use fallback faker method', function () {
     $faker = ($component = MockPluginComponent::make('icon_picker'))->faker();

@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Components;
+namespace FilamentFaker\Tests\Feature\Fakers\Components\Fixtures;
 
 use Filament\Forms\Components\TextInput;
 

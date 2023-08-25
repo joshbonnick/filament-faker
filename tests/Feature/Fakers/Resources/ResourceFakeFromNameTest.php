@@ -1,6 +1,6 @@
 <?php
 
-use FilamentFaker\Tests\TestSupport\Resources\ProductResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\ProductResource;
 
 it('can disable the usage of faking by component name by chaining', function () {
     mockComponentDecorator();

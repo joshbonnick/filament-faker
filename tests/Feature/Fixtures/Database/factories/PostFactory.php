@@ -1,8 +1,8 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Database\factories;
+namespace FilamentFaker\Tests\Feature\Fixtures\Database\factories;
 
-use FilamentFaker\Tests\TestSupport\Models\Post;
+use FilamentFaker\Tests\Feature\Fixtures\Models\Post;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Database\factories;
+namespace FilamentFaker\Tests\Feature\Fixtures\Database\factories;
 
 class TestFactory extends PostFactory
 {

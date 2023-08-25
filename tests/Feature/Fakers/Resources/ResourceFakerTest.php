@@ -4,9 +4,9 @@ use Filament\Forms\Components\ColorPicker;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesResources;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Resources\InjectedResource;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\InjectedResource;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 beforeEach(function () {

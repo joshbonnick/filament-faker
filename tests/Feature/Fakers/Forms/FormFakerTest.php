@@ -2,9 +2,9 @@
 
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Fakers\FakesForms;
-use FilamentFaker\Tests\TestSupport\Blocks\MockBlock;
-use FilamentFaker\Tests\TestSupport\Resources\MultipleForms;
-use FilamentFaker\Tests\TestSupport\Resources\PostResource;
+use FilamentFaker\Tests\Feature\Fakers\Blocks\Fixtures\MockBlock;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\MultipleForms;
+use FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures\PostResource;
 
 beforeEach(function () {
     mockComponentDecorator();

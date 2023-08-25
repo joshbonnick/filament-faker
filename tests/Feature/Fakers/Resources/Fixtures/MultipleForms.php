@@ -1,6 +1,6 @@
 <?php
 
-namespace FilamentFaker\Tests\TestSupport\Resources;
+namespace FilamentFaker\Tests\Feature\Fakers\Resources\Fixtures;
 
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\TextInput;
