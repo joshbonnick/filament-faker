@@ -2,6 +2,25 @@
 
 All notable changes to `filament-faker` will be documented in this file.
 
+## v1.0 - 2024-05-08
+
+### What's Changed
+
+* [1.x] Guess Faker method from component names by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/14
+* [1.x] Accept `Stringable` where type hinting `string` by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/15
+* [1.x] Decouple bindings from concrete Faker classes by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/16
+* Bump actions/checkout from 3 to 4 by [@dependabot](https://github.com/dependabot) in https://github.com/joshbonnick/filament-faker/pull/17
+* Bump stefanzweifel/git-auto-commit-action from 4 to 5 by [@dependabot](https://github.com/dependabot) in https://github.com/joshbonnick/filament-faker/pull/18
+* Bump aglipanci/laravel-pint-action from 2.3.0 to 2.3.1 by [@dependabot](https://github.com/dependabot) in https://github.com/joshbonnick/filament-faker/pull/19
+* Bump aglipanci/laravel-pint-action from 2.3.1 to 2.4 by [@dependabot](https://github.com/dependabot) in https://github.com/joshbonnick/filament-faker/pull/22
+* [1.0] Add Support for Laravel 11 by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/24
+
+### New Contributors
+
+* [@dependabot](https://github.com/dependabot) made their first contribution in https://github.com/joshbonnick/filament-faker/pull/17
+
+**Full Changelog**: https://github.com/joshbonnick/filament-faker/compare/v0.0.3...v1.0
+
 ## v0.0.3 - 2023-08-21
 
 ### What's Changed
