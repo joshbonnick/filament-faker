@@ -2,6 +2,14 @@
 
 All notable changes to `filament-faker` will be documented in this file.
 
+## 1.1 - 2024-05-09
+
+### What's Changed
+
+* [1.x] Remove formatting by [@joshbonnick](https://github.com/joshbonnick) in https://github.com/joshbonnick/filament-faker/pull/25
+
+**Full Changelog**: https://github.com/joshbonnick/filament-faker/compare/v1.0...1.1
+
 ## v1.0 - 2024-05-08
 
 ### What's Changed
