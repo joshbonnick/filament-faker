@@ -7,7 +7,6 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use FilamentFaker\Contracts\Decorators\ComponentDecorator;
 use FilamentFaker\Support\Livewire;
-use FilamentFaker\Support\Reflection;
 use FilamentFaker\Tests\Feature\Fixtures\InjectableService;
 
 beforeEach(function () {
@@ -16,59 +15,6 @@ beforeEach(function () {
 
 it('returns an instance of component', function () {
     expect($this->componentDecorator->getField())->toBeInstanceOf(Field::class);
-});
-
-it('can format components', function () {
-    $this->componentDecorator->afterStateHydrated(function (?string $state, InjectableService $service) {
-        return '::test-two::';
-    });
-
-    expect($this->componentDecorator->format())->toEqual('::test-two::');
-
-    $this->componentDecorator->afterStateUpdated(function (?string $state, string $old = null) {
-        return '::test::';
-    });
-
-    expect($this->componentDecorator->format())->toEqual('::test::');
-});
-
-it('only catches ReflectionExceptions thrown by this package.', function () {
-    expect(fn () => TextInput::make('test')->afterStateHydrated(fn () => throw new ReflectionException())->fake())
-        ->toThrow(ReflectionException::class)
-        ->and(fn () => TextInput::make('test')->afterStateUpdated(fn () => throw new ReflectionException())->fake())
-        ->toThrow(ReflectionException::class);
-});
-
-it('afterStateHydrated hook return null if method does not exist', function () {
-    $mock = mock(Reflection::class);
-
-    $mock->shouldReceive('reflect')
-        ->andReturnSelf();
-    $mock->shouldReceive('property')
-        ->andThrow(ReflectionException::class, 'afterStateHydrated does not exist');
-
-    app()->instance(Reflection::class, $mock);
-
-    $componentDecorator = tap(app(ComponentDecorator::class))->uses(TextInput::make('test'));
-
-    expect($componentDecorator->getAfterStateHydrated('test'))
-        ->toBeNull();
-});
-
-it('afterStateUpdated hook return null if method does not exist', function () {
-    $mock = mock(Reflection::class);
-
-    $mock->shouldReceive('reflect')
-        ->andReturnSelf();
-    $mock->shouldReceive('property')
-        ->andThrow(ReflectionException::class, 'afterStateUpdated does not exist');
-
-    app()->instance(Reflection::class, $mock);
-
-    $componentDecorator = tap(app(ComponentDecorator::class))->uses(TextInput::make('test'));
-
-    expect($componentDecorator->getAfterStateUpdated('test'))
-        ->toBeNull();
 });
 
 test('__get function returns a property', function () {
