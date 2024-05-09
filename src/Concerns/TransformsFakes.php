@@ -38,7 +38,7 @@ trait TransformsFakes
     /**
      * Apply a mutation callback to the Faker instance.
      */
-    public function mutateFake(Closure $callback = null): static
+    public function mutateFake(?Closure $callback = null): static
     {
         return tap($this, function () use ($callback) {
             $this->mutateCallback = $callback;

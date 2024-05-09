@@ -20,7 +20,7 @@ trait InteractsWithFilamentContainer
         return tap($block)->container($this->container());
     }
 
-    protected function getContainer(Component $from = null): ComponentContainer
+    protected function getContainer(?Component $from = null): ComponentContainer
     {
         try {
             return $from?->getContainer() ?? $this->container ?? $this->container();

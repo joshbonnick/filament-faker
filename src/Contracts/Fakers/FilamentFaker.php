@@ -23,7 +23,7 @@ interface FilamentFaker
      * @param  array<int, string>  $onlyAttributes
      * @param  Factory<Model>|class-string<Factory<Model>>|null  $factory
      */
-    public function withFactory(Factory|string $factory = null, array $onlyAttributes = []): static;
+    public function withFactory(Factory|string|null $factory = null, array $onlyAttributes = []): static;
 
     /**
      * Enable or disable attempts to use component names to retrieve methods
@@ -35,5 +35,5 @@ interface FilamentFaker
      * Add a callback function to the Faker instance for more control over the
      * output of mock data.
      */
-    public function mutateFake(Closure $callback = null): static;
+    public function mutateFake(?Closure $callback = null): static;
 }

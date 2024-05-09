@@ -9,7 +9,7 @@ use Mockery\MockInterface;
 
 uses(TestCase::class)->in(__DIR__);
 
-function mockComponentDecorator(MockInterface $mock = null)
+function mockComponentDecorator(?MockInterface $mock = null)
 {
     if (! $mock) {
         $mock = mock(Component::class)->makePartial();

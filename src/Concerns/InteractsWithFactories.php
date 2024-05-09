@@ -39,7 +39,7 @@ trait InteractsWithFactories
      * @param  array<int, string>  $onlyAttributes
      * @param  Factory<Model>|class-string<Factory<Model>>|null  $factory
      */
-    public function withFactory(Factory|string|Stringable $factory = null, array $onlyAttributes = []): static
+    public function withFactory(Factory|string|Stringable|null $factory = null, array $onlyAttributes = []): static
     {
         return tap($this, function () use ($factory, $onlyAttributes): void {
             $this->onlyAttributes = $onlyAttributes;

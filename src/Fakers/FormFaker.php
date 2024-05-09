@@ -29,11 +29,11 @@ use InvalidArgumentException;
 
 class FormFaker implements FakesForms, FilamentFaker
 {
-    use InteractsWithFilamentContainer;
-    use InteractsWithFactories;
-    use TransformsFakes;
     use HasChildComponents;
+    use InteractsWithFactories;
+    use InteractsWithFilamentContainer;
     use ResolvesClosures;
+    use TransformsFakes;
 
     protected bool $withHidden = true;
 
@@ -41,7 +41,7 @@ class FormFaker implements FakesForms, FilamentFaker
 
     public function __construct(
         protected Form $form,
-        ComponentContainer $container = null,
+        ?ComponentContainer $container = null,
     ) {
         $this->container = $container ?? $this->container();
     }

@@ -18,17 +18,17 @@ use InvalidArgumentException;
 
 class BlockFaker implements FakesBlocks, FilamentFaker
 {
-    use InteractsWithFilamentContainer;
-    use InteractsWithFactories;
-    use TransformsFakes;
     use HasChildComponents;
+    use InteractsWithFactories;
+    use InteractsWithFilamentContainer;
     use ResolvesClosures;
+    use TransformsFakes;
 
     protected ComponentContainer $container;
 
     public function __construct(
         protected Block $block,
-        ComponentContainer $container = null
+        ?ComponentContainer $container = null
     ) {
         $this->container = $container ?? $this->container();
     }
