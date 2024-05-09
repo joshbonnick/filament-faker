@@ -18,7 +18,7 @@ class MockBlock extends Block
         };
     }
 
-    public static function make(string $name = null): static
+    public static function make(?string $name = null): static
     {
         return parent::make($name ?? static::class)
             ->label('Rich Editor')

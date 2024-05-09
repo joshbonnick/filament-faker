@@ -20,11 +20,11 @@ use Stringable;
 
 class ResourceFaker implements FakesResources, FilamentFaker
 {
-    use InteractsWithFilamentContainer;
-    use InteractsWithFactories;
-    use TransformsFakes;
     use HasChildComponents;
+    use InteractsWithFactories;
+    use InteractsWithFilamentContainer;
     use ResolvesClosures;
+    use TransformsFakes;
 
     /**
      * @var class-string<FilamentResource>
