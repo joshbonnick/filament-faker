@@ -17,7 +17,7 @@ trait InteractsWithConfig
      */
     protected array $fakesConfig;
 
-    protected function config(string $path = null): mixed
+    protected function config(?string $path = null): mixed
     {
         $config = $this->fakesConfig ?? tap(config('filament-faker.fakes', []), function (array $config) {
             $this->fakesConfig = $config;

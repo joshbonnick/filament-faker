@@ -22,11 +22,11 @@ use ReflectionException;
 
 class ComponentFaker implements FakesComponents, FilamentFaker
 {
-    use InteractsWithFilamentContainer;
-    use InteractsWithFactories;
     use InteractsWithConfig;
-    use TransformsFakes;
+    use InteractsWithFactories;
+    use InteractsWithFilamentContainer;
     use ResolvesClosures;
+    use TransformsFakes;
 
     protected readonly ComponentDecorator $component;
 
@@ -34,7 +34,7 @@ class ComponentFaker implements FakesComponents, FilamentFaker
         protected readonly DataGenerator $generator,
         ComponentDecorator $decorator,
         Field $field,
-        ComponentContainer $container = null
+        ?ComponentContainer $container = null
     ) {
         $this->generator->uses(
             decorator: $this->component = $decorator->uses(
