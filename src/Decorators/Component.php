@@ -64,7 +64,7 @@ class Component implements ComponentDecorator
             return $state;
         }
 
-        return $state;
+        return ($formatted = $this->applyFormattingHooks($state)) === [] ? $state : $formatted;
     }
 
     /**

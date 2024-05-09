@@ -7,8 +7,10 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/joshbonnick/filament-faker/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/joshbonnick/filament-faker/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/joshbonnick/filament-faker.svg?style=flat-square)](https://packagist.org/packages/joshbonnick/filament-faker)
 
-Filament Faker is a utility library designed to streamline writing testing that use Filament resources, forms, blocks, and 
-components content. This library assists in automatically generating mock data for your tests within the Filament ecosystem.
+Filament Faker is a utility library designed to streamline writing testing that use Filament resources, forms, blocks,
+and
+components content. This library assists in automatically generating mock data for your tests within the Filament
+ecosystem.
 
 ## Features and Usage Highlights
 
@@ -21,19 +23,21 @@ components content. This library assists in automatically generating mock data f
 ## Contents
 
 <!-- TOC -->
+
 * [Filament Utility Library](#filament-utility-library)
 * [Requirements](#requirements)
 * [Installation](#installation)
 * [Usage](#usage)
-  * [Usage In Tests](#usage-in-tests)
-  * [Faking Custom & Plugin Components](#faking-custom--plugin-components)
-  * [Mutating Generated Data](#mutating-generated-data)
-  * [Generate Data Using Factory Definitions](#generate-data-using-factory-definitions)
-    * [Selecting Definitions](#selecting-definitions)
+    * [Usage In Tests](#usage-in-tests)
+    * [Faking Custom & Plugin Components](#faking-custom--plugin-components)
+    * [Mutating Generated Data](#mutating-generated-data)
+    * [Generate Data Using Factory Definitions](#generate-data-using-factory-definitions)
+        * [Selecting Definitions](#selecting-definitions)
 * [IDE Support](#ide-support)
 * [Changelog](#changelog)
 * [Credits](#credits)
 * [License](#license)
+
 <!-- TOC -->
 
 ## Requirements
@@ -99,6 +103,7 @@ $data = PostResource::fake();
   "categories" => [2],
 ]
 ```
+
 </details>
 
 ### Usage In Tests
@@ -108,40 +113,43 @@ You can use the faked data in your tests.
 ```php
 <?php
 
-namespace Tests\Feature\Services\ContentFormatting;
+namespace Tests\Feature\Filament\Blog;
 
-use App\Contracts\ContentFormatter;
-use App\Filament\Blocks\HeadingBlock;
-use App\Filament\Resources\PostResource;
-use Filament\Forms\Components\Field;use Tests\TestCase;
+use App\Enums\PostStatus;
+use App\Filament\Resources\Blog\PostResource;
+use App\Models\Category;
+use App\Models\Post;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Livewire\Livewire;
+use PHPUnit\Framework\Attributes\Test;
+use Tests\FilamentTestCase;
 
-class FormatBlocksTest extends TestCase
+class PostCreateTest extends FilamentTestCase
 {
-    public function test_it_formats_blocks()
-    {
-        $blocks = [
-            HeadingBlock::fake(),
-        ];
+    use RefreshDatabase;
 
-        $service = app(ContentFormatter::class);
-        $content = $service->format($blocks);
-        // or...
-        $data = PostResource::fake();
-        $content = $service->format($data);
-        // or apply mutations...
-        $data = PostResource::faker()->mutateFake(fn (Field $component): ?string => match ($component->getName()) {
-            'title' => fake()->jobTitle(),
-            default => null,
-        })->fake();
-        
-        // Test the content...
+    #[Test]
+    public function it_can_create_posts(): void
+    {
+        Category::factory()->count(2)->create();
+
+        $data = PostResource::faker()->fake();
+
+        Livewire::test(PostResource\Pages\CreatePost::class)
+            ->fillForm($data)
+            ->call('create')
+            ->assertHasNoFormErrors();
+
+        $this->assertDatabaseHas(Post::class, $data);
     }
 }
+
 ```
 
 ### Faking Custom & Plugin Components
 
-If you have added a plugin such as [Spatie Media Library](https://filamentphp.com/plugins/filament-spatie-media-library),
+If you have added a plugin such
+as [Spatie Media Library](https://filamentphp.com/plugins/filament-spatie-media-library),
 which adds the `SpatieMediaLibraryFileUpload` component you can register it in `config/filament-faker.php` like so:
 
 ```php
@@ -163,7 +171,8 @@ You may also override the default faker method attached to built in components b
 
 ### Mutating Generated Data
 
-If you need to control a specific components value, you can chain `mutateFake` onto the fake builder. If this method returns
+If you need to control a specific components value, you can chain `mutateFake` onto the fake builder. If this method
+returns
 `null` for a component then it will be ignored and filled by other methods.
 
 ```php
@@ -185,7 +194,8 @@ $data = PostResource::faker()->mutateFake(function (Field $component, Injectable
 
 Alternatively you can add a `mutateFake` method to your Form, Block or Resource.
 
-The closure passed to `mutateFake` supports dependency injection, you just need to type hint `\Filament\Forms\Components\Field`
+The closure passed to `mutateFake` supports dependency injection, you just need to type
+hint `\Filament\Forms\Components\Field`
 or the specific component type (e.g. `\Filament\Forms\Components\TextInput`) to get an instance of the component.
 
 ```php
@@ -228,12 +238,13 @@ $data = MyCustomBlock::faker()->shouldFakeUsingComponentName(false)->fake();
 
 ### Generate Data Using Factory Definitions
 
-If you need increased accuracy for a specific test then you can enable the usage of Factories. When the use of factories 
-is enabled the generated data will be generated using definitions from the factory provided. 
+If you need increased accuracy for a specific test then you can enable the usage of Factories. When the use of factories
+is enabled the generated data will be generated using definitions from the factory provided.
 
 If no factory is provided the package will attempt to resolve one from the given resource, form, component or block.
 
-As this feature executes `Factory::makeOne` under the hood, I recommend only using it in tests where the accuracy of the faked 
+As this feature executes `Factory::makeOne` under the hood, I recommend only using it in tests where the accuracy of the
+faked
 data is of significant importance.
 
 ```php
@@ -261,12 +272,14 @@ class FormatBlocksTest extends TestCase
 
 If you need to specify a factory you can pass a `class-string` or instance of a `Factory` to the `withFactory()` method.
 
-Only `Resources` can resolve a factory automatically, if you wish to use a factory with a Block or Component, you must provide
+Only `Resources` can resolve a factory automatically, if you wish to use a factory with a Block or Component, you must
+provide
 either the factory to `withFactory` or provide the model to the `Component`, `Form` or `Block`.
 
 #### Selecting Definitions
 
-If you want to select only a specific set of definitions from your factory you can pass an `array` as to the `withFactory()` method 
+If you want to select only a specific set of definitions from your factory you can pass an `array` as to
+the `withFactory()` method
 which lists the definitions you want you use.
 
 ```php
@@ -275,7 +288,8 @@ $data = PostResource::faker()->withFactory(onlyAttributes: ['title', 'slug'])->f
 
 ### Generate Data for Specific Fields
 
-If you only need a specific field or fields, you can specify them with the `onlyFields` method on Resource and Form fakers.
+If you only need a specific field or fields, you can specify them with the `onlyFields` method on Resource and Form
+fakers.
 
 ```php
 $data = PostResource::faker()->onlyFields('title', 'slug', 'published_at')->fake();
@@ -283,7 +297,8 @@ $data = PostResource::faker()->onlyFields('title', 'slug', 'published_at')->fake
 
 ## IDE Support
 
-As this package adds methods using Laravel's `Macroable` trait, your IDE will not find the methods on its own. To fix this you will need
+As this package adds methods using Laravel's `Macroable` trait, your IDE will not find the methods on its own. To fix
+this you will need
 to use the [ide-helper package](https://github.com/barryvdh/laravel-ide-helper).
 
 ## Changelog
